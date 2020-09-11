@@ -2,7 +2,7 @@
 
 void Player::initialTexture()
 {
-	if (!this->texture.loadFromFile("arts/2d-monster-sprites/PNG/4/4_enemies_1_die_000.png")) {
+	if (!this->texture.loadFromFile("img/player/idle/1.png")) {
 		std::cout << "error loading player texture";
 	}
 }
