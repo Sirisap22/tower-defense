@@ -1,68 +1,142 @@
 #include "Game.h"
 
+//Static functions
 
-Game::Game() {
-	this->mWindow = new sf::RenderWindow(sf::VideoMode(1080, 720), "SFML Application", sf::Style::Fullscreen);
-	this->mWindow->setFramerateLimit(144);
-	this->mPlayer = new Player;
+//Initializer functions
+void Game::initWindow()
+{
+    /*Creates a SFML window using options from a window.ini file.*/
 
+    std::ifstream ifs("Config/window.ini");
+
+    std::string title = "None";
+    sf::VideoMode window_bounds(800, 600);
+    unsigned framerate_limit = 120;
+    bool vertical_sync_enabled = false;
+
+    if (ifs.is_open())
+    {
+        std::getline(ifs, title);
+        ifs >> window_bounds.width >> window_bounds.height;
+        ifs >> framerate_limit;
+        ifs >> vertical_sync_enabled;
+    }
+
+    ifs.close();
+
+    this->window = new sf::RenderWindow(window_bounds, title);
+    this->window->setFramerateLimit(framerate_limit);
+    this->window->setVerticalSyncEnabled(vertical_sync_enabled);
+}
+
+void Game::initKeys()
+{
+    std::ifstream ifs("Config/supported_keys.ini");
+
+    if (ifs.is_open())
+    {
+        std::string key = "";
+        int key_value = 0;
+
+        while (ifs >> key >> key_value)
+        {
+            this->supportedKeys[key] = key_value;
+            std::cout << key << " " << key_value << std::endl;
+        }
+    }
+
+    ifs.close();
+}
+
+void Game::initStates()
+{
+    this->states.push(new MainMenuState(this->window, &this->supportedKeys, &this->states));
+}
+
+//Constructors/Destructors
+Game::Game()
+{
+    this->initWindow();
+    this->initKeys();
+    this->initStates();
+}
+
+Game::~Game()
+{
+    delete this->window;
+
+    while (!this->states.empty())
+    {
+        delete this->states.top();
+        this->states.pop();
+    }
+}
+
+// Functions
+
+void Game::endApplication()
+{
+    std::cout << "Ending Application" << "\n";
+}
+
+void Game::updateDt()
+{
+    /*Updates the dt variable with the time it takes to update and render one frame.*/
+    this->dt = this->dtClock.restart().asSeconds();
+}
+
+void Game::updateSFMLEvents()
+{
+    while (this->window->pollEvent(this->sfEvent))
+    {
+        if (this->sfEvent.type == sf::Event::Closed)
+            this->window->close();
+    }
+
+
+}
+
+void Game::update()
+{
+    this->updateSFMLEvents();
+
+    if (!this->states.empty())
+    {
+        this->states.top()->update(this->dt);
+
+        if (this->states.top()->getQuit())
+        {
+            this->states.top()->endState();
+            delete this->states.top();
+            this->states.pop();
+        }
+    }
+    // Application end
+    else
+    {
+        this->endApplication();
+        this->window->close();
+    }
+}
+
+void Game::render()
+{
+    this->window->clear();
+
+    // Render items
+    if (!this->states.empty())
+    {
+        this->states.top()->render(this->window);
+    }
+    this->window->display();
 }
 
 void Game::run()
 {
-	sf::Clock clock;
-	sf::Time timeSinceLastUpdate = sf::Time::Zero;
-	const sf::Time TimePerFrame = sf::seconds(1.f / 30.f);
-	while (this->mWindow->isOpen())
-	{
-		sf::Time deltaTime = clock.restart();
-		timeSinceLastUpdate += clock.restart();
-		while (timeSinceLastUpdate > TimePerFrame)
-		{
-			timeSinceLastUpdate -= TimePerFrame;
-			processEvents();
-			update(TimePerFrame);
-		}
-		render();
-	}
-}
-
-void Game::processEvents()
-{
-	sf::Event event;
-	while (this->mWindow->pollEvent(event))
-	{
-		switch (event.type) 
-		{
-			case sf::Event::KeyPressed:
-				handlePlayerInput(event.key.code, true);
-				break;
-			case sf::Event::KeyReleased:
-				handlePlayerInput(event.key.code, false);
-				break;
-			case sf::Event::Closed:
-				this->mWindow->close();
-				break;
-		}
-	}
-}
-
-void Game::update(sf::Time deltaTime)
-{
-
-}
-
-// game loop
-
-void Game::render()
-{
-	this->mWindow->clear();
-	this->mPlayer->render(*this->mWindow);
-
-	this->mWindow->display();
-}
-
-void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
-{
-
+    while (this->window->isOpen())
+    {
+        this->updateDt();
+        this->update();
+        this->render();
+    }
 }

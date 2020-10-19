@@ -1,22 +1,50 @@
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include "Player.h"
+#ifndef GAME_H
+#define GAME_H
 
-class Game
+
+#include "MainMenuState.h"
+
+class Game 
 {
-	public:
-		Game();
-		void run();
+private:
+	// Variables
+	sf::RenderWindow* window;
+	sf::Event sfEvent;
+	
+	/*delta keep track of game for how long to do one update and one render call*/
+	sf::Clock dtClock;
+	float dt;
 
-	private:
-		void processEvents();
-		void update(sf::Time deltaTime);
-		void render();
-		void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
+	/*Keep track all states in game*/
+	std::stack<State*> states;
 
-	private:
-		sf::RenderWindow* mWindow;
-		Player* mPlayer;
+	std::map<std::string, int> supportedKeys;
+
+	// Initialization
+	void initWindow();
+	void initKeys();
+	void initStates();
+
+public:
+	//Constructors/Destructors
+	Game();
+	virtual ~Game();
+
+	// Functions 
+
+	// Regular
+	void endApplication();
+
+	// Update
+	void updateDt();
+	void updateSFMLEvents();
+	void update();
+
+	// Render
+	void render();
+
+	// Core
+	void run();
 };
 
-
+#endif
