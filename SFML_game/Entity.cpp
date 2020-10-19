@@ -1,20 +1,44 @@
 #include "Entity.h"
 
+void Entity::initVariables()
+{
+	this->movementComponent = NULL;
+}
+
 Entity::Entity()
 {
-	this->shape.setSize(sf::Vector2f(75.f, 75.f));
-	//this->texture.loadFromFile("public/player/idle/1.png");
-	//this->shape.setTexture(&texture);
-	this->movementSpeed = 100.F;
+	this->initVariables();
 }
 
 Entity::~Entity()
 {
 }
 
+// Component functions
+
+void Entity::setTexture(sf::Texture& texture)
+{
+	this->sprite.setTexture(texture);
+}
+
+void Entity::createMovementComponent(const float maxVelocity)
+{
+	this->movementComponent = new MovementComponent(this->sprite, maxVelocity);
+}
+
+// Functions
+
+void Entity::setPositions(const float x, const float y)
+{
+	this->sprite.setPosition(x, y);
+}
+
 void Entity::move(const float& dt, const float dir_x, const float dir_y)
 {
-	this->shape.move(dir_x * this->movementSpeed * dt, dir_y * this->movementSpeed * dt);
+	if (this->movementComponent)
+	{
+		this->movementComponent->move(dir_x, dir_y, dt); // Sets velocity
+	}
 }
 
 void Entity::update(const float& dt)
@@ -24,5 +48,5 @@ void Entity::update(const float& dt)
 
 void Entity::render(sf::RenderTarget* target)
 {
-	target->draw(this->shape);
+	target->draw(this->sprite);
 }

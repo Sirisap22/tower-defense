@@ -1,34 +1,29 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include <vector>
-#include <iostream>
-#include <ctime>
-#include <cstdlib>
-#include <fstream>
-#include <sstream>
-#include <stack>
-#include <map>
-
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Network.hpp>
+#include "MovementComponent.h"
 
 class Entity
 {
 private:
+	void initVariables();
+
 protected:
-	//sf::Texture texture;
-	sf::RectangleShape shape;
-	float movementSpeed;
+	sf::Texture* texture;
+	sf::Sprite sprite;
+
+	MovementComponent* movementComponent;
 public:
 	// Constructor/Destructor
 	Entity();
 	virtual ~Entity();
 
+	// Component functions
+	void setTexture(sf::Texture& texture);
+	void createMovementComponent(const float maxVelocity);
+
 	// Functions
+	virtual void setPositions(const float x, const float y);
 	virtual void move(const float& dt, const float x, const float y);
 
 	virtual void update(const float& dt);

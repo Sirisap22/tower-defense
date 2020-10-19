@@ -10,6 +10,10 @@ private:
 	// Variables
 	sf::RenderWindow* window;
 	sf::Event sfEvent;
+	std::vector<sf::VideoMode> videoModes;
+	sf::ContextSettings windowSettings;
+	bool fullscreen;
+
 	
 	/*delta keep track of game for how long to do one update and one render call*/
 	sf::Clock dtClock;
@@ -21,6 +25,7 @@ private:
 	std::map<std::string, int> supportedKeys;
 
 	// Initialization
+	void initVariables();
 	void initWindow();
 	void initKeys();
 	void initStates();
