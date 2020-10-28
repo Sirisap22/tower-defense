@@ -6,14 +6,21 @@ class GameState :
 {
 private:
     Player* player;
-    MonsterNormal* monsters_normal;
+    std::vector<MonsterNormal*> monstersNormalAtLevelN;
+    std::vector<MonsterHeavy*> monstersHeavyAtLevelN;
+    std::vector<MonsterFly*> monstersFlyAtLevelN;
     sf::Texture texture;
     sf::RectangleShape bg;
+    int level;
+
 
     // Functions
     void initKeybinds();
     void initTextures();
-    void initEntities();
+    void initPlayer();
+    void initLevel();
+    void incrementLevel();
+    void startLevel();
 public:
     GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
     virtual ~GameState();

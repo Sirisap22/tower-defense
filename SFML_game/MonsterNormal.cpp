@@ -1,20 +1,25 @@
 #include "MonsterNormal.h"
 
-void MonsterNormal::initVariables(int health)
+void MonsterNormal::initVariables(int health, std::string skill, float walk_speed, int damage)
 {
 	this->health = health;
+	this->skill = skill;
+	this->walkSpeed = walk_speed;
+	this->damage = damage;
 }
 
-MonsterNormal::MonsterNormal(float x, float y, int health, sf::Texture& texture_sheet)
+MonsterNormal::MonsterNormal(float x, float y, int health, std::string skill, float walk_speed, int damage, sf::Texture& texture_sheet)
 {
-	this->initVariables(health);
+	this->initVariables(health, skill, walk_speed, damage);
 
 	this->setPositions(x, y);
 
-	this->createMovementComponent(300.f, 15.f, 5.f);
+	this->createMovementComponent(this->walkSpeed, 15.f, 5.f);
 	this->createAnimationComponent(texture_sheet);
 
-	this->animationComponent->addAnimation("WALK", 10.f, 0, 0, 10, 0, 333, 314);
+	this->animationComponent->addAnimation("WALK", 10.f, 0, 0, 9, 0, 377, 404);
+
+	this->sprite.setScale(-0.5f, 0.5f);
 }
 
 MonsterNormal::~MonsterNormal()

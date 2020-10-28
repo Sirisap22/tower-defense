@@ -5,11 +5,16 @@ class MonsterNormal :
     public Entity
 {
 private:
-    int health;
-    void initVariables(int health);
+    int health, damage;
+    float walkSpeed;
+    
+
+    void initVariables(int health, std::string skill, float walk_speed, int damage);
 
 public:
-    MonsterNormal(float x, float y, int health, sf::Texture& texture_sheet);
+    std::string skill;
+
+    MonsterNormal(float x, float y, int health, std::string skill,float walk_speed,int damage, sf::Texture& texture_sheet);
     virtual ~MonsterNormal();
 
     // functions

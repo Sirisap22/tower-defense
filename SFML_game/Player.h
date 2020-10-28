@@ -7,7 +7,8 @@ class Player :
 {
 private:
     // Variables
-    int money();
+    int health;
+    int money;
     // Initilizer functions
     void initVariables();
     void initComponents();

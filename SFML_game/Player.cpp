@@ -2,7 +2,8 @@
 // Initializer functions
 void Player::initVariables()
 {
-
+	this->health = 100;
+	this->money = 300;
 }
 
 void Player::initComponents()

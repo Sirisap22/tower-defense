@@ -32,6 +32,9 @@
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="State.cpp" />
+    <ClCompile Include="TowerFly.cpp" />
+    <ClCompile Include="TowerHeavy.cpp" />
+    <ClCompile Include="TowerNormal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h" />
@@ -46,6 +49,9 @@
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="TowerFly.h" />
+    <ClInclude Include="TowerHeavy.h" />
+    <ClInclude Include="TowerNormal.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
