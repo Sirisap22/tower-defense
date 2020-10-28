@@ -54,17 +54,17 @@ void GameState::initLevel()
 	
 	// init normal monsters
 	for (int i = 0; i < 1; ++i) {
-		this->monstersNormalAtLevelN.push_back(new MonsterNormal(this->window->getSize().x - 500, this->window->getSize().y - 500, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
+		this->monstersAtLevelN.push_back(new MonsterNormal(this->window->getSize().x - 500, this->window->getSize().y - 500, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
 	}
 
 	// init heavy monsters
 	for (int i = 0; i < 1; ++i) {
-		this->monstersHeavyAtLevelN.push_back(new MonsterHeavy(100 * 2 * (i+1) , 100 * 2 * (i + 1), 100, "heavy", 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
+		this->monstersAtLevelN.push_back(new MonsterHeavy(100 * 2 * (i+1) , 100 * 2 * (i + 1), 100, "heavy", 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
 	}
 
 	// init fly monsters
 	for (int i = 0; i < 2; ++i) {
-		this->monstersFlyAtLevelN.push_back(new MonsterFly(100 * 2 * (i + 1), 100 * 2 * (i + 1), 100, "fly", 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
+		this->monstersAtLevelN.push_back(new MonsterFly(100 * 2 * (i + 1), 100 * 2 * (i + 1), 100, "fly", 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
 	}
 
 
@@ -102,17 +102,10 @@ GameState::~GameState()
 
 	delete this->player;
 
-	for (auto& monster_normal : this->monstersNormalAtLevelN) {
-		delete monster_normal;
+	for (auto& monster : this->monstersAtLevelN) {
+		delete monster;
 	}
 
-	for (auto& monster_heavy : this->monstersHeavyAtLevelN) {
-		delete monster_heavy;
-	}
-
-	for (auto& monster_fly : this->monstersFlyAtLevelN) {
-		delete monster_fly;
-	}
 }
 
 void GameState::updateInput(const float& dt)
@@ -139,16 +132,8 @@ void GameState::update(const float& dt)
 
 	this->player->update(dt);
 
-	for (auto& monster_normal : this->monstersNormalAtLevelN) {
-		monster_normal->update(dt);
-	}
-
-	for (auto& monster_heavy : this->monstersHeavyAtLevelN) {
-		monster_heavy->update(dt);
-	}
-
-	for (auto& monster_fly : this->monstersFlyAtLevelN) {
-		monster_fly->update(dt);
+	for (auto& monster : this->monstersAtLevelN) {
+		monster->update(dt);
 	}
 
 }
@@ -163,21 +148,9 @@ void GameState::render(sf::RenderTarget* target)
 
 	this->player->render(target);
 
-	if (!this->monstersNormalAtLevelN.empty()) {
-		for (auto& monster_normal : this->monstersNormalAtLevelN) {
-			monster_normal->render(target);
-		}
-	}
-
-	if (!this->monstersHeavyAtLevelN.empty()) {
-		for (auto& monster_heavy : this->monstersHeavyAtLevelN) {
-			monster_heavy->render(target);
-		}
-	}
-	
-	if (!this->monstersFlyAtLevelN.empty()) {
-		for (auto& monster_fly : this->monstersFlyAtLevelN) {
-			monster_fly->render(target);
+	if (!this->monstersAtLevelN.empty()) {
+		for (auto& monster : this->monstersAtLevelN) {	
+			monster->render(target);
 		}
 	}
 	

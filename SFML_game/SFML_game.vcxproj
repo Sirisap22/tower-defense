@@ -26,15 +26,14 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterFly.cpp" />
     <ClCompile Include="MonsterHeavy.cpp" />
     <ClCompile Include="MonsterNormal.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="State.cpp" />
-    <ClCompile Include="TowerFly.cpp" />
-    <ClCompile Include="TowerHeavy.cpp" />
-    <ClCompile Include="TowerNormal.cpp" />
+    <ClCompile Include="Tower.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h" />
@@ -43,15 +42,14 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="MainMenuState.h" />
+    <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterFly.h" />
     <ClInclude Include="MonsterHeavy.h" />
     <ClInclude Include="MonsterNormal.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="State.h" />
-    <ClInclude Include="TowerFly.h" />
-    <ClInclude Include="TowerHeavy.h" />
-    <ClInclude Include="TowerNormal.h" />
+    <ClInclude Include="Tower.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

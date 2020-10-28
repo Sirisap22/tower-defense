@@ -1,23 +1,13 @@
 #pragma once
-#include "Entity.h"
-
+#include "Monster.h"
 class MonsterNormal :
-    public Entity
+    public Monster
 {
 private:
-    int health, damage;
-    float walkSpeed;
-    
-
-    void initVariables(int health, std::string skill, float walk_speed, int damage);
+    virtual void initComponents(sf::Texture& texture_sheet);
 
 public:
-    std::string skill;
-
-    MonsterNormal(float x, float y, int health, std::string skill,float walk_speed,int damage, sf::Texture& texture_sheet);
+    MonsterNormal(float x, float y, int health, std::string skill, float walk_speed, int damage, sf::Texture& texture_sheet);
     virtual ~MonsterNormal();
-
-    // functions
-    virtual void update(const float& dt);
 };
 

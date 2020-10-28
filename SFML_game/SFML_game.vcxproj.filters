@@ -60,23 +60,20 @@
     <ClCompile Include="AnimationComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="MonsterFly.cpp">
-      <Filter>Entities\Monsters</Filter>
+    <ClCompile Include="Tower.cpp">
+      <Filter>Entities\Towers</Filter>
     </ClCompile>
-    <ClCompile Include="MonsterHeavy.cpp">
+    <ClCompile Include="Monster.cpp">
       <Filter>Entities\Monsters</Filter>
     </ClCompile>
     <ClCompile Include="MonsterNormal.cpp">
       <Filter>Entities\Monsters</Filter>
     </ClCompile>
-    <ClCompile Include="TowerNormal.cpp">
-      <Filter>Entities\Towers</Filter>
+    <ClCompile Include="MonsterFly.cpp">
+      <Filter>Entities\Monsters</Filter>
     </ClCompile>
-    <ClCompile Include="TowerHeavy.cpp">
-      <Filter>Entities\Towers</Filter>
-    </ClCompile>
-    <ClCompile Include="TowerFly.cpp">
-      <Filter>Entities\Towers</Filter>
+    <ClCompile Include="MonsterHeavy.cpp">
+      <Filter>Entities\Monsters</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,23 +104,20 @@
     <ClInclude Include="AnimationComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="MonsterFly.h">
-      <Filter>Entities\Monsters</Filter>
+    <ClInclude Include="Tower.h">
+      <Filter>Entities\Towers</Filter>
     </ClInclude>
-    <ClInclude Include="MonsterHeavy.h">
+    <ClInclude Include="Monster.h">
       <Filter>Entities\Monsters</Filter>
     </ClInclude>
     <ClInclude Include="MonsterNormal.h">
       <Filter>Entities\Monsters</Filter>
     </ClInclude>
-    <ClInclude Include="TowerNormal.h">
-      <Filter>Entities\Towers</Filter>
+    <ClInclude Include="MonsterFly.h">
+      <Filter>Entities\Monsters</Filter>
     </ClInclude>
-    <ClInclude Include="TowerHeavy.h">
-      <Filter>Entities\Towers</Filter>
-    </ClInclude>
-    <ClInclude Include="TowerFly.h">
-      <Filter>Entities\Towers</Filter>
+    <ClInclude Include="MonsterHeavy.h">
+      <Filter>Entities\Monsters</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
