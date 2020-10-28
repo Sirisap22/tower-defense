@@ -2,6 +2,7 @@
 // Initializer functions
 void Player::initVariables()
 {
+
 }
 
 void Player::initComponents()
@@ -32,5 +33,7 @@ void Player::update(const float& dt)
 {
 	this->movementComponent->update(dt);
 
-	this->animationComponent->play("IDLE_RIGHT", dt);
+	if (this->movementComponent->idle()) {
+		this->animationComponent->play("IDLE_RIGHT", dt);
+	}
 }

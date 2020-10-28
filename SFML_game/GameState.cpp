@@ -26,9 +26,14 @@ void GameState::initTextures()
 	{
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_PLAYER_TEXTURE";
 	}
+
+	if (!this->textures["MONSTER_NORMAL_SHEET"].loadFromFile("public/sprites/monster/normal/mon-nor-walk.png"))
+	{
+		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_MONSTER_TEXTURE";
+	}
 }
 
-void GameState::initPlayers()
+void GameState::initEntities()
 {
 	this->player = new Player(0, 0, this->textures["PLAYER_SHEET"]);
 }
@@ -43,7 +48,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->bg.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
 	//this->background.setFillColor(sf::Color::Magenta);
 	this->bg.setTexture(&texture);
-	this->initPlayers();
+	this->initEntities();
 
 }
 

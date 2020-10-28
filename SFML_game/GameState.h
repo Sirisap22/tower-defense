@@ -6,13 +6,14 @@ class GameState :
 {
 private:
     Player* player;
+    MonsterNormal* monsters_normal;
     sf::Texture texture;
     sf::RectangleShape bg;
 
     // Functions
     void initKeybinds();
     void initTextures();
-    void initPlayers();
+    void initEntities();
 public:
     GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
     virtual ~GameState();

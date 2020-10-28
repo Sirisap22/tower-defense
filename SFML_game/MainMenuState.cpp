@@ -58,8 +58,8 @@ void MainMenuState::initButtons()
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
-	this->buttons["SETTINGS"] = new Button(300, 640, 200, 50,
-		&this->font, "Settings", 72,
+	this->buttons["LEADERBOARD"] = new Button(300, 640, 200, 50,
+		&this->font, "Leaderboard", 72,
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 

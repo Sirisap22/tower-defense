@@ -54,6 +54,15 @@
     <ClCompile Include="AnimationComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="MonsterNormal.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterHeavy.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterFly.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -82,6 +91,15 @@
     </ClInclude>
     <ClInclude Include="AnimationComponent.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterNormal.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterHeavy.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterFly.h">
+      <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
