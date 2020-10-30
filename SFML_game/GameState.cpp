@@ -27,20 +27,40 @@ void GameState::initTextures()
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_PLAYER_TEXTURE";
 	}
 
+	// monsters textures
 	if (!this->textures["MONSTER_NORMAL_SHEET"].loadFromFile("public/sprites/monster/normal/mon-nor-walk.png"))
 	{
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_MONSTER_TEXTURE";
 	}
-
 	if (!this->textures["MONSTER_HEAVY_SHEET"].loadFromFile("public/sprites/monster/heavy/mon-heavy-walk.png"))
 	{
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_MONSTER_TEXTURE";
 	}
-
 	if (!this->textures["MONSTER_FLY_SHEET"].loadFromFile("public/sprites/monster/fly/mon-fly-walk.png"))
 	{
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_MONSTER_TEXTURE";
 	}
+
+	// towers textures
+	std::vector<std::string> towerCat = { "normal", "heavy", "fly" };
+	for (std::string category : towerCat) {
+		for (int i = 1; i <= 3; ++i) {
+			std::string towerPath = "public/sprites/tower/" + category + "/level_" + std::to_string(i) + ".png";
+			std::string bulletPath = "public/sprites/tower/" + category + "/bull_" + std::to_string(i) + ".png";
+			if (!this->textures["TOWER_NORMAL_LEVEL_" + std::to_string(i)].loadFromFile(towerPath))
+			{
+				throw "ERROR::GAME_STATE::COULD_NOT_LOAD_TOWER_TEXTURE";
+			}
+
+			if (!this->textures["TOWER_NORMAL_BULLET_" + std::to_string(i)].loadFromFile(bulletPath))
+			{
+				throw "ERROR::GAME_STATE::COULD_NOT_LOAD_TOWER_BULLET_TEXTURE";
+			}
+		}
+	}
+	
+	
+	
 }
 
 void GameState::initPlayer()
