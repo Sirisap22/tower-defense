@@ -1,21 +1,13 @@
 #pragma once
-#include "Entity.h"
+#include "Monster.h"
 class MonsterFly :
-   public Entity
+    public Monster
 {
 private:
-    int health, damage;
-    float walkSpeed;
-
-    void initVariables(int health, std::string skill, float walk_speed, int damage);
+   virtual void initComponents();
 
 public:
-    std::string skill;
-
     MonsterFly(float x, float y, int health, std::string skill, float walk_speed, int damage, sf::Texture& texture_sheet);
     virtual ~MonsterFly();
-
-    // functions
-    virtual void update(const float& dt);
 };
 

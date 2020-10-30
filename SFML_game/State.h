@@ -2,9 +2,7 @@
 #define STATE_H
 
 #include "Player.h"
-#include "MonsterNormal.h"
-#include "MonsterHeavy.h"
-#include "MonsterFly.h"
+
 
 class State
 {

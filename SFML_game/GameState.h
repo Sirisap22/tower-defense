@@ -1,14 +1,23 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
+
 #include "State.h"
+#include "Monster.h"
+#include "MonsterNormal.h"
+#include "MonsterHeavy.h"
+#include "MonsterFly.h"
+#include "Tower.h"
+#include "TowerNormal.h"
+#include "TowerFly.h"
+#include "TowerHeavy.h"
+
 class GameState :
     public State
 {
 private:
     Player* player;
-    std::vector<MonsterNormal*> monstersNormalAtLevelN;
-    std::vector<MonsterHeavy*> monstersHeavyAtLevelN;
-    std::vector<MonsterFly*> monstersFlyAtLevelN;
+    std::vector<Monster*> monstersAtLevelN;
+    std::vector<Tower*> towersAtCurrentState;
     sf::Texture texture;
     sf::RectangleShape bg;
     int level;

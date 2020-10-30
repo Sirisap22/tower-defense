@@ -27,20 +27,43 @@ void GameState::initTextures()
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_PLAYER_TEXTURE";
 	}
 
+	// monsters textures
 	if (!this->textures["MONSTER_NORMAL_SHEET"].loadFromFile("public/sprites/monster/normal/mon-nor-walk.png"))
 	{
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_MONSTER_TEXTURE";
 	}
-
 	if (!this->textures["MONSTER_HEAVY_SHEET"].loadFromFile("public/sprites/monster/heavy/mon-heavy-walk.png"))
 	{
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_MONSTER_TEXTURE";
 	}
-
 	if (!this->textures["MONSTER_FLY_SHEET"].loadFromFile("public/sprites/monster/fly/mon-fly-walk.png"))
 	{
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_MONSTER_TEXTURE";
 	}
+
+	// towers textures
+	std::vector<std::string> towerCat = { "normal", "heavy", "fly" };
+	std::vector<std::string> towerCatUpper = { "NORMAL", "HEAVY", "FLY" };
+	for (int j = 0; j < 3; ++j) {
+		for (int i = 1; i <= 3; ++i) {
+			std::string towerKey = "TOWER_" + towerCatUpper[j] + "_LEVEL_" + std::to_string(i);
+			std::string bulletKey = "TOWER_" + towerCatUpper[j] + "_BULLET_" + std::to_string(i);
+			std::string towerPath = "public/sprites/tower/" + towerCat[j] + "/level_" + std::to_string(i) + ".png";
+			std::string bulletPath = "public/sprites/tower/" + towerCat[j] + "/bull_" + std::to_string(i) + ".png";
+			if (!this->textures[towerKey].loadFromFile(towerPath))
+			{
+				throw "ERROR::GAME_STATE::COULD_NOT_LOAD_TOWER_TEXTURE";
+			}
+
+			if (!this->textures[bulletKey].loadFromFile(bulletPath))
+			{
+				throw "ERROR::GAME_STATE::COULD_NOT_LOAD_TOWER_BULLET_TEXTURE";
+			}
+		}
+	}
+	
+	
+	
 }
 
 void GameState::initPlayer()
@@ -51,22 +74,31 @@ void GameState::initPlayer()
 void GameState::initLevel()
 {
 	this->level = 1;
+
+	//this->monstersAtLevelN[0] = new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]);
 	
 	// init normal monsters
 	for (int i = 0; i < 1; ++i) {
-		this->monstersNormalAtLevelN.push_back(new MonsterNormal(this->window->getSize().x - 500, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
+		this->monstersAtLevelN.push_back(new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
 	}
 
 	// init heavy monsters
 	for (int i = 0; i < 1; ++i) {
-		this->monstersHeavyAtLevelN.push_back(new MonsterHeavy(100 * 2 * (i+1) , 100 * 2 * (i + 1), 100, "heavy", 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
+		this->monstersAtLevelN.push_back(new MonsterHeavy(100 * 2 * (i+1) , 100 * 2 * (i + 1), 100, "heavy", 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
 	}
 
 	// init fly monsters
 	for (int i = 0; i < 2; ++i) {
-		this->monstersFlyAtLevelN.push_back(new MonsterFly(100 * 2 * (i + 1), 100 * 2 * (i + 1), 100, "fly", 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
+		this->monstersAtLevelN.push_back(new MonsterFly(100 * 2 * (i + 1), 100 * 2 * (i + 1), 100, "fly", 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
 	}
 
+	// delete later
+	for (int i = 1; i < 2; ++i) {
+		this->towersAtCurrentState.push_back(new TowerNormal(100*i, 200*i, 10, 10, this->textures["TOWER_NORMAL_LEVEL_1"], this->textures["TOWER_NORMAL_LEVEL_2"], this->textures["TOWER_NORMAL_LEVEL_3"]));
+		this->towersAtCurrentState.push_back(new TowerHeavy(100 * 2 * i, 200 * 2 * i, 10, 10, this->textures["TOWER_HEAVY_LEVEL_1"], this->textures["TOWER_HEAVY_LEVEL_2"], this->textures["TOWER_HEAVY_LEVEL_3"]));
+		this->towersAtCurrentState.push_back(new TowerFly(100 * 3 * i, 200 * 3 * i, 10, 10, this->textures["TOWER_FLY_LEVEL_1"], this->textures["TOWER_FLY_LEVEL_2"], this->textures["TOWER_FLY_LEVEL_3"]));
+	}
+	//this->towersAtCurrentState.push_back(new TowerNormal(100, 200, 10, 10, this->textures["TOWER_NORMAL_LEVEL_1"], this->textures["TOWER_NORMAL_LEVEL_2"], this->textures["TOWER_NORMAL_LEVEL_3"]));
 
 }
 
@@ -102,17 +134,17 @@ GameState::~GameState()
 
 	delete this->player;
 
-	for (auto& monster_normal : this->monstersNormalAtLevelN) {
-		delete monster_normal;
+	for (auto& monster : this->monstersAtLevelN) {
+		delete monster;
 	}
 
-	for (auto& monster_heavy : this->monstersHeavyAtLevelN) {
-		delete monster_heavy;
-	}
+	this->monstersAtLevelN.clear();
 
-	for (auto& monster_fly : this->monstersFlyAtLevelN) {
-		delete monster_fly;
+	//delete this->monstersAtLevelN;
+	for (auto& tower : this->towersAtCurrentState) {
+		delete tower;
 	}
+	this->towersAtCurrentState.clear();
 }
 
 void GameState::updateInput(const float& dt)
@@ -139,16 +171,15 @@ void GameState::update(const float& dt)
 
 	this->player->update(dt);
 
-	for (auto& monster_normal : this->monstersNormalAtLevelN) {
-		monster_normal->update(dt);
+	for (auto& monster : this->monstersAtLevelN) {
+		monster->update(dt);
 	}
 
-	for (auto& monster_heavy : this->monstersHeavyAtLevelN) {
-		monster_heavy->update(dt);
-	}
+	//this->monstersAtLevelN->update(dt);
 
-	for (auto& monster_fly : this->monstersFlyAtLevelN) {
-		monster_fly->update(dt);
+	// delete later
+	for (auto& tower : this->towersAtCurrentState) {
+	tower->update(dt);
 	}
 
 }
@@ -163,21 +194,16 @@ void GameState::render(sf::RenderTarget* target)
 
 	this->player->render(target);
 
-	if (!this->monstersNormalAtLevelN.empty()) {
-		for (auto& monster_normal : this->monstersNormalAtLevelN) {
-			monster_normal->render(target);
+	if (!this->monstersAtLevelN.empty()) {
+		for (auto& monster : this->monstersAtLevelN) {	
+			monster->render(target);
 		}
 	}
 
-	if (!this->monstersHeavyAtLevelN.empty()) {
-		for (auto& monster_heavy : this->monstersHeavyAtLevelN) {
-			monster_heavy->render(target);
-		}
-	}
-	
-	if (!this->monstersFlyAtLevelN.empty()) {
-		for (auto& monster_fly : this->monstersFlyAtLevelN) {
-			monster_fly->render(target);
+	//this->monstersAtLevelN->render(target);
+	if (!this->towersAtCurrentState.empty()) {
+		for (auto& tower : this->towersAtCurrentState) {
+			tower->render(target);
 		}
 	}
 	

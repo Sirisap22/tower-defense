@@ -28,6 +28,9 @@
     <Filter Include="Entities\Towers">
       <UniqueIdentifier>{30d14e80-0683-4f84-b44f-7cd49bba584c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{43cc99cf-b5e6-461c-baba-50cbf676e811}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -48,9 +51,6 @@
     <ClCompile Include="MainMenuState.cpp">
       <Filter>States</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
@@ -60,29 +60,35 @@
     <ClCompile Include="AnimationComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="Tower.cpp">
+      <Filter>Entities\Towers</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>Entities\Monsters</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterNormal.cpp">
+      <Filter>Entities\Monsters</Filter>
+    </ClCompile>
     <ClCompile Include="MonsterFly.cpp">
       <Filter>Entities\Monsters</Filter>
     </ClCompile>
     <ClCompile Include="MonsterHeavy.cpp">
       <Filter>Entities\Monsters</Filter>
     </ClCompile>
-    <ClCompile Include="MonsterNormal.cpp">
-      <Filter>Entities\Monsters</Filter>
-    </ClCompile>
     <ClCompile Include="TowerNormal.cpp">
+      <Filter>Entities\Towers</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="TowerFly.cpp">
       <Filter>Entities\Towers</Filter>
     </ClCompile>
     <ClCompile Include="TowerHeavy.cpp">
       <Filter>Entities\Towers</Filter>
     </ClCompile>
-    <ClCompile Include="TowerFly.cpp">
-      <Filter>Entities\Towers</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameState.h">
       <Filter>States</Filter>
     </ClInclude>
@@ -95,9 +101,6 @@
     <ClInclude Include="MainMenuState.h">
       <Filter>States</Filter>
     </ClInclude>
-    <ClInclude Include="Button.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Entities</Filter>
     </ClInclude>
@@ -107,22 +110,34 @@
     <ClInclude Include="AnimationComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="Tower.h">
+      <Filter>Entities\Towers</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>Entities\Monsters</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterNormal.h">
+      <Filter>Entities\Monsters</Filter>
+    </ClInclude>
     <ClInclude Include="MonsterFly.h">
       <Filter>Entities\Monsters</Filter>
     </ClInclude>
     <ClInclude Include="MonsterHeavy.h">
       <Filter>Entities\Monsters</Filter>
     </ClInclude>
-    <ClInclude Include="MonsterNormal.h">
-      <Filter>Entities\Monsters</Filter>
-    </ClInclude>
     <ClInclude Include="TowerNormal.h">
       <Filter>Entities\Towers</Filter>
     </ClInclude>
-    <ClInclude Include="TowerHeavy.h">
-      <Filter>Entities\Towers</Filter>
+    <ClInclude Include="Button.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="TowerFly.h">
+      <Filter>Entities\Towers</Filter>
+    </ClInclude>
+    <ClInclude Include="TowerHeavy.h">
       <Filter>Entities\Towers</Filter>
     </ClInclude>
   </ItemGroup>
