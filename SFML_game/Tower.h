@@ -7,7 +7,7 @@ private:
     int level;
     int damage;
     int attackSpeed;
-    std::vector<sf::Texture&> textureTowerLevelN;
+    //std::vector<sf::Texture&> textureTowerLevelN;
 
     void initVariables(int damage, int attack_speed);
     void initTextures(sf::Texture& level_1, sf::Texture& level_2, sf::Texture& level_3);

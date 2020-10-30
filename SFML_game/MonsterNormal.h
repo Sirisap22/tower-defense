@@ -4,7 +4,7 @@ class MonsterNormal :
     public Monster
 {
 private:
-    virtual void initComponents(sf::Texture& texture_sheet);
+    void initComponents();
 
 public:
     MonsterNormal(float x, float y, int health, std::string skill, float walk_speed, int damage, sf::Texture& texture_sheet);

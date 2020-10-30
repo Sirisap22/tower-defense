@@ -6,7 +6,7 @@ class GameState :
 {
 private:
     Player* player;
-    Monster* monstersAtLevelN;
+    std::vector<Monster*> monstersAtLevelN;
     sf::Texture texture;
     sf::RectangleShape bg;
     int level;

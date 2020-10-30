@@ -1,9 +1,9 @@
 #include "MonsterNormal.h"
 
-void MonsterNormal::initComponents(sf::Texture& texture_sheet)
+void MonsterNormal::initComponents()
 {
 	this->createMovementComponent(this->walkSpeed, 15.f, 5.f);
-	this->createAnimationComponent(texture_sheet);
+	this->createAnimationComponent(this->textureSheet);
 
 	this->animationComponent->addAnimation("WALK", 10.f, 0, 0, 9, 0, 377, 404);
 }
@@ -11,6 +11,9 @@ void MonsterNormal::initComponents(sf::Texture& texture_sheet)
 MonsterNormal::MonsterNormal(float x, float y, int health, std::string skill, float walk_speed, int damage, sf::Texture& texture_sheet)
 	: Monster(x, y, health, skill, walk_speed, damage, texture_sheet)
 {
+
+	this->initComponents();
+	
 }
 
 MonsterNormal::~MonsterNormal()

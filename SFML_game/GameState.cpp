@@ -52,22 +52,22 @@ void GameState::initLevel()
 {
 	this->level = 1;
 
-	this->monstersAtLevelN = new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]);
+	//this->monstersAtLevelN[0] = new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]);
 	
 	// init normal monsters
-	/*for (int i = 0; i < 1; ++i) {
+	for (int i = 0; i < 1; ++i) {
 		this->monstersAtLevelN.push_back(new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
-	}*/
+	}
 
 	// init heavy monsters
-	/*for (int i = 0; i < 1; ++i) {
+	for (int i = 0; i < 1; ++i) {
 		this->monstersAtLevelN.push_back(new MonsterHeavy(100 * 2 * (i+1) , 100 * 2 * (i + 1), 100, "heavy", 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
-	}*/
+	}
 
 	// init fly monsters
-	/*for (int i = 0; i < 2; ++i) {
+	for (int i = 0; i < 2; ++i) {
 		this->monstersAtLevelN.push_back(new MonsterFly(100 * 2 * (i + 1), 100 * 2 * (i + 1), 100, "fly", 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
-	}*/
+	}
 
 
 }
@@ -104,13 +104,13 @@ GameState::~GameState()
 
 	delete this->player;
 
-	/*for (auto monster : this->monstersAtLevelN) {
+	for (auto& monster : this->monstersAtLevelN) {
 		delete monster;
 	}
 
-	this->monstersAtLevelN.clear();*/
+	this->monstersAtLevelN.clear();
 
-	delete this->monstersAtLevelN;
+	//delete this->monstersAtLevelN;
 }
 
 void GameState::updateInput(const float& dt)
@@ -137,11 +137,11 @@ void GameState::update(const float& dt)
 
 	this->player->update(dt);
 
-	/*for (auto monster : this->monstersAtLevelN) {
+	for (auto& monster : this->monstersAtLevelN) {
 		monster->update(dt);
-	}*/
+	}
 
-	this->monstersAtLevelN->update(dt);
+	//this->monstersAtLevelN->update(dt);
 
 }
 
@@ -155,12 +155,12 @@ void GameState::render(sf::RenderTarget* target)
 
 	this->player->render(target);
 
-	/*if (!this->monstersAtLevelN.empty()) {
-		for (auto monster : this->monstersAtLevelN) {	
+	if (!this->monstersAtLevelN.empty()) {
+		for (auto& monster : this->monstersAtLevelN) {	
 			monster->render(target);
 		}
-	}*/
+	}
 
-	this->monstersAtLevelN->render(target);
+	//this->monstersAtLevelN->render(target);
 	
 }
