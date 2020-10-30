@@ -23,7 +23,7 @@ public:
 
     virtual void update(const float& dt);
 
-    virtual void upgrade(int level) = 0;
-    virtual void attack() = 0;
+    //virtual void upgrade(int level) = 0;
+    //virtual void attack() = 0;
 };
 

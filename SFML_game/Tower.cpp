@@ -9,9 +9,11 @@ void Tower::initVariables(int damage, int attack_speed)
 
 void Tower::initTextures(sf::Texture& level_1, sf::Texture& level_2, sf::Texture& level_3)
 {
-	this->textureTowerLevelN[0] = level_1;
-	this->textureTowerLevelN[1] = level_2;
-	this->textureTowerLevelN[2] = level_3;
+	this->textureTowerLevelN.push_back(level_1);
+	this->textureTowerLevelN.push_back(level_2);
+	this->textureTowerLevelN.push_back(level_3);
+
+	
 }
 
 Tower::Tower(float x, float y,int damage, int attack_speed, sf::Texture& level_1, sf::Texture& level_2, sf::Texture& level_3)
