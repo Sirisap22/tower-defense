@@ -54,7 +54,7 @@ void GameState::initLevel()
 	
 	// init normal monsters
 	for (int i = 0; i < 1; ++i) {
-		this->monstersNormalAtLevelN.push_back(new MonsterNormal(this->window->getSize().x - 500, this->window->getSize().y - 500, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
+		this->monstersNormalAtLevelN.push_back(new MonsterNormal(this->window->getSize().x - 500, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
 	}
 
 	// init heavy monsters

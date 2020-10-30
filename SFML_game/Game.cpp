@@ -141,6 +141,7 @@ void Game::render()
 {
     this->window->clear();
 
+
     // Render items
     if (!this->states.empty())
     {
