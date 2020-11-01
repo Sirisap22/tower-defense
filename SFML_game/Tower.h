@@ -17,6 +17,7 @@ public:
     int damage;
     int attackSpeed;
     float radius;
+    sf::CircleShape radiusShape;
     Entity::EntityAttributes attribute;
     sf::Vector2f originPoint;
     std::vector<sf::Texture> textureTowerLevelN;
@@ -26,8 +27,12 @@ public:
     virtual ~Tower();
 
     virtual bool isAlreadyDetected(Monster* monster);
-    virtual void update(const float& dt);
+    virtual std::vector<Monster*>::iterator monsterIterator(Monster* monster);
+    virtual void attack();
 
+    virtual void render(sf::RenderTarget* target);
+    virtual void update(const float& dt);
+    
     //virtual void upgrade(int level) = 0;
     //virtual void attack() = 0;
 };

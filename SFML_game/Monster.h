@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 #include "Entity.h"
 class Monster :
     public Entity

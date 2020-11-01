@@ -4,6 +4,7 @@ TowerHeavy::TowerHeavy(float x, float y, Entity::EntityAttributes attribute, int
 	:Tower(x, y, attribute, damage, attack_speed, level_1, level_2, level_3)
 {
 	this->radius = 100.f;
+	
 }
 
 TowerHeavy::~TowerHeavy()

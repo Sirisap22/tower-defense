@@ -17,6 +17,7 @@ public:
 	enum class states { BTN_IDLE, BTN_HOVER, BTN_ACTIVE };
 	enum class TowerType { NORMAL, FLY, HEAVY, NONE };
 private:
+	
 	sf::Sprite shape;
 	states towerCreatorState;
 	TowerType towerTypeToCreator;

@@ -22,8 +22,10 @@ Tower::Tower(float x, float y, Entity::EntityAttributes attribute ,int damage, i
 	this->initVariables(attribute, damage, attack_speed);
 	this->initTextures(level_1, level_2, level_3);
 
+
 	this->setTexture(this->textureTowerLevelN[0]);
 
+	
 	this->originPoint = sf::Vector2f(x, y);
 	this->setPositions(x - this->sprite.getTexture()->getSize().x/2, y - this->sprite.getTexture()->getSize().y / 2);
 }
@@ -37,6 +39,31 @@ bool Tower::isAlreadyDetected(Monster* monster)
 	return (std::find(this->monstersInRadius.begin(), this->monstersInRadius.end(), monster) != this->monstersInRadius.end());
 }
 
+std::vector<Monster*>::iterator Tower::monsterIterator(Monster* monster)
+{
+	auto it = std::find(this->monstersInRadius.begin(), this->monstersInRadius.end(), monster);
+
+	return it;
+}
+
+void Tower::attack()
+{
+	// animation
+	// damage
+	if (!this->monstersInRadius.empty()) {
+		// create bullet
+	}
+}
+
+void Tower::render(sf::RenderTarget* target)
+{
+	target->draw(this->sprite);
+	target->draw(this->radiusShape);
+}
+
 void Tower::update(const float& dt)
 {
+
 }
+
+

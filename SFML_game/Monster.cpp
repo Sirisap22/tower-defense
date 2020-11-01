@@ -14,9 +14,11 @@ Monster::Monster(float x, float y, Entity::EntityAttributes attribute, int healt
 {
 	this->initVariables(attribute, health, walk_speed, damage, texture_sheet);
 
-	this->originPoint = sf::Vector2f(x , y);
-	this->setPositions(x - this->sprite.getTextureRect().width / 2, y - this->sprite.getTextureRect().height / 2);
-	this->sprite.setScale(-0.5f, 0.5f);
+	this->originPoint = sf::Vector2f(x, y);
+	//this->sprite.setScale(-0.5f, 0.5f);
+
+	this->setPositions(x, y);
+
 }
 
 Monster::~Monster()

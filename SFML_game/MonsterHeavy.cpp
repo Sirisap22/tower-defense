@@ -11,6 +11,8 @@ void MonsterHeavy::initComponents()
 MonsterHeavy::MonsterHeavy(float x, float y, Entity::EntityAttributes attribute, int health, float walk_speed, int damage, sf::Texture& texture_sheet)
     : Monster(x, y, attribute, health, walk_speed, damage, texture_sheet)
 {
+    //this->originPoint = sf::Vector2f(x, y);
+    //std::cout << "##################### " << this->originPoint.x << " " << this->originPoint.y << " " << this->sprite.getTextureRect().width;
     this->initComponents();
 }
 

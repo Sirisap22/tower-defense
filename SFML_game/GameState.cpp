@@ -100,7 +100,7 @@ void GameState::initLevel()
 
 	// init heavy monsters
 	for (int i = 0; i < 1; ++i) {
-		this->monstersAtLevelN.push_back(new MonsterHeavy(100 * 2 * (i+1) , 100 * 2 * (i + 1), Entity::EntityAttributes::HEAVY, 100, 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
+		this->monstersAtLevelN.push_back(new MonsterHeavy(100, 100, Entity::EntityAttributes::HEAVY, 100, 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
 	}
 
 	// init fly monsters
@@ -188,7 +188,10 @@ void GameState::checkAndCreateTower()
 
 bool GameState::isMonsterInTowerRadius(float towerRadius,float towerX, float towerY, float monsterX, float monsterY)
 {
-	return (towerX - monsterX) * (towerX - monsterX) - (towerY - monsterY) * (towerY - monsterY) < towerRadius * towerRadius;
+	std::cout << "towerX: " << towerX << " towerY: " << towerY << " monsterX: " << monsterX << " monsterY: " << monsterY << std::endl;
+	std::cout << (towerX - monsterX) * (towerX - monsterX) + (towerY - monsterY) * (towerY - monsterY) << " distance \n ";
+	std::cout << "radius " << towerRadius*towerRadius << std::endl;
+	return (towerX - monsterX) * (towerX - monsterX) + (towerY - monsterY) * (towerY - monsterY) < towerRadius * towerRadius;
 }
 
 void GameState::checkMonstersInTowersRadius()
@@ -203,6 +206,7 @@ void GameState::checkMonstersInTowersRadius()
 				tower->monstersInRadius.push_back(monster);
 				// delete later
 				std::cout << "Detected\n";
+				//tower->monstersInRadius.erase(tower->monstersInRadius.begin());
 			}
 		}
 	}
