@@ -62,13 +62,28 @@ void GameState::initTextures()
 		}
 	}
 	
+	// tower creator textures
+	for (int i = 0; i < 3; ++i) {
+		std::string creatorKey = "TOWER_CREATOR_" + towerCatUpper[i];
+		std::string creatorPath = "public/sprites/tower-creator/" + towerCat[i] + ".png";
+		if (!this->textures[creatorKey].loadFromFile(creatorPath))
+		{
+			throw "ERROR::GAME_STATE::COULD_NOT_LOAD_CREATOR_TEXTURE";
+		}
+	}
 	
-	
+}
+
+void GameState::initCreator()
+{
+	this->towerCreator["NORMAL"] = new TowerCreator(500.f, 825.f, 100.f, 250.f, this->textures["TOWER_CREATOR_NORMAL"]);
+	this->towerCreator["FLY"] = new TowerCreator(700.f, 825.f, 100.f, 250.f, this->textures["TOWER_CREATOR_FLY"]);
+	this->towerCreator["HEAVY"] = new TowerCreator(900.f, 825.f, 100.f, 250.f, this->textures["TOWER_CREATOR_HEAVY"]);
 }
 
 void GameState::initPlayer()
 {
-	this->player = new Player(0, 0, this->textures["PLAYER_SHEET"]);
+	this->player = new Player(0.f, 0.f, this->textures["PLAYER_SHEET"]);
 }
 
 void GameState::initLevel()
@@ -125,6 +140,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->bg.setTexture(&texture);
 
 	this->initPlayer();
+	this->initCreator();
 	this->initLevel();
 
 }
@@ -145,6 +161,12 @@ GameState::~GameState()
 		delete tower;
 	}
 	this->towersAtCurrentState.clear();
+
+	auto it = this->towerCreator.begin();
+	for (it = this->towerCreator.begin(); it != this->towerCreator.end(); ++it)
+	{
+		delete it->second;
+	}
 }
 
 void GameState::updateInput(const float& dt)
@@ -171,6 +193,12 @@ void GameState::update(const float& dt)
 
 	this->player->update(dt);
 
+	// tower creator
+	for (auto& it : this->towerCreator)
+	{
+		it.second->update(this->mousePosView);
+	}
+
 	for (auto& monster : this->monstersAtLevelN) {
 		monster->update(dt);
 	}
@@ -194,12 +222,20 @@ void GameState::render(sf::RenderTarget* target)
 
 	this->player->render(target);
 
+	// tower creator
+	for (auto& it : this->towerCreator)
+	{
+		it.second->render(target);
+	}
+
+	// monsters
 	if (!this->monstersAtLevelN.empty()) {
 		for (auto& monster : this->monstersAtLevelN) {	
 			monster->render(target);
 		}
 	}
 
+	// towers
 	//this->monstersAtLevelN->render(target);
 	if (!this->towersAtCurrentState.empty()) {
 		for (auto& tower : this->towersAtCurrentState) {

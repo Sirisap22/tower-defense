@@ -10,6 +10,7 @@
 #include "TowerNormal.h"
 #include "TowerFly.h"
 #include "TowerHeavy.h"
+#include "TowerCreator.h"
 
 class GameState :
     public State
@@ -20,12 +21,14 @@ private:
     std::vector<Tower*> towersAtCurrentState;
     sf::Texture texture;
     sf::RectangleShape bg;
+    std::map<std::string, TowerCreator*> towerCreator;
     int level;
 
 
     // Functions
     void initKeybinds();
     void initTextures();
+    void initCreator();
     void initPlayer();
     void initLevel();
     void incrementLevel();
