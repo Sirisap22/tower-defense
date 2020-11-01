@@ -15,6 +15,7 @@
 class GameState :
     public State
 {
+//enum TowerType { NORMAL = 0, FLY, HEAVY };
 private:
     Player* player;
     std::vector<Monster*> monstersAtLevelN;
@@ -23,6 +24,7 @@ private:
     sf::RectangleShape bg;
     std::map<std::string, TowerCreator*> towerCreator;
     int level;
+    TowerCreator::TowerType selectedTowerCreator;
 
 
     // Functions
@@ -39,6 +41,9 @@ public:
 
     // Functions
 
+    void checkAndCreateTower();
+    
+    void updateTowerCreator(const float& dt);
     void updateInput(const float& dt);
     void update(const float& dt);
     void render(sf::RenderTarget* target = NULL);

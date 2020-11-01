@@ -76,9 +76,10 @@ void GameState::initTextures()
 
 void GameState::initCreator()
 {
-	this->towerCreator["NORMAL"] = new TowerCreator(500.f, 825.f, 100.f, 250.f, this->textures["TOWER_CREATOR_NORMAL"]);
-	this->towerCreator["FLY"] = new TowerCreator(700.f, 825.f, 100.f, 250.f, this->textures["TOWER_CREATOR_FLY"]);
-	this->towerCreator["HEAVY"] = new TowerCreator(900.f, 825.f, 100.f, 250.f, this->textures["TOWER_CREATOR_HEAVY"]);
+	this->selectedTowerCreator = TowerCreator::TowerType::NONE;
+	this->towerCreator["NORMAL"] = new TowerCreator(500.f, 825.f, 100.f, 250.f, TowerCreator::TowerType::NORMAL, this->textures["TOWER_CREATOR_NORMAL"]);
+	this->towerCreator["FLY"] = new TowerCreator(700.f, 825.f, 100.f, 250.f, TowerCreator::TowerType::FLY, this->textures["TOWER_CREATOR_FLY"]);
+	this->towerCreator["HEAVY"] = new TowerCreator(900.f, 825.f, 100.f, 250.f, TowerCreator::TowerType::HEAVY, this->textures["TOWER_CREATOR_HEAVY"]);
 }
 
 void GameState::initPlayer()
@@ -107,13 +108,7 @@ void GameState::initLevel()
 		this->monstersAtLevelN.push_back(new MonsterFly(100 * 2 * (i + 1), 100 * 2 * (i + 1), 100, "fly", 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
 	}
 
-	// delete later
-	for (int i = 1; i < 2; ++i) {
-		this->towersAtCurrentState.push_back(new TowerNormal(100*i, 200*i, 10, 10, this->textures["TOWER_NORMAL_LEVEL_1"], this->textures["TOWER_NORMAL_LEVEL_2"], this->textures["TOWER_NORMAL_LEVEL_3"]));
-		this->towersAtCurrentState.push_back(new TowerHeavy(100 * 2 * i, 200 * 2 * i, 10, 10, this->textures["TOWER_HEAVY_LEVEL_1"], this->textures["TOWER_HEAVY_LEVEL_2"], this->textures["TOWER_HEAVY_LEVEL_3"]));
-		this->towersAtCurrentState.push_back(new TowerFly(100 * 3 * i, 200 * 3 * i, 10, 10, this->textures["TOWER_FLY_LEVEL_1"], this->textures["TOWER_FLY_LEVEL_2"], this->textures["TOWER_FLY_LEVEL_3"]));
-	}
-	//this->towersAtCurrentState.push_back(new TowerNormal(100, 200, 10, 10, this->textures["TOWER_NORMAL_LEVEL_1"], this->textures["TOWER_NORMAL_LEVEL_2"], this->textures["TOWER_NORMAL_LEVEL_3"]));
+	
 
 }
 
@@ -169,6 +164,62 @@ GameState::~GameState()
 	}
 }
 
+void GameState::checkAndCreateTower()
+{
+	if (this->selectedTowerCreator != TowerCreator::TowerType::NONE && this->mousePosView.y < 800 && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		switch (this->selectedTowerCreator) {
+		case TowerCreator::TowerType::NORMAL:
+			this->towersAtCurrentState.push_back(new TowerNormal(this->mousePosView.x, this->mousePosView.y, 10, 10, this->textures["TOWER_NORMAL_LEVEL_1"], this->textures["TOWER_NORMAL_LEVEL_2"], this->textures["TOWER_NORMAL_LEVEL_3"]));
+			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
+			break;
+		case TowerCreator::TowerType::FLY:
+			this->towersAtCurrentState.push_back(new TowerFly(this->mousePosView.x, this->mousePosView.y, 10, 10, this->textures["TOWER_FLY_LEVEL_1"], this->textures["TOWER_FLY_LEVEL_2"], this->textures["TOWER_FLY_LEVEL_3"]));
+			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
+			break;
+		case TowerCreator::TowerType::HEAVY:
+			this->towersAtCurrentState.push_back(new TowerHeavy(this->mousePosView.x, this->mousePosView.y, 10, 10, this->textures["TOWER_HEAVY_LEVEL_1"], this->textures["TOWER_HEAVY_LEVEL_2"], this->textures["TOWER_HEAVY_LEVEL_3"]));
+			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
+			break;
+		default:
+			std::cout << "NONE" << std::endl;
+		}
+	}
+}
+
+void GameState::updateTowerCreator(const float& dt)
+{
+	for (auto& towerCreator : this->towerCreator) {
+		if (towerCreator.second->isPressed()) {
+			// toggle selected item
+			if (this->selectedTowerCreator == towerCreator.second->selectedTowerType() && this->selectedTowerCreator != TowerCreator::TowerType::NONE) {
+				this->selectedTowerCreator = TowerCreator::TowerType::NONE;
+			}
+			else {
+				this->selectedTowerCreator = towerCreator.second->selectedTowerType();
+			}
+
+			// delete later 
+			switch(this->selectedTowerCreator) {
+				case TowerCreator::TowerType::NORMAL:
+					std::cout << "NORMAL" << std::endl;
+					break;
+				case TowerCreator::TowerType::FLY:
+					std::cout << "FLY" << std::endl;
+					break;
+				case TowerCreator::TowerType::HEAVY:
+					std::cout << "HEAVY" << std::endl;
+					break;
+				case TowerCreator::TowerType::NONE:
+					std::cout << "NONE" << std::endl;
+
+			}
+			
+		}
+	}
+
+	checkAndCreateTower();
+}
+
 void GameState::updateInput(const float& dt)
 {
 
@@ -196,8 +247,10 @@ void GameState::update(const float& dt)
 	// tower creator
 	for (auto& it : this->towerCreator)
 	{
-		it.second->update(this->mousePosView);
+		it.second->update(this->mousePosView, dt);
 	}
+
+	this->updateTowerCreator(dt);
 
 	for (auto& monster : this->monstersAtLevelN) {
 		monster->update(dt);

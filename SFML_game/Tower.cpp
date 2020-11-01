@@ -23,7 +23,7 @@ Tower::Tower(float x, float y,int damage, int attack_speed, sf::Texture& level_1
 
 	this->setTexture(this->textureTowerLevelN[0]);
 
-	this->setPositions(x, y);
+	this->setPositions(x - this->sprite.getTexture()->getSize().x/2, y - this->sprite.getTexture()->getSize().y / 2);
 }
 
 Tower::~Tower()

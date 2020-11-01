@@ -1,8 +1,9 @@
 #include "TowerCreator.h"
 
-TowerCreator::TowerCreator(float x, float y, float width, float height, sf::Texture& texture)
+TowerCreator::TowerCreator(float x, float y, float width, float height, TowerType tower_type, sf::Texture& texture)
 {
-	this->towerCreatorState = BTN_IDLE;
+	this->towerCreatorState = states::BTN_IDLE;
+	this->towerTypeToCreator = tower_type;
 	
 	//this->shape.setSc(sf::Vector2f(width, height));
 	this->shape.setPosition(sf::Vector2f(x, y));
@@ -15,19 +16,34 @@ TowerCreator::~TowerCreator()
 
 const bool TowerCreator::isPressed() const
 {
-	if (this->towerCreatorState == BTN_ACTIVE) {
+	if (this->towerCreatorState == states::BTN_ACTIVE) {
+		//std::cout << "TRUE\n";
 		return true;
 	}
 	return false;
 }
 
-void TowerCreator::update(const sf::Vector2f mousePos)
+const TowerCreator::TowerType TowerCreator::selectedTowerType() const
 {
+	return this->towerTypeToCreator;
+}
+
+void TowerCreator::update(const sf::Vector2f mousePos, const float& dt)
+{
+	
+	this->towerCreatorState = states::BTN_IDLE;
+
+	// make sure clock to not overflow
+	if (this->clock.getElapsedTime() > sf::seconds(1.f)) {
+		this->clock.restart();
+	}
+
 	if (this->shape.getGlobalBounds().contains(mousePos)) {
-		this->towerCreatorState = BTN_HOVER;
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			this->towerCreatorState = BTN_ACTIVE;
-			std::cout << "CLICKED" << std::endl;
+		this->towerCreatorState = states::BTN_HOVER;
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->clock.getElapsedTime() > sf::seconds(0.1) && !this->isPressed()) {
+			//std::cout << "ACTIVE\n";
+			this->clock.restart();
+			this->towerCreatorState = states::BTN_ACTIVE;
 		}
 	}
 }
