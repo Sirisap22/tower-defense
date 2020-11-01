@@ -26,7 +26,7 @@ Tower::Tower(float x, float y, Entity::EntityAttributes attribute ,int damage, i
 	this->setTexture(this->textureTowerLevelN[0]);
 
 	
-	this->originPoint = sf::Vector2f(x, y);
+	this->originPoint = sf::Vector2f(x - 10.f, y);
 	this->setPositions(x - this->sprite.getTexture()->getSize().x/2, y - this->sprite.getTexture()->getSize().y / 2);
 }
 
