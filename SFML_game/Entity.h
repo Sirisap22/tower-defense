@@ -16,6 +16,7 @@ protected:
 	AnimationComponent* animationComponent;
 public:
 	// Constructor/Destructor
+	enum class EntityAttributes {NORMAL, FLY, HEAVY};
 	Entity();
 	virtual ~Entity();
 

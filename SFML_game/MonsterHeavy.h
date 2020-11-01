@@ -6,7 +6,7 @@ class MonsterHeavy :
 private:
     void initComponents();
 public:
-    MonsterHeavy(float x, float y, int health, std::string skill, float walk_speed, int damage, sf::Texture& texture_sheet);
+    MonsterHeavy(float x, float y, Entity::EntityAttributes attribute, int health, float walk_speed, int damage, sf::Texture& texture_sheet);
     virtual ~MonsterHeavy();
 };
 

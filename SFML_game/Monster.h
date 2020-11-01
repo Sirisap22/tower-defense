@@ -4,17 +4,16 @@ class Monster :
     public Entity
 {
 protected:
-    int health, damage;
-    float walkSpeed;
-    sf::Texture textureSheet;
-
-    void initVariables(int health, std::string skill, float walk_speed, int damage, sf::Texture texture_sheet);
-   
+    void initVariables(Entity::EntityAttributes attribute, int health, float walk_speed, int damage, sf::Texture texture_sheet);
 
 public:
-    std::string skill;
+    int health, damage;
+    float walkSpeed;
+    Entity::EntityAttributes attribute;
+    sf::Vector2f originPoint;
+    sf::Texture textureSheet;
 
-    Monster(float x, float y, int health, std::string skill, float walk_speed, int damage, sf::Texture texture_sheet);
+    Monster(float x, float y, Entity::EntityAttributes attribute, int health, float walk_speed, int damage, sf::Texture texture_sheet);
     virtual ~Monster();
 
     // functions

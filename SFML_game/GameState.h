@@ -42,7 +42,11 @@ public:
     // Functions
 
     void checkAndCreateTower();
+    bool isMonsterInTowerRadius(float towerRadius, float towerX, float towerY, float monsterX, float monsterY);
+    void checkMonstersInTowersRadius();
+    void checkMonstersOutTowersRadius();
     
+    void updateTowersAndMonstersInteraction();
     void updateTowerCreator(const float& dt);
     void updateInput(const float& dt);
     void update(const float& dt);

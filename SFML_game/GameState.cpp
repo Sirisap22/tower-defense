@@ -94,18 +94,18 @@ void GameState::initLevel()
 	//this->monstersAtLevelN[0] = new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]);
 	
 	// init normal monsters
-	for (int i = 0; i < 1; ++i) {
-		this->monstersAtLevelN.push_back(new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
+	for (int i = 0; i < 2; ++i) {
+		this->monstersAtLevelN.push_back(new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, Entity::EntityAttributes::NORMAL, 100, 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
 	}
 
 	// init heavy monsters
 	for (int i = 0; i < 1; ++i) {
-		this->monstersAtLevelN.push_back(new MonsterHeavy(100 * 2 * (i+1) , 100 * 2 * (i + 1), 100, "heavy", 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
+		this->monstersAtLevelN.push_back(new MonsterHeavy(100 * 2 * (i+1) , 100 * 2 * (i + 1), Entity::EntityAttributes::HEAVY, 100, 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
 	}
 
 	// init fly monsters
 	for (int i = 0; i < 2; ++i) {
-		this->monstersAtLevelN.push_back(new MonsterFly(100 * 2 * (i + 1), 100 * 2 * (i + 1), 100, "fly", 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
+		this->monstersAtLevelN.push_back(new MonsterFly(100 * 2 * (i + 1), 100 * 2 * (i + 1), Entity::EntityAttributes::FLY, 100, 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
 	}
 
 	
@@ -169,21 +169,64 @@ void GameState::checkAndCreateTower()
 	if (this->selectedTowerCreator != TowerCreator::TowerType::NONE && this->mousePosView.y < 800 && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		switch (this->selectedTowerCreator) {
 		case TowerCreator::TowerType::NORMAL:
-			this->towersAtCurrentState.push_back(new TowerNormal(this->mousePosView.x, this->mousePosView.y, 10, 10, this->textures["TOWER_NORMAL_LEVEL_1"], this->textures["TOWER_NORMAL_LEVEL_2"], this->textures["TOWER_NORMAL_LEVEL_3"]));
+			this->towersAtCurrentState.push_back(new TowerNormal(this->mousePosView.x, this->mousePosView.y, Entity::EntityAttributes::NORMAL, 10, 10, this->textures["TOWER_NORMAL_LEVEL_1"], this->textures["TOWER_NORMAL_LEVEL_2"], this->textures["TOWER_NORMAL_LEVEL_3"]));
 			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 			break;
 		case TowerCreator::TowerType::FLY:
-			this->towersAtCurrentState.push_back(new TowerFly(this->mousePosView.x, this->mousePosView.y, 10, 10, this->textures["TOWER_FLY_LEVEL_1"], this->textures["TOWER_FLY_LEVEL_2"], this->textures["TOWER_FLY_LEVEL_3"]));
+			this->towersAtCurrentState.push_back(new TowerFly(this->mousePosView.x, this->mousePosView.y, Entity::EntityAttributes::FLY, 10, 10, this->textures["TOWER_FLY_LEVEL_1"], this->textures["TOWER_FLY_LEVEL_2"], this->textures["TOWER_FLY_LEVEL_3"]));
 			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 			break;
 		case TowerCreator::TowerType::HEAVY:
-			this->towersAtCurrentState.push_back(new TowerHeavy(this->mousePosView.x, this->mousePosView.y, 10, 10, this->textures["TOWER_HEAVY_LEVEL_1"], this->textures["TOWER_HEAVY_LEVEL_2"], this->textures["TOWER_HEAVY_LEVEL_3"]));
+			this->towersAtCurrentState.push_back(new TowerHeavy(this->mousePosView.x, this->mousePosView.y, Entity::EntityAttributes::HEAVY, 10, 10, this->textures["TOWER_HEAVY_LEVEL_1"], this->textures["TOWER_HEAVY_LEVEL_2"], this->textures["TOWER_HEAVY_LEVEL_3"]));
 			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 			break;
 		default:
 			std::cout << "NONE" << std::endl;
 		}
 	}
+}
+
+bool GameState::isMonsterInTowerRadius(float towerRadius,float towerX, float towerY, float monsterX, float monsterY)
+{
+	return (towerX - monsterX) * (towerX - monsterX) - (towerY - monsterY) * (towerY - monsterY) < towerRadius * towerRadius;
+}
+
+void GameState::checkMonstersInTowersRadius()
+{
+	for (auto& tower : this->towersAtCurrentState) {
+		for (auto& monster : this->monstersAtLevelN) {
+			if (
+				tower->attribute == monster->attribute && 
+				isMonsterInTowerRadius(tower->radius, tower->originPoint.x, tower->originPoint.y, monster->originPoint.x, monster->originPoint.y) &&
+				!tower->isAlreadyDetected(monster)
+				) {
+				tower->monstersInRadius.push_back(monster);
+				// delete later
+				std::cout << "Detected\n";
+			}
+		}
+	}
+}
+
+void GameState::checkMonstersOutTowersRadius()
+{
+	for (auto& tower : this->towersAtCurrentState) {
+		for (int i = 0; i < tower->monstersInRadius.size(); ++i) {
+			Monster* monster = tower->monstersInRadius[i];
+			if (!isMonsterInTowerRadius(tower->radius, tower->originPoint.x, tower->originPoint.y, monster->originPoint.x, monster->originPoint.y)) {
+				tower->monstersInRadius.erase(tower->monstersInRadius.begin() + i);
+			}
+		}
+	}
+}
+
+void GameState::updateTowersAndMonstersInteraction()
+{
+	if (!this->towersAtCurrentState.empty()) {
+		checkMonstersInTowersRadius();
+		checkMonstersOutTowersRadius();
+	}
+	
 }
 
 void GameState::updateTowerCreator(const float& dt)
@@ -262,6 +305,8 @@ void GameState::update(const float& dt)
 	for (auto& tower : this->towersAtCurrentState) {
 	tower->update(dt);
 	}
+
+	this->updateTowersAndMonstersInteraction();
 
 }
 

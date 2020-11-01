@@ -1,5 +1,6 @@
 #pragma once
-#include <queue>
+
+#include <algorithm>
 
 #include "Entity.h"
 #include "Monster.h"
@@ -7,20 +8,24 @@
 class Tower :
     public Entity
 {
-private:
-    int level;
-    int damage;
-    int attackSpeed;
-    std::vector<sf::Texture> textureTowerLevelN;
-    std::queue<Monster*> monstersInRadius;
-
-    void initVariables(int damage, int attack_speed);
+protected:
+    void initVariables(Entity::EntityAttributes attribute, int damage, int attack_speed);
     void initTextures(sf::Texture& level_1, sf::Texture& level_2, sf::Texture& level_3);
 
 public:
-    Tower(float x, float y,int damage, int attack_speed, sf::Texture& level_1, sf::Texture& level_2, sf::Texture& level_3);
+    int level;
+    int damage;
+    int attackSpeed;
+    float radius;
+    Entity::EntityAttributes attribute;
+    sf::Vector2f originPoint;
+    std::vector<sf::Texture> textureTowerLevelN;
+    std::vector<Monster*> monstersInRadius;
+
+    Tower(float x, float y, Entity::EntityAttributes attribute,int damage, int attack_speed, sf::Texture& level_1, sf::Texture& level_2, sf::Texture& level_3);
     virtual ~Tower();
 
+    virtual bool isAlreadyDetected(Monster* monster);
     virtual void update(const float& dt);
 
     //virtual void upgrade(int level) = 0;

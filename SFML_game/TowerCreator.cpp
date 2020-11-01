@@ -40,7 +40,7 @@ void TowerCreator::update(const sf::Vector2f mousePos, const float& dt)
 
 	if (this->shape.getGlobalBounds().contains(mousePos)) {
 		this->towerCreatorState = states::BTN_HOVER;
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->clock.getElapsedTime() > sf::seconds(0.1) && !this->isPressed()) {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->clock.getElapsedTime() > sf::seconds(0.1f) && !this->isPressed()) {
 			//std::cout << "ACTIVE\n";
 			this->clock.restart();
 			this->towerCreatorState = states::BTN_ACTIVE;

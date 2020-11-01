@@ -8,8 +8,8 @@ void MonsterHeavy::initComponents()
     this->animationComponent->addAnimation("WALK", 10.f, 0, 0, 9, 0, 445, 469);
 }
 
-MonsterHeavy::MonsterHeavy(float x, float y, int health, std::string skill, float walk_speed, int damage, sf::Texture& texture_sheet)
-    : Monster(x, y, health, skill, walk_speed, damage, texture_sheet)
+MonsterHeavy::MonsterHeavy(float x, float y, Entity::EntityAttributes attribute, int health, float walk_speed, int damage, sf::Texture& texture_sheet)
+    : Monster(x, y, attribute, health, walk_speed, damage, texture_sheet)
 {
     this->initComponents();
 }
