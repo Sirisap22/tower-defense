@@ -31,5 +31,5 @@ void Monster::update(const float& dt)
 
 	this->animationComponent->play("WALK", dt);
 
-	this->hitboxComponent->update(dt, this->sprite.getPosition());
+	//this->hitboxComponent->update(dt, this->sprite.getPosition());
 }

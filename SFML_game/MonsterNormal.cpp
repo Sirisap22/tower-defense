@@ -6,7 +6,7 @@ void MonsterNormal::initComponents()
 	this->createAnimationComponent(this->textureSheet);
 
 	// fix later
-	this->createHitboxComponent(this->originPoint.x, this->originPoint.y, 100, 100);
+	this->createHitboxComponent(this->originPoint.x + 100.f, this->originPoint.y + 100.f, 50);
 
 	this->animationComponent->addAnimation("WALK", 10.f, 0, 0, 9, 0, 377, 404);
 }

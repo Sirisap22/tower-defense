@@ -9,15 +9,15 @@
 class HitboxComponent
 {
 private:
-	sf::RectangleShape hitbox;
+	sf::CircleShape hitbox;
 	sf::Vector2f originPoint;
 public:
-	HitboxComponent(float x, float y, float width, float height);
+	HitboxComponent(float x, float y, float radius);
 	virtual ~HitboxComponent();
 
 	const sf::Vector2f& getOriginPoint() const;
-	const sf::RectangleShape& getHitbox() const;
+	const sf::CircleShape& getHitbox() const;
 
-	virtual void update(const float& dt, sf::Vector2f currentPosition);
+	virtual void update(const float& dt, sf::Vector2f currentPosition, float adjust_parameter);
 };
 

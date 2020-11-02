@@ -27,7 +27,7 @@ public:
 	void setTexture(sf::Texture& texture);
 	void createMovementComponent(const float maxVelocity, const float acceleration, const float deceleration);
 	void createAnimationComponent(sf::Texture& texture_sheet);
-	void createHitboxComponent(float x, float y, float width, float height);
+	void createHitboxComponent(float x, float y, float radius);
 
 	// Accessors
 	const sf::Vector2f getPosition() const;

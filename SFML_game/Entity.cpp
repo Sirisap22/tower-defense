@@ -34,9 +34,9 @@ void Entity::createAnimationComponent(sf::Texture& texture_sheet)
 	this->animationComponent = new AnimationComponent(this->sprite, texture_sheet);
 }
 
-void Entity::createHitboxComponent(float x, float y, float width, float height)
+void Entity::createHitboxComponent(float x, float y, float radius)
 {
-	this->hitboxComponent = new HitboxComponent(x, y, width, height);
+	this->hitboxComponent = new HitboxComponent(x, y, radius);
 }
 
 const sf::Vector2f Entity::getPosition() const

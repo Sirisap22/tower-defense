@@ -330,7 +330,7 @@ void GameState::updateMonstersMove(const float& dt)
 	/*for (auto& monster : this->monstersAtLevelN) {
 		monster->getHitboxComponent()->update(dt, this->monstersAtLevelN[0]->getPosition());
 	}*/
-	this->monstersAtLevelN[0]->getHitboxComponent()->update(dt, this->monstersAtLevelN[0]->getPosition());
+	this->monstersAtLevelN[0]->getHitboxComponent()->update(dt, this->monstersAtLevelN[0]->getPosition(), 100.f);
 
 }
 

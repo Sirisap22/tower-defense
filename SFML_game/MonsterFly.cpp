@@ -6,7 +6,7 @@ void MonsterFly::initComponents()
     this->createAnimationComponent(this->textureSheet);
 
     // fix later
-    this->createHitboxComponent(this->originPoint.x, this->originPoint.y, 100, 100);
+    this->createHitboxComponent(this->originPoint.x + 85.f, this->originPoint.y + 40.f, 60.f);
 
     this->animationComponent->addAnimation("WALK", 10.f, 0, 0, 9, 0, 344, 290);
 }
