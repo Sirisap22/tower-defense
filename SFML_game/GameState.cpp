@@ -97,7 +97,7 @@ void GameState::initFont()
 void GameState::initButtons()
 {
 	this->buttons["TOGGLE_HITBOX"] = new Button(
-		1600.f, 1000.f, 200.f, 50.f,
+		1600.f, 900.f, 200.f, 50.f,
 		&this->font, "Toggle Hitbox", 24,
 		sf::Color(250, 250, 250, 250), sf::Color(70, 70, 70, 200), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 0)
