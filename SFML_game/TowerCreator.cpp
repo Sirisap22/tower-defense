@@ -35,7 +35,7 @@ void TowerCreator::update(const sf::Vector2f mousePos, const float& dt)
 	this->towerCreatorState = states::BTN_IDLE;
 
 	// make sure clock to not overflow
-	if (this->clock.getElapsedTime() > sf::seconds(1.f)) {
+	if (this->clock.getElapsedTime() > sf::seconds(30.f)) {
 		this->clock.restart();
 	}
 

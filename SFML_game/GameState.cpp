@@ -112,7 +112,7 @@ void GameState::initLevel()
 	
 	// init normal monsters
 	for (int i = 0; i < 2; ++i) {
-		this->monstersAtLevelN.push_back(new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, Entity::EntityAttributes::NORMAL, 100, 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
+		this->monstersAtLevelN.push_back(new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 800, Entity::EntityAttributes::NORMAL, 100, 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
 	}
 
 	// init heavy monsters
@@ -155,6 +155,12 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initPlayer();
 	this->initCreator();
 	this->initButtons();
+
+	//delete later
+	this->mon_walk = false;
+
+
+
 	this->initLevel();
 
 }
@@ -213,7 +219,22 @@ void GameState::checkAndCreateTower()
 
 bool GameState::isMonsterInTowerRadius(Tower* tower, Monster* monster)
 {
-	return tower->radiusShape.getGlobalBounds().intersects(monster->getHitboxComponent()->getHitbox().getGlobalBounds());
+	sf::Vector2f towerPosition = tower->radiusShape.getPosition();
+	sf::Vector2f monsterPosition = monster->getHitboxComponent()->getHitbox().getPosition();
+	sf::FloatRect towerRadiusShape = tower->radiusShape.getGlobalBounds();
+	sf::FloatRect monsterHitboxShape = monster->getHitboxComponent()->getHitbox().getGlobalBounds();
+
+	float dx = (towerPosition.x + (towerRadiusShape.width / 2)) - (monsterPosition.x + (monsterHitboxShape.width / 2));
+	float dy = (towerPosition.y + (towerRadiusShape.height / 2)) - (monsterPosition.y + (monsterHitboxShape.height / 2));
+	float distance = std::sqrt((dx * dx) + (dy * dy));
+
+	if (distance <= (towerRadiusShape.width / 2) + (monsterHitboxShape.width / 2))
+	{
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 void GameState::checkMonstersInTowersRadius()
@@ -226,6 +247,8 @@ void GameState::checkMonstersInTowersRadius()
 				isMonsterInTowerRadius(tower, monster) &&
 				!tower->isAlreadyDetected(monster)
 				) {
+				//std::cout << tower->radiusShape.getGlobalBounds(). << std::endl;
+				//std::cout << tower->radiusShape.getGlobalBounds().height << std::endl;
 				tower->monstersInRadius.push_back(monster);
 				// delete later
 				std::cout << "Detected In\n";
@@ -293,11 +316,15 @@ void GameState::updateTowerCreator(const float& dt)
 
 void GameState::updateMonstersMove(const float& dt)
 {
-	if (this->monstersAtLevelN[0]->getHitboxComponent()->getHitbox().getPosition().x > (this->window->getSize().x)) {
-		this->monstersAtLevelN[0]->move(-1.f, 0.f, dt);
+	if (this->monstersAtLevelN[0]->getHitboxComponent()->getHitbox().getPosition().x < 1500 && !mon_walk) {
+		this->monstersAtLevelN[0]->move(1.f, 0.f, dt);
 	}
 	else {
-		this->monstersAtLevelN[0]->move(1.f, 0.f, dt);
+		this->mon_walk = true;
+		this->monstersAtLevelN[0]->move(-1.f, 0.f, dt);
+		if (this->monstersAtLevelN[0]->getHitboxComponent()->getHitbox().getPosition().x < 100) {
+			this->mon_walk = false;
+		}
 	}
 
 	/*for (auto& monster : this->monstersAtLevelN) {
@@ -364,11 +391,44 @@ void GameState::update(const float& dt)
 
 	// delete later
 	for (auto& tower : this->towersAtCurrentState) {
-	tower->update(dt);
+		tower->update(dt);
 	}
 
 	this->updateTowersAndMonstersInteraction();
 
+}
+
+void GameState::renderTowerCreators(sf::RenderTarget* target)
+{
+	for (auto& it : this->towerCreator)
+	{
+		it.second->render(target);
+	}
+}
+
+void GameState::renderTowers(sf::RenderTarget* target)
+{
+	//this->monstersAtLevelN->render(target);
+	if (!this->towersAtCurrentState.empty()) {
+		for (auto& tower : this->towersAtCurrentState) {
+			tower->render(target);
+			if (tower->radius != 0.f && this->toggleHitbox) {
+				target->draw(tower->radiusShape);
+			}
+		}
+	}
+}
+
+void GameState::renderMonsters(sf::RenderTarget* target)
+{
+	if (!this->monstersAtLevelN.empty()) {
+		for (auto& monster : this->monstersAtLevelN) {
+			monster->render(target);
+			if (monster->getHitboxComponent() != nullptr && this->toggleHitbox) {
+				target->draw(monster->getHitboxComponent()->getHitbox());
+			}
+		}
+	}
 }
 
 void GameState::renderButtons(sf::RenderTarget* target)
@@ -390,33 +450,14 @@ void GameState::render(sf::RenderTarget* target)
 
 	this->player->render(target);
 
-	// tower creator
-	for (auto& it : this->towerCreator)
-	{
-		it.second->render(target);
-	}
+	this->renderTowerCreators(target);
 
 	this->renderButtons(target);
 
-	// monsters
-	if (!this->monstersAtLevelN.empty()) {
-		for (auto& monster : this->monstersAtLevelN) {	
-			monster->render(target);
-			if (monster->getHitboxComponent() != nullptr && this->toggleHitbox) {
-				target->draw(monster->getHitboxComponent()->getHitbox());
-			}
-		}
-	}
+	this->renderTowers(target);
 
-	// towers
-	//this->monstersAtLevelN->render(target);
-	if (!this->towersAtCurrentState.empty()) {
-		for (auto& tower : this->towersAtCurrentState) {
-			tower->render(target);
-			if (tower->radius != 0.f && this->toggleHitbox) {
-				target->draw(tower->radiusShape);
-			}
-		}
-	}
+	this->renderMonsters(target);
+
+	
 	
 }

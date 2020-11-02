@@ -30,6 +30,8 @@ private:
     bool toggleHitbox;
     int level;
 
+    // delete later 
+    bool mon_walk;
 
     // Functions
     void initKeybinds();
@@ -59,6 +61,9 @@ public:
     void updateButtons();
     void update(const float& dt);
 
+    void renderTowerCreators(sf::RenderTarget* target);
+    void renderTowers(sf::RenderTarget* target);
+    void renderMonsters(sf::RenderTarget* target);
     void renderButtons(sf::RenderTarget* target);
     void render(sf::RenderTarget* target = NULL);
 };
