@@ -30,4 +30,6 @@ void Monster::update(const float& dt)
 	this->movementComponent->update(dt);
 
 	this->animationComponent->play("WALK", dt);
+
+	this->hitboxComponent->update(dt, this->sprite.getPosition());
 }

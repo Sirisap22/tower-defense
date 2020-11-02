@@ -18,6 +18,7 @@ public:
     int attackSpeed;
     float radius;
     sf::CircleShape radiusShape;
+
     Entity::EntityAttributes attribute;
     sf::Vector2f originPoint;
     std::vector<sf::Texture> textureTowerLevelN;

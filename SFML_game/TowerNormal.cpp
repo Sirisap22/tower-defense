@@ -6,10 +6,7 @@ TowerNormal::TowerNormal(float x, float y, Entity::EntityAttributes attribute, i
 	this->radius = 300.f;
 
 	this->radiusShape.setRadius(this->radius);
-	this->radiusShape.setOutlineColor(sf::Color::Green);
-	this->radiusShape.setOutlineThickness(1.f);
-	this->radiusShape.setFillColor(sf::Color::Transparent);
-	this->radiusShape.setPosition(x - this->radius - 10.f, y - this->radius);
+	this->radiusShape.setPosition(x - this->radius - 10.f, y - this->radius - 30.f);
 }
 
 TowerNormal::~TowerNormal()

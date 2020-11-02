@@ -4,6 +4,9 @@ TowerFly::TowerFly(float x, float y, Entity::EntityAttributes attribute, int dam
 	:Tower(x, y, attribute, damage, attack_speed, level_1, level_2, level_3)
 {
 	this->radius = 100.f;
+
+	this->radiusShape.setRadius(this->radius);
+	this->radiusShape.setPosition(x - this->radius - 10.f, y - this->radius);
 }
 
 TowerFly::~TowerFly()

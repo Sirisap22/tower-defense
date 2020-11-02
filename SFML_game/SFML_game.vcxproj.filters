@@ -90,6 +90,9 @@
     <ClCompile Include="TowerCreator.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="HitboxComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameState.h">
@@ -145,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="TowerCreator.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="HitboxComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

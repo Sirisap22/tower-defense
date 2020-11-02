@@ -11,6 +11,7 @@
 #include "TowerFly.h"
 #include "TowerHeavy.h"
 #include "TowerCreator.h"
+#include "Button.h"
 
 class GameState :
     public State
@@ -23,8 +24,11 @@ private:
     sf::Texture texture;
     sf::RectangleShape bg;
     std::map<std::string, TowerCreator*> towerCreator;
-    int level;
     TowerCreator::TowerType selectedTowerCreator;
+    std::map<std::string, Button*> buttons;
+    sf::Font font;
+    bool toggleHitbox;
+    int level;
 
 
     // Functions
@@ -32,6 +36,8 @@ private:
     void initTextures();
     void initCreator();
     void initPlayer();
+    void initFont();
+    void initButtons();
     void initLevel();
     void incrementLevel();
     void startLevel();
@@ -42,14 +48,18 @@ public:
     // Functions
 
     void checkAndCreateTower();
-    bool isMonsterInTowerRadius(float towerRadius, float towerX, float towerY, float monsterX, float monsterY);
+    bool isMonsterInTowerRadius(Tower* tower, Monster* monster);
     void checkMonstersInTowersRadius();
     void checkMonstersOutTowersRadius();
     
     void updateTowersAndMonstersInteraction();
     void updateTowerCreator(const float& dt);
+    void updateMonstersMove(const float& dt);
     void updateInput(const float& dt);
+    void updateButtons();
     void update(const float& dt);
+
+    void renderButtons(sf::RenderTarget* target);
     void render(sf::RenderTarget* target = NULL);
 };
 

@@ -87,10 +87,27 @@ void GameState::initPlayer()
 	this->player = new Player(0.f, 0.f, this->textures["PLAYER_SHEET"]);
 }
 
+void GameState::initFont()
+{
+	if (!this->font.loadFromFile("Fonts/Play-Regular.ttf")) {
+		throw("ERROR::GAMESTATE::COULD NOT LOAD FONT");
+	}
+}
+
+void GameState::initButtons()
+{
+	this->buttons["TOGGLE_HITBOX"] = new Button(
+		1600.f, 1000.f, 200.f, 50.f,
+		&this->font, "Toggle Hitbox", 24,
+		sf::Color(250, 250, 250, 250), sf::Color(70, 70, 70, 200), sf::Color(20, 20, 20, 50),
+		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 0)
+	);
+}
+
 void GameState::initLevel()
 {
 	this->level = 1;
-
+	this->toggleHitbox = false;
 	//this->monstersAtLevelN[0] = new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]);
 	
 	// init normal monsters
@@ -134,8 +151,10 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->bg.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
 	this->bg.setTexture(&texture);
 
+	this->initFont();
 	this->initPlayer();
 	this->initCreator();
+	this->initButtons();
 	this->initLevel();
 
 }
@@ -162,6 +181,12 @@ GameState::~GameState()
 	{
 		delete it->second;
 	}
+
+	auto it2 = this->buttons.begin();
+	for (it2 = this->buttons.begin(); it2 != this->buttons.end(); ++it2)
+	{
+		delete it2->second;
+	}
 }
 
 void GameState::checkAndCreateTower()
@@ -186,26 +211,24 @@ void GameState::checkAndCreateTower()
 	}
 }
 
-bool GameState::isMonsterInTowerRadius(float towerRadius,float towerX, float towerY, float monsterX, float monsterY)
+bool GameState::isMonsterInTowerRadius(Tower* tower, Monster* monster)
 {
-	std::cout << "towerX: " << towerX << " towerY: " << towerY << " monsterX: " << monsterX << " monsterY: " << monsterY << std::endl;
-	std::cout << (towerX - monsterX) * (towerX - monsterX) + (towerY - monsterY) * (towerY - monsterY) << " distance \n ";
-	std::cout << "radius " << towerRadius*towerRadius << std::endl;
-	return (towerX - monsterX) * (towerX - monsterX) + (towerY - monsterY) * (towerY - monsterY) < towerRadius * towerRadius;
+	return tower->radiusShape.getGlobalBounds().intersects(monster->getHitboxComponent()->getHitbox().getGlobalBounds());
 }
 
 void GameState::checkMonstersInTowersRadius()
 {
 	for (auto& tower : this->towersAtCurrentState) {
 		for (auto& monster : this->monstersAtLevelN) {
+			
 			if (
 				tower->attribute == monster->attribute && 
-				isMonsterInTowerRadius(tower->radius, tower->originPoint.x, tower->originPoint.y, monster->originPoint.x, monster->originPoint.y) &&
+				isMonsterInTowerRadius(tower, monster) &&
 				!tower->isAlreadyDetected(monster)
 				) {
 				tower->monstersInRadius.push_back(monster);
 				// delete later
-				std::cout << "Detected\n";
+				std::cout << "Detected In\n";
 				//tower->monstersInRadius.erase(tower->monstersInRadius.begin());
 			}
 		}
@@ -217,7 +240,8 @@ void GameState::checkMonstersOutTowersRadius()
 	for (auto& tower : this->towersAtCurrentState) {
 		for (int i = 0; i < tower->monstersInRadius.size(); ++i) {
 			Monster* monster = tower->monstersInRadius[i];
-			if (!isMonsterInTowerRadius(tower->radius, tower->originPoint.x, tower->originPoint.y, monster->originPoint.x, monster->originPoint.y)) {
+			if (!isMonsterInTowerRadius(tower, monster)) {
+				std::cout << "Detected Out\n";
 				tower->monstersInRadius.erase(tower->monstersInRadius.begin() + i);
 			}
 		}
@@ -227,8 +251,8 @@ void GameState::checkMonstersOutTowersRadius()
 void GameState::updateTowersAndMonstersInteraction()
 {
 	if (!this->towersAtCurrentState.empty()) {
-		checkMonstersInTowersRadius();
-		checkMonstersOutTowersRadius();
+		this->checkMonstersInTowersRadius();
+		this->checkMonstersOutTowersRadius();
 	}
 	
 }
@@ -264,7 +288,23 @@ void GameState::updateTowerCreator(const float& dt)
 		}
 	}
 
-	checkAndCreateTower();
+	this->checkAndCreateTower();
+}
+
+void GameState::updateMonstersMove(const float& dt)
+{
+	if (this->monstersAtLevelN[0]->getHitboxComponent()->getHitbox().getPosition().x > (this->window->getSize().x)) {
+		this->monstersAtLevelN[0]->move(-1.f, 0.f, dt);
+	}
+	else {
+		this->monstersAtLevelN[0]->move(1.f, 0.f, dt);
+	}
+
+	/*for (auto& monster : this->monstersAtLevelN) {
+		monster->getHitboxComponent()->update(dt, this->monstersAtLevelN[0]->getPosition());
+	}*/
+	this->monstersAtLevelN[0]->getHitboxComponent()->update(dt, this->monstersAtLevelN[0]->getPosition());
+
 }
 
 void GameState::updateInput(const float& dt)
@@ -284,10 +324,25 @@ void GameState::updateInput(const float& dt)
 		this->endState();
 }
 
+void GameState::updateButtons()
+{
+	for (auto& it : this->buttons)
+	{
+		it.second->update(this->mousePosView);
+	}
+
+	// New game
+	if (this->buttons["TOGGLE_HITBOX"]->isPressed())
+	{
+		this->toggleHitbox = !this->toggleHitbox;
+	}
+}
+
 void GameState::update(const float& dt)
 {
 	this->updateMousePositions();
 	this->updateInput(dt);
+	this->updateMonstersMove(dt);
 
 	this->player->update(dt);
 
@@ -303,6 +358,8 @@ void GameState::update(const float& dt)
 		monster->update(dt);
 	}
 
+	this->updateButtons();
+
 	//this->monstersAtLevelN->update(dt);
 
 	// delete later
@@ -312,6 +369,15 @@ void GameState::update(const float& dt)
 
 	this->updateTowersAndMonstersInteraction();
 
+}
+
+void GameState::renderButtons(sf::RenderTarget* target)
+{
+	for (auto& it : this->buttons)
+	{
+		//std::cout << it.second->isPressed() << "\n";
+		it.second->render(target);
+	}
 }
 
 void GameState::render(sf::RenderTarget* target)
@@ -330,10 +396,15 @@ void GameState::render(sf::RenderTarget* target)
 		it.second->render(target);
 	}
 
+	this->renderButtons(target);
+
 	// monsters
 	if (!this->monstersAtLevelN.empty()) {
 		for (auto& monster : this->monstersAtLevelN) {	
 			monster->render(target);
+			if (monster->getHitboxComponent() != nullptr && this->toggleHitbox) {
+				target->draw(monster->getHitboxComponent()->getHitbox());
+			}
 		}
 	}
 
@@ -342,6 +413,9 @@ void GameState::render(sf::RenderTarget* target)
 	if (!this->towersAtCurrentState.empty()) {
 		for (auto& tower : this->towersAtCurrentState) {
 			tower->render(target);
+			if (tower->radius != 0.f && this->toggleHitbox) {
+				target->draw(tower->radiusShape);
+			}
 		}
 	}
 	

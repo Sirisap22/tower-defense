@@ -57,14 +57,20 @@ void Button::update(const sf::Vector2f mousePos)
 	// Idle
 	this->buttonState = BTN_IDLE;
 
+	// make sure clock to not overflow
+	if (this->clock.getElapsedTime() > sf::seconds(1.f)) {
+		this->clock.restart();
+	}
+
 	// Hover
 	if (this->shape.getGlobalBounds().contains(mousePos))
 	{
 		this->buttonState = BTN_HOVER;
 
 		// Pressed
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->clock.getElapsedTime() > sf::seconds(0.2f) && !this->isPressed())
 		{
+			this->clock.restart();
 			this->buttonState = BTN_ACTIVE;
 		}
 	}

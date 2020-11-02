@@ -31,7 +31,7 @@ private:
 	sf::Color hoverColor;
 	sf::Color activeColor;
 
-
+	sf::Clock clock;
 public:
 	Button(float x, float y, float width, float height,
 		sf::Font* font ,std::string text,unsigned character_size,

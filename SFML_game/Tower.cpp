@@ -6,6 +6,10 @@ void Tower::initVariables(Entity::EntityAttributes attribute, int damage, int at
 	this->damage = damage;
 	this->attackSpeed = attack_speed;
 	this->attribute = attribute;
+	this->radius = 0.f;
+	this->radiusShape.setOutlineColor(sf::Color::Green);
+	this->radiusShape.setOutlineThickness(1.f);
+	this->radiusShape.setFillColor(sf::Color::Transparent);
 }
 
 void Tower::initTextures(sf::Texture& level_1, sf::Texture& level_2, sf::Texture& level_3)
@@ -27,7 +31,7 @@ Tower::Tower(float x, float y, Entity::EntityAttributes attribute ,int damage, i
 
 	
 	this->originPoint = sf::Vector2f(x - 10.f, y);
-	this->setPositions(x - this->sprite.getTexture()->getSize().x/2, y - this->sprite.getTexture()->getSize().y / 2);
+	this->setPositions(x - this->sprite.getTexture()->getSize().x/2, y - this->sprite.getTexture()->getSize().y + 30.f);
 }
 
 Tower::~Tower()
@@ -58,7 +62,6 @@ void Tower::attack()
 void Tower::render(sf::RenderTarget* target)
 {
 	target->draw(this->sprite);
-	target->draw(this->radiusShape);
 }
 
 void Tower::update(const float& dt)
