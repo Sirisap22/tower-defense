@@ -25,11 +25,12 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
             window.clear();
 
+        // mapPixelToCoords คือแปลงค่าจาก range ทั้งจอ monitor เป็นหน้าต่าง window
         mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             
-            circle.setPosition(mousePosition.x - circle.getRadius(), mousePosition.y - circle.getRadius() );
+            circle.setPosition(mousePosition.x - circle.getRadius(), mousePosition.y - circle.getRadius());
 
             window.draw(circle);
         }
