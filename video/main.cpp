@@ -2,7 +2,7 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(500, 500), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(500, 500), "Draw with the click!");
 
     sf::CircleShape circle(50.f);
     circle.setFillColor(sf::Color::Green);
