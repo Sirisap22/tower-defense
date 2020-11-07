@@ -22,12 +22,11 @@ int main()
                 window.close();
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
-            window.clear();
-
+        // update ตำแหน่งของ Mouse
         // mapPixelToCoords คือแปลงค่าจาก range ทั้งจอ monitor เป็นหน้าต่าง window
         mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
+        // ถ้า Mouse ซ้ายถูกคลิก draw circle
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             
             circle.setPosition(mousePosition.x - circle.getRadius(), mousePosition.y - circle.getRadius());
@@ -35,6 +34,7 @@ int main()
             window.draw(circle);
         }
 
+        // ถ้า Mouse ขวาถูกคลิก draw rectangle
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 
             rectangle.setPosition(mousePosition.x - rectangle.getSize().x / 2, mousePosition.y - rectangle.getSize().y / 2);
@@ -42,6 +42,11 @@ int main()
             window.draw(rectangle);
         }
 
+        // กด c เพื่อเคลียร์หน้าจอ
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+            window.clear();
+
+        // แสดงผลภาพ
         window.display();
         
     }
