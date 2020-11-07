@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SFML_game", "SFML_game\SFML_game.vcxproj", "{5EAD2D8B-39AB-4708-BF40-7B9398C653A9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "video", "video\video.vcxproj", "{4A906FA5-8433-4224-9B4C-35135B27B258}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{5EAD2D8B-39AB-4708-BF40-7B9398C653A9}.Release|x64.Build.0 = Release|x64
 		{5EAD2D8B-39AB-4708-BF40-7B9398C653A9}.Release|x86.ActiveCfg = Release|Win32
 		{5EAD2D8B-39AB-4708-BF40-7B9398C653A9}.Release|x86.Build.0 = Release|Win32
+		{4A906FA5-8433-4224-9B4C-35135B27B258}.Debug|x64.ActiveCfg = Debug|x64
+		{4A906FA5-8433-4224-9B4C-35135B27B258}.Debug|x64.Build.0 = Debug|x64
+		{4A906FA5-8433-4224-9B4C-35135B27B258}.Debug|x86.ActiveCfg = Debug|Win32
+		{4A906FA5-8433-4224-9B4C-35135B27B258}.Debug|x86.Build.0 = Debug|Win32
+		{4A906FA5-8433-4224-9B4C-35135B27B258}.Release|x64.ActiveCfg = Release|x64
+		{4A906FA5-8433-4224-9B4C-35135B27B258}.Release|x64.Build.0 = Release|x64
+		{4A906FA5-8433-4224-9B4C-35135B27B258}.Release|x86.ActiveCfg = Release|Win32
+		{4A906FA5-8433-4224-9B4C-35135B27B258}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,56 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="AnimationComponent.cpp" />
-    <ClCompile Include="Bullet.cpp" />
-    <ClCompile Include="Button.cpp" />
-    <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameState.cpp" />
-    <ClCompile Include="HitboxComponent.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="MainMenuState.cpp" />
-    <ClCompile Include="Monster.cpp" />
-    <ClCompile Include="MonsterFly.cpp" />
-    <ClCompile Include="MonsterHeavy.cpp" />
-    <ClCompile Include="MonsterNormal.cpp" />
-    <ClCompile Include="MovementComponent.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="State.cpp" />
-    <ClCompile Include="Tower.cpp" />
-    <ClCompile Include="TowerCreator.cpp" />
-    <ClCompile Include="TowerFly.cpp" />
-    <ClCompile Include="TowerHeavy.cpp" />
-    <ClCompile Include="TowerNormal.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="AnimationComponent.h" />
-    <ClInclude Include="Bullet.h" />
-    <ClInclude Include="Button.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="GameState.h" />
-    <ClInclude Include="HitboxComponent.h" />
-    <ClInclude Include="MainMenuState.h" />
-    <ClInclude Include="Monster.h" />
-    <ClInclude Include="MonsterFly.h" />
-    <ClInclude Include="MonsterHeavy.h" />
-    <ClInclude Include="MonsterNormal.h" />
-    <ClInclude Include="MovementComponent.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="State.h" />
-    <ClInclude Include="Tower.h" />
-    <ClInclude Include="TowerCreator.h" />
-    <ClInclude Include="TowerFly.h" />
-    <ClInclude Include="TowerHeavy.h" />
-    <ClInclude Include="TowerNormal.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{5ead2d8b-39ab-4708-bf40-7b9398c653a9}</ProjectGuid>
-    <RootNamespace>SFMLgame</RootNamespace>
+    <ProjectGuid>{4a906fa5-8433-4224-9b4c-35135b27b258}</ProjectGuid>
+    <RootNamespace>video</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -161,13 +116,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\SFML-2.5.1\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-main-d.lib;sfml-system-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-audio-d.lib;sfml-network-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -178,17 +133,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-main-d.lib;sfml-system-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-audio-d.lib;sfml-network-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
