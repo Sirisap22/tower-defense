@@ -2,9 +2,7 @@
 
 #include <algorithm>
 
-#include "Entity.h"
 #include "Monster.h"
-#include "Bullet.h"
 
 class Tower :
     public Entity
@@ -20,6 +18,7 @@ public:
     int attackSpeed;
     float radius;
     sf::CircleShape radiusShape;
+    sf::Clock time;
 
     Entity::EntityAttributes attribute;
     sf::Vector2f originPoint;
@@ -31,6 +30,7 @@ public:
     virtual ~Tower();
 
     virtual bool isAlreadyDetected(Monster* monster);
+    virtual bool canAttack();
     virtual std::vector<Monster*>::iterator monsterIterator(Monster* monster);
     virtual void render(sf::RenderTarget* target);
     virtual void update(const float& dt);

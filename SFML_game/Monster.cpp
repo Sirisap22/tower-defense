@@ -33,3 +33,9 @@ void Monster::update(const float& dt)
 
 	//this->hitboxComponent->update(dt, this->sprite.getPosition());
 }
+
+void Monster::decreaseHealth(int damage)
+{
+	this->health -= damage;
+	std::cout << this->health << std::endl;
+}

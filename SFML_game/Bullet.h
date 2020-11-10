@@ -1,14 +1,15 @@
 #pragma once
 
 #include "Monster.h"
-#include "Entity.h"
-#include "cmath"
+#include "Tower.h"
+#include <cmath>
 
 class Bullet :
     public Entity
 {
 private:
     int level;
+    Tower* tower;
     Monster* target;
     Entity::EntityAttributes attribute;
     std::vector<sf::Texture> textureBulletLevelN;
@@ -18,8 +19,11 @@ private:
     void initComponents();
     void initTextures(std::map<std::string, sf::Texture> textures);
 public:
-    Bullet(float x, float y, Entity::EntityAttributes attribute, int level, Monster* target, std::map<std::string, sf::Texture> textures);
+    Bullet(float x, float y, Entity::EntityAttributes attribute, int level, Tower* tower, Monster* target, std::map<std::string, sf::Texture> textures);
     virtual ~Bullet();
+
+    Tower* getTower() const;
+    Monster* getTarget() const;
 
     virtual void setTextureByLevel();
 

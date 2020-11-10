@@ -11,6 +11,7 @@
 #include "TowerFly.h"
 #include "TowerHeavy.h"
 #include "TowerCreator.h"
+#include "Bullet.h"
 #include "Button.h"
 
 class GameState :
@@ -54,10 +55,21 @@ public:
     bool isMonsterInTowerRadius(Tower* tower, Monster* monster);
     void checkMonstersInTowersRadius();
     void checkMonstersOutTowersRadius();
+    void attackMonstersInRadius();
+    bool isBulletMonsterCollision(Bullet* bullet, Monster* monster);
+    void bulletsMonstersCollision();
+    void shootBullets(const float& dt);
+    bool isMonsterDied(Monster* monster);
+    void deleteMonstersThatDied();
+    // check monster died -> delete bullets that have this monster as target
+    //
     
     void updateTowersAndMonstersInteraction();
+    void updateBullets(const float& dt);
     void updateTowerCreator(const float& dt);
+    void updateTowers(const float& dt);
     void updateMonstersMove(const float& dt);
+    void updateMonsters(const float& dt);
     void updateInput(const float& dt);
     void updateButtons();
     void update(const float& dt);
@@ -65,6 +77,7 @@ public:
     void renderTowerCreators(sf::RenderTarget* target);
     void renderTowers(sf::RenderTarget* target);
     void renderMonsters(sf::RenderTarget* target);
+    void renderBullets(sf::RenderTarget* target);
     void renderButtons(sf::RenderTarget* target);
     void render(sf::RenderTarget* target = NULL);
 };

@@ -19,6 +19,7 @@ public:
 
     // functions
     virtual void update(const float& dt);
+    virtual void decreaseHealth(int damage);
     virtual void initComponents() = 0;
 };
 

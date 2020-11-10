@@ -58,6 +58,17 @@ bool Tower::isAlreadyDetected(Monster* monster)
 	return (std::find(this->monstersInRadius.begin(), this->monstersInRadius.end(), monster) != this->monstersInRadius.end());
 }
 
+bool Tower::canAttack()
+{
+	int delay = 1500 - attackSpeed;
+	if (this->time.getElapsedTime() > sf::milliseconds(delay)) {
+		this->time.restart();
+		return true;
+	}
+
+	return false;
+}
+
 std::vector<Monster*>::iterator Tower::monsterIterator(Monster* monster)
 {
 	auto it = std::find(this->monstersInRadius.begin(), this->monstersInRadius.end(), monster);
