@@ -1,5 +1,4 @@
 #include "Tower.h"
-
 void Tower::initVariables(Entity::EntityAttributes attribute, int damage, int attack_speed)
 {
 	this->level = 1;
@@ -12,19 +11,35 @@ void Tower::initVariables(Entity::EntityAttributes attribute, int damage, int at
 	this->radiusShape.setFillColor(sf::Color::Transparent);
 }
 
-void Tower::initTextures(sf::Texture& level_1, sf::Texture& level_2, sf::Texture& level_3)
+void Tower::initTextures(std::map<std::string, sf::Texture> textures)
 {
-	this->textureTowerLevelN.push_back(level_1);
-	this->textureTowerLevelN.push_back(level_2);
-	this->textureTowerLevelN.push_back(level_3);
+	std::string volcab = this->selectTexturesByAttribute();
 
-	
+	for (int i = 1; i <= 3; ++i) {
+		this->textureTowerLevelN.push_back(textures["TOWER_" + volcab + "_LEVEL_" + std::to_string(i)]);
+	}
 }
 
-Tower::Tower(float x, float y, Entity::EntityAttributes attribute ,int damage, int attack_speed, sf::Texture& level_1, sf::Texture& level_2, sf::Texture& level_3)
+std::string Tower::selectTexturesByAttribute()
+{
+	switch (this->attribute) {
+		case Entity::EntityAttributes::NORMAL :
+			return "NORMAL";
+			break;
+		case Entity::EntityAttributes::FLY :
+			return "FLY";
+			break;
+		case Entity::EntityAttributes::HEAVY :
+			return "HEAVY";
+			break;
+	}
+	return "NONE";
+}
+
+Tower::Tower(float x, float y, Entity::EntityAttributes attribute ,int damage, int attack_speed, std::map<std::string, sf::Texture> textures)
 {
 	this->initVariables(attribute, damage, attack_speed);
-	this->initTextures(level_1, level_2, level_3);
+	this->initTextures(textures);
 
 
 	this->setTexture(this->textureTowerLevelN[0]);
@@ -48,15 +63,6 @@ std::vector<Monster*>::iterator Tower::monsterIterator(Monster* monster)
 	auto it = std::find(this->monstersInRadius.begin(), this->monstersInRadius.end(), monster);
 
 	return it;
-}
-
-void Tower::attack()
-{
-	// animation
-	// damage
-	if (!this->monstersInRadius.empty()) {
-		// create bullet
-	}
 }
 
 void Tower::render(sf::RenderTarget* target)

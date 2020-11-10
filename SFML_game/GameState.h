@@ -21,6 +21,7 @@ private:
     Player* player;
     std::vector<Monster*> monstersAtLevelN;
     std::vector<Tower*> towersAtCurrentState;
+    std::vector<Bullet* > bulletsAtCurrentTime;
     sf::Texture texture;
     sf::RectangleShape bg;
     std::map<std::string, TowerCreator*> towerCreator;

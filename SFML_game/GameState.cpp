@@ -200,15 +200,15 @@ void GameState::checkAndCreateTower()
 	if (this->selectedTowerCreator != TowerCreator::TowerType::NONE && this->mousePosView.y < 800 && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		switch (this->selectedTowerCreator) {
 		case TowerCreator::TowerType::NORMAL:
-			this->towersAtCurrentState.push_back(new TowerNormal(this->mousePosView.x, this->mousePosView.y, Entity::EntityAttributes::NORMAL, 10, 10, this->textures["TOWER_NORMAL_LEVEL_1"], this->textures["TOWER_NORMAL_LEVEL_2"], this->textures["TOWER_NORMAL_LEVEL_3"]));
+			this->towersAtCurrentState.push_back(new TowerNormal(this->mousePosView.x, this->mousePosView.y, Entity::EntityAttributes::NORMAL, 10, 10, this->textures));
 			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 			break;
 		case TowerCreator::TowerType::FLY:
-			this->towersAtCurrentState.push_back(new TowerFly(this->mousePosView.x, this->mousePosView.y, Entity::EntityAttributes::FLY, 10, 10, this->textures["TOWER_FLY_LEVEL_1"], this->textures["TOWER_FLY_LEVEL_2"], this->textures["TOWER_FLY_LEVEL_3"]));
+			this->towersAtCurrentState.push_back(new TowerFly(this->mousePosView.x, this->mousePosView.y, Entity::EntityAttributes::FLY, 10, 10, this->textures));
 			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 			break;
 		case TowerCreator::TowerType::HEAVY:
-			this->towersAtCurrentState.push_back(new TowerHeavy(this->mousePosView.x, this->mousePosView.y, Entity::EntityAttributes::HEAVY, 10, 10, this->textures["TOWER_HEAVY_LEVEL_1"], this->textures["TOWER_HEAVY_LEVEL_2"], this->textures["TOWER_HEAVY_LEVEL_3"]));
+			this->towersAtCurrentState.push_back(new TowerHeavy(this->mousePosView.x, this->mousePosView.y, Entity::EntityAttributes::HEAVY, 10, 10, this->textures));
 			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 			break;
 		default:

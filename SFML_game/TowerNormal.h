@@ -5,7 +5,7 @@ class TowerNormal :
 {
 private:
 public:
-    TowerNormal(float x, float y, Entity::EntityAttributes attribute, int damage, int attack_speed, sf::Texture& level_1, sf::Texture& level_2, sf::Texture& level_3);
+    TowerNormal(float x, float y, Entity::EntityAttributes attribute, int damage, int attack_speed, std::map<std::string, sf::Texture> textures);
     virtual ~TowerNormal();
 };
 
