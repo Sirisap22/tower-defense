@@ -58,7 +58,7 @@ void Button::update(const sf::Vector2f mousePos)
 	this->buttonState = BTN_IDLE;
 
 	// make sure clock to not overflow
-	if (this->clock.getElapsedTime() > sf::seconds(30.f)) {
+	if (this->clock.getElapsedTime() > sf::seconds(60.f)) {
 		this->clock.restart();
 	}
 

@@ -69,15 +69,23 @@ void MainMenuState::initButtons()
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 }
 
+void MainMenuState::initLeaderBoard()
+{
+	this->leaderBoard = new Plane(1030.f, 275.f, 500.f, 450.f, &this->font, 72, 48);
+}
+
 MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
 	: State(window, supportedKeys, states)
 {
+	this->toggleLeaderBoard = false;
+
 	this->initVariables();
 	this->initBackground();
 	this->initFonts();
 	this->initKeybinds();
 	this->initButtons();
-
+	this->initFonts();
+	this->initLeaderBoard();
 }
 
 MainMenuState::~MainMenuState()
@@ -87,6 +95,9 @@ MainMenuState::~MainMenuState()
 	{
 		delete it->second;
 	}
+
+	delete this->leaderBoard;
+
 }
 
 void MainMenuState::updateInput(const float& dt)
@@ -104,6 +115,10 @@ void MainMenuState::updateButtons()
 	if (this->buttons["GAME_STATE"]->isPressed())
 	{
 		this->states->push(new GameState(this->window, this->supportedKeys, this->states));
+	}
+
+	if (this->buttons["LEADERBOARD"]->isPressed()) {
+		this->toggleLeaderBoard = !this->toggleLeaderBoard;
 	}
 
 	// Quit the game
@@ -139,8 +154,13 @@ void MainMenuState::render(sf::RenderTarget* target)
 	}
 
 	target->draw(this->background);
-
+		
 	this->renderButtons(target);
+
+
+	if (this->toggleLeaderBoard) {
+		this->leaderBoard->render(target);
+	}
 
 	// remove later
 	sf::Text mouseText;

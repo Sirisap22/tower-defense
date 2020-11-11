@@ -84,6 +84,8 @@ void GameState::initCreator()
 
 void GameState::initPlayer()
 {
+	this->playerHealth = 100;
+	this->money = 300;
 	this->player = new Player(0.f, 0.f, this->textures["PLAYER_SHEET"]);
 }
 

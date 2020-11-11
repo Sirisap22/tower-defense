@@ -3,6 +3,7 @@
 
 #include "GameState.h"
 #include "Button.h"
+#include "Plane.h"
 
 class MainMenuState :
     public State
@@ -12,8 +13,10 @@ private:
     sf::Texture backgroundTexture;
     sf::RectangleShape background;
     sf::Font font;
+    bool toggleLeaderBoard;
 
     std::map<std::string, Button*> buttons;
+    Plane* leaderBoard;
 
     // Functions
     void initVariables();
@@ -21,6 +24,7 @@ private:
     void initFonts();
     void initKeybinds();
     void initButtons();
+    void initLeaderBoard();
 public:
     MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
     virtual ~MainMenuState();

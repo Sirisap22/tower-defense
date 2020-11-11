@@ -33,6 +33,7 @@
     <ClCompile Include="MonsterHeavy.cpp" />
     <ClCompile Include="MonsterNormal.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
+    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="Tower.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="MonsterHeavy.h" />
     <ClInclude Include="MonsterNormal.h" />
     <ClInclude Include="MovementComponent.h" />
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Tower.h" />

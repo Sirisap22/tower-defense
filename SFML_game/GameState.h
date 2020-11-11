@@ -30,6 +30,8 @@ private:
     sf::Font font;
     bool toggleHitbox;
     int level;
+    int playerHealth;
+    int money;
 
     // delete later 
     bool mon_walk;
