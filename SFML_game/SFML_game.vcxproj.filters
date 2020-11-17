@@ -97,7 +97,10 @@
       <Filter>Entities</Filter>
     </ClCompile>
     <ClCompile Include="Plane.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="InputField.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -162,7 +165,10 @@
       <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="Plane.h">
-      <Filter>Header Files</Filter>
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="InputField.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

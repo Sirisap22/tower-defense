@@ -18,14 +18,19 @@ private:
     void initComponents();
     void initTextures(std::map<std::string, sf::Texture> textures);
 public:
+    bool isCollide;
     Bullet(float x, float y, Entity::EntityAttributes attribute, int level, Monster* target, std::map<std::string, sf::Texture> textures);
     virtual ~Bullet();
 
     virtual void setTextureByLevel();
 
+    virtual sf::Sprite* getSprite();
+
+    virtual Monster* getTarget() const;
     virtual sf::Vector2f relativeTargetPosition();
     virtual void rotateRelativeTextureAngle();
 
+    virtual void update(const float& dt);
     virtual void render(sf::RenderTarget* target);
     virtual void shoot(const float& dt);
 };

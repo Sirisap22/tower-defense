@@ -56,18 +56,30 @@ public:
     bool isMonsterInTowerRadius(Tower* tower, Monster* monster);
     void checkMonstersInTowersRadius();
     void checkMonstersOutTowersRadius();
+
+    void checkMonstersDead();
+    void attackMonsters();
+    void monsterBulletCollision();
+    Monster* selectNotDeadMonster(Tower* tower);
     
     void updateTowersAndMonstersInteraction();
     void updateTowerCreator(const float& dt);
     void updateMonstersMove(const float& dt);
+    void updateMonstersDead();
     void updateInput(const float& dt);
+    void updateAttackMonsters(Tower* tower, Monster* monster);
+    void updateBullets(const float& dt);
     void updateButtons();
     void update(const float& dt);
+
+    void destoryBullets();
+    void destoryMonsters();
 
     void renderTowerCreators(sf::RenderTarget* target);
     void renderTowers(sf::RenderTarget* target);
     void renderMonsters(sf::RenderTarget* target);
     void renderButtons(sf::RenderTarget* target);
+    void renderBullet(sf::RenderTarget* target);
     void render(sf::RenderTarget* target = NULL);
 };
 

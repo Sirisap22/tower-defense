@@ -18,7 +18,8 @@ std::string Bullet::selectTexturesByAttribute()
 
 void Bullet::initComponents()
 {
-	this->createHitboxComponent(this->origin.x, this->origin.y, 2.f);
+	this->createHitboxComponent(this->origin.x, this->origin.y, 10.f);
+//	this->createMovementComponent(100.f, 10.f, 0.f);
 }
 
 void Bullet::initTextures(std::map<std::string, sf::Texture> textures)
@@ -35,6 +36,7 @@ Bullet::Bullet(float x, float y, Entity::EntityAttributes attribute, int level, 
 	this->attribute = attribute;
 	this->level = level;
 	this->target = target;
+	this->isCollide = false;
 
 	this->setPositions(x, y);
 	this->origin = sf::Vector2f(x, y);
@@ -45,7 +47,7 @@ Bullet::Bullet(float x, float y, Entity::EntityAttributes attribute, int level, 
 
 	this->initComponents();
 
-	this->rotateRelativeTextureAngle();
+	//this->rotateRelativeTextureAngle();
 }
 
 Bullet::~Bullet()
@@ -67,6 +69,16 @@ void Bullet::setTextureByLevel()
 		default:
 			throw "ERROR::CANNOT::SET::BULLET::TEXTURE";
 	}
+}
+
+sf::Sprite* Bullet::getSprite()
+{
+	return &this->sprite;
+}
+
+Monster* Bullet::getTarget() const
+{
+	return this->target;
 }
 
 sf::Vector2f Bullet::relativeTargetPosition()
@@ -109,6 +121,11 @@ void Bullet::rotateRelativeTextureAngle()
 }
 
 
+
+void Bullet::update(const float& dt)
+{
+	//this->movementComponent->update(dt);
+}
 
 void Bullet::render(sf::RenderTarget* target)
 {

@@ -7,6 +7,7 @@ void Monster::initVariables(Entity::EntityAttributes attribute, int health, floa
 	this->damage = damage;
 	this->textureSheet = texture_sheet;
 	this->attribute = attribute;
+	this->isDead = false;
 
 }
 

@@ -263,14 +263,61 @@ void GameState::checkMonstersInTowersRadius()
 void GameState::checkMonstersOutTowersRadius()
 {
 	for (auto& tower : this->towersAtCurrentState) {
-		for (int i = 0; i < tower->monstersInRadius.size(); ++i) {
+		for (int i = 0; i < tower->monstersInRadius.size();) {
 			Monster* monster = tower->monstersInRadius[i];
 			if (!isMonsterInTowerRadius(tower, monster)) {
 				std::cout << "Detected Out\n";
 				tower->monstersInRadius.erase(tower->monstersInRadius.begin() + i);
 			}
+			else {
+				++i;
+			}
 		}
 	}
+}
+
+void GameState::checkMonstersDead()
+{
+	//update bullet to isCollide
+	for (auto& bullet : this->bulletsAtCurrentTime) {
+		if (bullet->getTarget() == nullptr) {
+			goto skip;
+		}
+		if (bullet->getTarget()->isDead) {
+			skip:
+			bullet->isCollide = true;
+		}
+	}
+}
+
+void GameState::attackMonsters()
+{
+	for (auto& tower : this->towersAtCurrentState) {
+		//std::cout << !tower->monstersInRadius.empty() << std::endl;
+		if (!tower->monstersInRadius.empty() && tower->canAttack()) {
+			this->updateAttackMonsters(tower, this->selectNotDeadMonster(tower));
+		}
+	}
+}
+
+void GameState::monsterBulletCollision()
+{
+	for (auto& bullet : this->bulletsAtCurrentTime) {
+	//	std::cout << bullet->getTarget() << " bulleet target \n";
+		if (bullet->getHitboxComponent()->getHitbox().getGlobalBounds()
+			.intersects(bullet->getTarget()->getHitboxComponent()->getHitbox().getGlobalBounds())) {
+			bullet->isCollide = true;
+			bullet->getTarget()->health -= 10.f; //********//
+		}
+	}
+}
+
+Monster* GameState::selectNotDeadMonster(Tower* tower)
+{
+	for (auto& monster : tower->monstersInRadius) {
+		if (!monster->isDead) return monster;
+	}
+	return nullptr;
 }
 
 void GameState::updateTowersAndMonstersInteraction()
@@ -317,23 +364,33 @@ void GameState::updateTowerCreator(const float& dt)
 }
 
 void GameState::updateMonstersMove(const float& dt)
-{
-	if (this->monstersAtLevelN[0]->getHitboxComponent()->getHitbox().getPosition().x < 1500 && !mon_walk) {
-		this->monstersAtLevelN[0]->move(1.f, 0.f, dt);
+{  
+	if (!this->monstersAtLevelN.empty()) {
+		if (this->monstersAtLevelN[0]->getHitboxComponent()->getHitbox().getPosition().x < 1500 && !mon_walk) {
+			this->monstersAtLevelN[0]->move(1.f, 0.f, dt);
+		}
+		else {
+			this->mon_walk = true;
+			this->monstersAtLevelN[0]->move(-1.f, 0.f, dt);
+			if (this->monstersAtLevelN[0]->getHitboxComponent()->getHitbox().getPosition().x < 100) {
+				this->mon_walk = false;
+			}
+		}
+
+		/*for (auto& monster : this->monstersAtLevelN) {
+			monster->getHitboxComponent()->update(dt, this->monstersAtLevelN[0]->getPosition());
+		}*/
+		this->monstersAtLevelN[0]->getHitboxComponent()->update(dt, this->monstersAtLevelN[0]->getPosition(), 100.f);
 	}
-	else {
-		this->mon_walk = true;
-		this->monstersAtLevelN[0]->move(-1.f, 0.f, dt);
-		if (this->monstersAtLevelN[0]->getHitboxComponent()->getHitbox().getPosition().x < 100) {
-			this->mon_walk = false;
+}
+
+void GameState::updateMonstersDead()
+{
+	for (auto& monster : this->monstersAtLevelN) {
+		if (monster->health <= 0) {
+			monster->isDead = true;
 		}
 	}
-
-	/*for (auto& monster : this->monstersAtLevelN) {
-		monster->getHitboxComponent()->update(dt, this->monstersAtLevelN[0]->getPosition());
-	}*/
-	this->monstersAtLevelN[0]->getHitboxComponent()->update(dt, this->monstersAtLevelN[0]->getPosition(), 100.f);
-
 }
 
 void GameState::updateInput(const float& dt)
@@ -351,6 +408,31 @@ void GameState::updateInput(const float& dt)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("CLOSE"))))
 		this->endState();
+}
+void GameState::updateAttackMonsters(Tower* tower, Monster* monster)
+{
+		this->bulletsAtCurrentTime.push_back(
+			new Bullet(float(tower->getPosition().x), float(tower->getPosition().y),
+				tower->attribute, tower->level, monster, this->textures));
+
+}
+
+void GameState::updateBullets(const float& dt)
+{
+	for (auto& bullet : this->bulletsAtCurrentTime) {
+		//std::cout << "TEST\n";
+		if (bullet->getTarget() != nullptr) {
+			float targetX = bullet->getTarget()->getHitboxComponent()->getHitbox().getPosition().x;
+			float targetY = bullet->getTarget()->getHitboxComponent()->getHitbox().getPosition().y;
+			float bulletX = bullet->getHitboxComponent()->getHitbox().getPosition().x;
+			float bulletY = bullet->getHitboxComponent()->getHitbox().getPosition().y;
+			float dx = targetX - bulletX;
+			float dy = targetY - bulletY;
+		//	std::cout << dx << dy << "\n";
+			bullet->getSprite()->move(sf::Vector2f(dx, dy) * dt);
+			bullet->getHitboxComponent()->update(dt, bullet->getPosition(), 100.f);
+		}
+	}
 }
 
 void GameState::updateButtons()
@@ -397,7 +479,46 @@ void GameState::update(const float& dt)
 	}
 
 	this->updateTowersAndMonstersInteraction();
+	this->checkMonstersDead();
 
+	this->attackMonsters();
+	this->checkMonstersDead();
+
+	this->destoryBullets();
+	this->updateBullets(dt);
+	//	this->destoryBullets();
+
+	this->monsterBulletCollision();
+	//this->destoryBullets();
+
+	this->updateMonstersDead();
+	this->destoryMonsters();
+
+}
+
+void GameState::destoryBullets()
+{
+	for (int i = 0; i < this->bulletsAtCurrentTime.size();) {
+		if (this->bulletsAtCurrentTime[i]->isCollide) {
+			this->bulletsAtCurrentTime.erase(this->bulletsAtCurrentTime.begin() + i);
+		}
+		else {
+			++i;
+		}
+		//std::cout << "BULL SIZE: " << this->bulletsAtCurrentTime.size() << "\n";
+	}
+}
+
+void GameState::destoryMonsters()
+{
+	for (int i = 0; i < this->monstersAtLevelN.size();) {
+		if (this->monstersAtLevelN[i]->isDead) {
+			this->monstersAtLevelN.erase(this->monstersAtLevelN.begin() + i);
+		}
+		else {
+			++i;
+		}
+	}
 }
 
 void GameState::renderTowerCreators(sf::RenderTarget* target)
@@ -425,10 +546,13 @@ void GameState::renderMonsters(sf::RenderTarget* target)
 {
 	if (!this->monstersAtLevelN.empty()) {
 		for (auto& monster : this->monstersAtLevelN) {
-			monster->render(target);
-			if (monster->getHitboxComponent() != nullptr && this->toggleHitbox) {
-				target->draw(monster->getHitboxComponent()->getHitbox());
+			if (!monster->isDead) {
+				monster->render(target);
+				if (monster->getHitboxComponent() != nullptr && this->toggleHitbox) {
+					target->draw(monster->getHitboxComponent()->getHitbox());
+				}
 			}
+			
 		}
 	}
 }
@@ -440,6 +564,19 @@ void GameState::renderButtons(sf::RenderTarget* target)
 		//std::cout << it.second->isPressed() << "\n";
 		it.second->render(target);
 	}
+}
+
+void GameState::renderBullet(sf::RenderTarget* target)
+{
+	for (auto& bullet : this->bulletsAtCurrentTime) {
+		if (!bullet->isCollide) {
+			bullet->render(target);
+			if (bullet->getHitboxComponent() != nullptr && this->toggleHitbox) {
+				target->draw(bullet->getHitboxComponent()->getHitbox());
+			}
+		}
+	}
+
 }
 
 void GameState::render(sf::RenderTarget* target)
@@ -459,6 +596,7 @@ void GameState::render(sf::RenderTarget* target)
 	this->renderTowers(target);
 
 	this->renderMonsters(target);
+	this->renderBullet(target);
 
 	
 	

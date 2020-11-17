@@ -36,6 +36,15 @@ std::string Tower::selectTexturesByAttribute()
 	return "NONE";
 }
 
+bool Tower::canAttack()
+{
+	if (this->clock.getElapsedTime() > sf::seconds(0.5f)) {
+		this->clock.restart();
+		return true;
+	}
+	return false;
+}
+
 Tower::Tower(float x, float y, Entity::EntityAttributes attribute ,int damage, int attack_speed, std::map<std::string, sf::Texture> textures)
 {
 	this->initVariables(attribute, damage, attack_speed);
@@ -72,7 +81,26 @@ void Tower::render(sf::RenderTarget* target)
 
 void Tower::update(const float& dt)
 {
+}
+
+void Tower::upgrade(int level)
+{
+	switch (level) {
+	case 2:
+		this->level = 2;
+		this->damage = damage * 2;
+		this->attackSpeed *= 2;
+		this->sprite.setTexture(this->textureTowerLevelN[1]);
+		break;
+	case 3:
+		this->level = 3;
+		this->damage = damage * 1.5;
+		this->attackSpeed *= 1.5;
+		this->sprite.setTexture(this->textureTowerLevelN[2]);
+		break;
+	}
 
 }
+
 
 
