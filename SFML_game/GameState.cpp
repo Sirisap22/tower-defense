@@ -85,7 +85,7 @@ void GameState::initCreator()
 void GameState::initPlayer()
 {
 	this->playerHealth = 100;
-	this->money = 300;
+	this->money = 3000;
 	this->player = new Player(0.f, 0.f, this->textures["PLAYER_SHEET"]);
 }
 
@@ -117,6 +117,9 @@ void GameState::initLevel()
 	this->gold.setCharacterSize(48);
 	this->gold.setPosition(sf::Vector2f(1600.f, 30.f));
 	this->gold.setFillColor(sf::Color::Yellow);
+
+	this->towerSeller = new TowerSeller(1400.f, 800.f);
+	this->towerUpgrader = new TowerUpgrader(1200.f, 800.f);
 	//this->monstersAtLevelN[0] = new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]);
 	
 	// init normal monsters
@@ -202,6 +205,10 @@ GameState::~GameState()
 	{
 		delete it2->second;
 	}
+
+	delete this->towerSeller;
+
+	delete this->towerUpgrader;
 }
 
 void GameState::checkAndCreateTower()
@@ -228,6 +235,7 @@ void GameState::checkAndCreateTower()
 
 bool GameState::isMonsterInTowerRadius(Tower* tower, Monster* monster)
 {
+	if (!monster) return false;
 	sf::Vector2f towerPosition = tower->radiusShape.getPosition();
 	sf::Vector2f monsterPosition = monster->getHitboxComponent()->getHitbox().getPosition();
 	sf::FloatRect towerRadiusShape = tower->radiusShape.getGlobalBounds();
@@ -345,6 +353,7 @@ void GameState::updateSelectTower()
 		Tower* tower = this->towersAtCurrentState[i];
 		if (tower->isPressed(this->mousePosView)) {
 			this->selectedTower = ((this->selectedTower == -1 || this->selectedTower != i) ? i : -1);
+			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 			std::cout << "Selected Tower ID : " << this->selectedTower << std::endl;
 		}
 	}
@@ -382,6 +391,21 @@ void GameState::updateTowerCreator(const float& dt)
 	}
 
 	this->checkAndCreateTower();
+}
+
+void GameState::updateTowerSeller()
+{
+	if (this->towerSeller->isPressed(this->mousePosView)) {
+		this->towerSeller->sellTower(this->selectedTower, &this->money, &this->towersAtCurrentState);
+		this->selectedTower = -1;
+	}
+}
+
+void GameState::updateTowerUpgrader()
+{
+	if (this->towerUpgrader->isPressed(this->mousePosView)) {
+		this->towerUpgrader->upgraderTower(this->selectedTower, &this->money, &this->towersAtCurrentState);
+	}
 }
 
 void GameState::updateMonstersMove(const float& dt)
@@ -491,6 +515,8 @@ void GameState::update(const float& dt)
 	}
 
 	this->updateTowerCreator(dt);
+	this->updateTowerSeller();
+	this->updateTowerUpgrader();
 
 	for (auto& monster : this->monstersAtLevelN) {
 		monster->update(dt);
@@ -509,9 +535,13 @@ void GameState::update(const float& dt)
 
 	this->updateTowersAndMonstersInteraction();
 	this->checkMonstersDead();
+	this->destoryMonsters();
+
 
 	this->attackMonsters();
 	this->checkMonstersDead();
+	this->destoryMonsters();
+
 
 	this->destoryBullets();
 	this->updateBullets(dt);
@@ -531,6 +561,7 @@ void GameState::destoryBullets()
 {
 	for (int i = 0; i < this->bulletsAtCurrentTime.size();) {
 		if (this->bulletsAtCurrentTime[i]->isCollide) {
+			delete this->bulletsAtCurrentTime[i];
 			this->bulletsAtCurrentTime.erase(this->bulletsAtCurrentTime.begin() + i);
 		}
 		else {
@@ -544,6 +575,7 @@ void GameState::destoryMonsters()
 {
 	for (int i = 0; i < this->monstersAtLevelN.size();) {
 		if (this->monstersAtLevelN[i]->isDead) {
+			//delete this->monstersAtLevelN[i];
 			this->monstersAtLevelN.erase(this->monstersAtLevelN.begin() + i);
 		}
 		else {
@@ -557,6 +589,20 @@ void GameState::renderTowerCreators(sf::RenderTarget* target)
 	for (auto& it : this->towerCreator)
 	{
 		it.second->render(target);
+	}
+}
+
+void GameState::renderTowerSeller(sf::RenderTarget* target)
+{
+	if (this->selectedTower != -1) {
+		this->towerSeller->render(target);
+	}
+}
+
+void GameState::renderTowerUpgrader(sf::RenderTarget* target)
+{
+	if (this->selectedTower != -1 && this->towersAtCurrentState[this->selectedTower]->level < 3) {
+		this->towerUpgrader->render(target);
 	}
 }
 
@@ -627,6 +673,8 @@ void GameState::render(sf::RenderTarget* target)
 	this->player->render(target);
 
 	this->renderTowerCreators(target);
+	this->renderTowerSeller(target);
+	this->renderTowerUpgrader(target);
 
 	this->renderButtons(target);
 

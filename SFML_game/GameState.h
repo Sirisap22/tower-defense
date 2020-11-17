@@ -12,6 +12,8 @@
 #include "TowerHeavy.h"
 #include "TowerCreator.h"
 #include "Button.h"
+#include "TowerSeller.h"
+#include "TowerUpgrader.h"
 
 class GameState :
     public State
@@ -25,6 +27,8 @@ private:
     sf::Texture texture;
     sf::RectangleShape bg;
     std::map<std::string, TowerCreator*> towerCreator;
+    TowerSeller* towerSeller;
+    TowerUpgrader* towerUpgrader;
     TowerCreator::TowerType selectedTowerCreator;
     int selectedTower;
     std::map<std::string, Button*> buttons;
@@ -68,6 +72,8 @@ public:
     void updateTowersAndMonstersInteraction();
     void updateSelectTower();
     void updateTowerCreator(const float& dt);
+    void updateTowerSeller();
+    void updateTowerUpgrader();
     void updateMonstersMove(const float& dt);
     void updateMonstersDead();
     void updateInput(const float& dt);
@@ -81,6 +87,8 @@ public:
     void destoryMonsters();
 
     void renderTowerCreators(sf::RenderTarget* target);
+    void renderTowerSeller(sf::RenderTarget* target);
+    void renderTowerUpgrader(sf::RenderTarget* target);
     void renderTowers(sf::RenderTarget* target);
     void renderMonsters(sf::RenderTarget* target);
     void renderButtons(sf::RenderTarget* target);

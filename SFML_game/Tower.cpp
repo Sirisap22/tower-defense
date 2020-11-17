@@ -105,13 +105,13 @@ void Tower::upgrade(int level)
 		this->level = 2;
 		this->damage = damage * 2;
 		this->attackSpeed *= 2;
-		this->sprite.setTexture(this->textureTowerLevelN[1]);
+		this->sprite.setTexture(this->textureTowerLevelN[1], true);
 		break;
 	case 3:
 		this->level = 3;
 		this->damage = damage * 1.5;
 		this->attackSpeed *= 1.5;
-		this->sprite.setTexture(this->textureTowerLevelN[2]);
+		this->sprite.setTexture(this->textureTowerLevelN[2], true);
 		break;
 	}
 
