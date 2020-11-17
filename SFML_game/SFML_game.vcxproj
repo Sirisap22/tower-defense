@@ -42,6 +42,8 @@
     <ClCompile Include="TowerFly.cpp" />
     <ClCompile Include="TowerHeavy.cpp" />
     <ClCompile Include="TowerNormal.cpp" />
+    <ClCompile Include="TowerSeller.cpp" />
+    <ClCompile Include="TowerUpgrader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h" />
@@ -66,6 +68,8 @@
     <ClInclude Include="TowerFly.h" />
     <ClInclude Include="TowerHeavy.h" />
     <ClInclude Include="TowerNormal.h" />
+    <ClInclude Include="TowerSeller.h" />
+    <ClInclude Include="TowerUpgrader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

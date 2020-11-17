@@ -109,7 +109,14 @@ void GameState::initButtons()
 void GameState::initLevel()
 {
 	this->level = 1;
+	this->selectedTower = -1;
 	this->toggleHitbox = false;
+
+	this->gold.setFont(this->font);
+	this->gold.setString("GOLD : "+std::to_string(this->money));
+	this->gold.setCharacterSize(48);
+	this->gold.setPosition(sf::Vector2f(1600.f, 30.f));
+	this->gold.setFillColor(sf::Color::Yellow);
 	//this->monstersAtLevelN[0] = new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]);
 	
 	// init normal monsters
@@ -320,6 +327,7 @@ Monster* GameState::selectNotDeadMonster(Tower* tower)
 	return nullptr;
 }
 
+
 void GameState::updateTowersAndMonstersInteraction()
 {
 	if (!this->towersAtCurrentState.empty()) {
@@ -327,6 +335,19 @@ void GameState::updateTowersAndMonstersInteraction()
 		this->checkMonstersOutTowersRadius();
 	}
 	
+}
+
+void GameState::updateSelectTower()
+{
+	for (int i = 0; i < this->towersAtCurrentState.size(); i++) {
+		//std::cout << this->selectedTower << std::endl;
+
+		Tower* tower = this->towersAtCurrentState[i];
+		if (tower->isPressed(this->mousePosView)) {
+			this->selectedTower = ((this->selectedTower == -1 || this->selectedTower != i) ? i : -1);
+			std::cout << "Selected Tower ID : " << this->selectedTower << std::endl;
+		}
+	}
 }
 
 void GameState::updateTowerCreator(const float& dt)
@@ -430,7 +451,8 @@ void GameState::updateBullets(const float& dt)
 			float dy = targetY - bulletY;
 		//	std::cout << dx << dy << "\n";
 			bullet->getSprite()->move(sf::Vector2f(dx, dy) * dt);
-			bullet->getHitboxComponent()->update(dt, bullet->getPosition(), 100.f);
+			//bullet->update(dt, std::atan(dx/dy));
+			bullet->getHitboxComponent()->update(dt, bullet->getPosition(), 0.f);
 		}
 	}
 }
@@ -447,6 +469,11 @@ void GameState::updateButtons()
 	{
 		this->toggleHitbox = !this->toggleHitbox;
 	}
+}
+
+void GameState::updateGold()
+{
+	this->gold.setString("GOLD : "+std::to_string(this->money));
 }
 
 void GameState::update(const float& dt)
@@ -478,6 +505,8 @@ void GameState::update(const float& dt)
 		tower->update(dt);
 	}
 
+	this->updateSelectTower();
+
 	this->updateTowersAndMonstersInteraction();
 	this->checkMonstersDead();
 
@@ -493,6 +522,8 @@ void GameState::update(const float& dt)
 
 	this->updateMonstersDead();
 	this->destoryMonsters();
+
+	this->updateGold();
 
 }
 
@@ -537,6 +568,7 @@ void GameState::renderTowers(sf::RenderTarget* target)
 			tower->render(target);
 			if (tower->radius != 0.f && this->toggleHitbox) {
 				target->draw(tower->radiusShape);
+				target->draw(tower->getHitboxComponent()->getHitbox());
 			}
 		}
 	}
@@ -579,6 +611,11 @@ void GameState::renderBullet(sf::RenderTarget* target)
 
 }
 
+void GameState::renderGold(sf::RenderTarget* target)
+{
+	target->draw(this->gold);
+}
+
 void GameState::render(sf::RenderTarget* target)
 {
 	if (!target)
@@ -598,6 +635,6 @@ void GameState::render(sf::RenderTarget* target)
 	this->renderMonsters(target);
 	this->renderBullet(target);
 
-	
+	this->renderGold(target);
 	
 }

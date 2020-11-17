@@ -47,6 +47,7 @@ Bullet::Bullet(float x, float y, Entity::EntityAttributes attribute, int level, 
 
 	this->initComponents();
 
+
 	//this->rotateRelativeTextureAngle();
 }
 
@@ -94,37 +95,13 @@ sf::Vector2f Bullet::relativeTargetPosition()
 	return sf::Vector2f(dx, dy);
 }
 
-void Bullet::rotateRelativeTextureAngle()
-{
-	sf::Vector2f diff = this->relativeTargetPosition();
-	float dx = diff.x;
-	float dy = diff.y;
-	float angle = 0.f;
-	// top left
-	if (dx > 0.f && dy > 0.f) {
-		angle = -std::atan(dy / dx);
-	}
-	// top right
-	else if (dx < 0.f && dy > 0.f) {
-		angle = std::atan(dy / dx);
-	}
-	// bottom left
-	else if (dx > 0.f && dy < 0.f) {
-		angle = -(std::atan(dy / dx) + 90.f);
-	} 
-	// bottom right
-	else if (dx < 0.f && dy < 0.f) {
-		angle = std::atan(dy / dx) + 90.f;
-	}
-
-	this->sprite.setRotation(angle);
-}
 
 
 
-void Bullet::update(const float& dt)
+void Bullet::update(const float& dt,float angle)
 {
 	//this->movementComponent->update(dt);
+	//this->sprite.rotate(angle);
 }
 
 void Bullet::render(sf::RenderTarget* target)
@@ -132,8 +109,3 @@ void Bullet::render(sf::RenderTarget* target)
 	target->draw(this->sprite);
 }
 
-void Bullet::shoot(const float& dt)
-{
-	this->rotateRelativeTextureAngle();
-	this->sprite.move(this->relativeTargetPosition());
-}

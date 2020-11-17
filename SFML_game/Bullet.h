@@ -28,10 +28,8 @@ public:
 
     virtual Monster* getTarget() const;
     virtual sf::Vector2f relativeTargetPosition();
-    virtual void rotateRelativeTextureAngle();
-
-    virtual void update(const float& dt);
+    
+    virtual void update(const float& dt, float angle);
     virtual void render(sf::RenderTarget* target);
-    virtual void shoot(const float& dt);
-};
+   };
 

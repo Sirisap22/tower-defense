@@ -26,12 +26,14 @@ private:
     sf::RectangleShape bg;
     std::map<std::string, TowerCreator*> towerCreator;
     TowerCreator::TowerType selectedTowerCreator;
+    int selectedTower;
     std::map<std::string, Button*> buttons;
     sf::Font font;
     bool toggleHitbox;
     int level;
     int playerHealth;
     int money;
+    sf::Text gold;
 
     // delete later 
     bool mon_walk;
@@ -61,8 +63,10 @@ public:
     void attackMonsters();
     void monsterBulletCollision();
     Monster* selectNotDeadMonster(Tower* tower);
+
     
     void updateTowersAndMonstersInteraction();
+    void updateSelectTower();
     void updateTowerCreator(const float& dt);
     void updateMonstersMove(const float& dt);
     void updateMonstersDead();
@@ -70,6 +74,7 @@ public:
     void updateAttackMonsters(Tower* tower, Monster* monster);
     void updateBullets(const float& dt);
     void updateButtons();
+    void updateGold();
     void update(const float& dt);
 
     void destoryBullets();
@@ -80,6 +85,7 @@ public:
     void renderMonsters(sf::RenderTarget* target);
     void renderButtons(sf::RenderTarget* target);
     void renderBullet(sf::RenderTarget* target);
+    void renderGold(sf::RenderTarget* target);
     void render(sf::RenderTarget* target = NULL);
 };
 

@@ -102,6 +102,12 @@
     <ClCompile Include="InputField.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="TowerUpgrader.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="TowerSeller.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameState.h">
@@ -168,6 +174,12 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="InputField.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TowerUpgrader.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TowerSeller.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>

@@ -45,12 +45,27 @@ bool Tower::canAttack()
 	return false;
 }
 
+bool Tower::isPressed(sf::Vector2f mousePos)
+{
+	if (this->pClock.getElapsedTime() > sf::seconds(60.f)) {
+		this->pClock.restart();
+	}
+	if (this->pClock.getElapsedTime() > sf::seconds(0.2f) &&
+		this->hitboxComponent->getHitbox().getGlobalBounds().contains(mousePos) &&
+		sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		this->pClock.restart();
+		return true;
+	}
+	return false;
+}
+
 Tower::Tower(float x, float y, Entity::EntityAttributes attribute ,int damage, int attack_speed, std::map<std::string, sf::Texture> textures)
 {
 	this->initVariables(attribute, damage, attack_speed);
 	this->initTextures(textures);
 
 
+	this->createHitboxComponent(x, y, 50.f);
 	this->setTexture(this->textureTowerLevelN[0]);
 
 	

@@ -21,7 +21,8 @@ public:
     int attackSpeed;
     float radius;
     sf::CircleShape radiusShape;
-    sf::Clock clock;
+    sf::Clock clock; // attack clock
+    sf::Clock pClock; // click clock
 
     Entity::EntityAttributes attribute;
     sf::Vector2f originPoint;
@@ -29,6 +30,7 @@ public:
     std::vector<Monster*> monstersInRadius;
 
     bool canAttack();
+    bool isPressed(sf::Vector2f mousePos);
     
 
     Tower(float x, float y, Entity::EntityAttributes attribute,int damage, int attack_speed, std::map<std::string, sf::Texture> textures);
