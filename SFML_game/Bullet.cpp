@@ -31,12 +31,13 @@ void Bullet::initTextures(std::map<std::string, sf::Texture> textures)
 	}
 }
 
-Bullet::Bullet(float x, float y, Entity::EntityAttributes attribute, int level, Monster* target, std::map<std::string, sf::Texture> textures)
+Bullet::Bullet(float x, float y, Entity::EntityAttributes attribute, int level, int damage, Monster* target, std::map<std::string, sf::Texture> textures)
 {
 	this->attribute = attribute;
 	this->level = level;
 	this->target = target;
 	this->isCollide = false;
+	this->damage = damage;
 
 	this->setPositions(x, y);
 	this->origin = sf::Vector2f(x, y);

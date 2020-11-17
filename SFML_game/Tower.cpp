@@ -38,7 +38,7 @@ std::string Tower::selectTexturesByAttribute()
 
 bool Tower::canAttack()
 {
-	if (this->clock.getElapsedTime() > sf::seconds(0.5f)) {
+	if (this->clock.getElapsedTime() > sf::seconds(1.f)) {
 		this->clock.restart();
 		return true;
 	}

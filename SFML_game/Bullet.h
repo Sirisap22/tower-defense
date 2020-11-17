@@ -19,7 +19,8 @@ private:
     void initTextures(std::map<std::string, sf::Texture> textures);
 public:
     bool isCollide;
-    Bullet(float x, float y, Entity::EntityAttributes attribute, int level, Monster* target, std::map<std::string, sf::Texture> textures);
+    int damage;
+    Bullet(float x, float y, Entity::EntityAttributes attribute, int level, int damage, Monster* target, std::map<std::string, sf::Texture> textures);
     virtual ~Bullet();
 
     virtual void setTextureByLevel();

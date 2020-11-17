@@ -322,7 +322,7 @@ void GameState::monsterBulletCollision()
 		if (bullet->getHitboxComponent()->getHitbox().getGlobalBounds()
 			.intersects(bullet->getTarget()->getHitboxComponent()->getHitbox().getGlobalBounds())) {
 			bullet->isCollide = true;
-			bullet->getTarget()->health -= 10.f; //********//
+			bullet->getTarget()->health -= bullet->damage; //********//
 		}
 	}
 }
@@ -458,7 +458,7 @@ void GameState::updateAttackMonsters(Tower* tower, Monster* monster)
 {
 		this->bulletsAtCurrentTime.push_back(
 			new Bullet(float(tower->getPosition().x), float(tower->getPosition().y),
-				tower->attribute, tower->level, monster, this->textures));
+				tower->attribute, tower->level, tower->damage, monster, this->textures));
 
 }
 
@@ -474,7 +474,7 @@ void GameState::updateBullets(const float& dt)
 			float dx = targetX - bulletX;
 			float dy = targetY - bulletY;
 		//	std::cout << dx << dy << "\n";
-			bullet->getSprite()->move(sf::Vector2f(dx, dy) * dt);
+			bullet->getSprite()->move(sf::Vector2f(dx, dy) * (dt + 0.01f));
 			//bullet->update(dt, std::atan(dx/dy));
 			bullet->getHitboxComponent()->update(dt, bullet->getPosition(), 0.f);
 		}
