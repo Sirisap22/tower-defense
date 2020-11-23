@@ -13,6 +13,7 @@ public:
     Entity::EntityAttributes attribute;
     sf::Vector2f originPoint;
     sf::Texture textureSheet;
+    sf::Vector2f adjustParamHitbox;
     bool isDead;
 
     Monster(float x, float y, Entity::EntityAttributes attribute, int health, float walk_speed, int damage, sf::Texture texture_sheet);

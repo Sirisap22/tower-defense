@@ -425,8 +425,13 @@ void GameState::updateMonstersMove(const float& dt)
 		/*for (auto& monster : this->monstersAtLevelN) {
 			monster->getHitboxComponent()->update(dt, this->monstersAtLevelN[0]->getPosition());
 		}*/
-		this->monstersAtLevelN[0]->getHitboxComponent()->update(dt, this->monstersAtLevelN[0]->getPosition(), 100.f);
+		this->updateMonsterHitbox(this->monstersAtLevelN[0]);
 	}
+}
+
+void GameState::updateMonsterHitbox(Monster* monster)
+{
+	monster->getHitboxComponent()->update(monster->getPosition(), monster->adjustParamHitbox.x, monster->adjustParamHitbox.y);
 }
 
 void GameState::updateMonstersDead()
@@ -474,9 +479,9 @@ void GameState::updateBullets(const float& dt)
 			float dx = targetX - bulletX;
 			float dy = targetY - bulletY;
 		//	std::cout << dx << dy << "\n";
-			bullet->getSprite()->move(sf::Vector2f(dx, dy) * (dt + 0.01f));
+			bullet->getSprite()->move(sf::Vector2f(dx, dy) * (dt + 0.07f));   
 			//bullet->update(dt, std::atan(dx/dy));
-			bullet->getHitboxComponent()->update(dt, bullet->getPosition(), 0.f);
+			bullet->getHitboxComponent()->update(bullet->getPosition(), -20.f, -20.f);
 		}
 	}
 }

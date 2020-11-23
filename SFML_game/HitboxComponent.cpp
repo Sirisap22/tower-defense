@@ -24,8 +24,9 @@ const sf::CircleShape& HitboxComponent::getHitbox() const
 	return this->hitbox;
 }
 
-void HitboxComponent::update(const float& dt, sf::Vector2f currentPosition, float adjust_parameter)
+void HitboxComponent::update(sf::Vector2f currentPosition, float adjustX, float adjustY)
 {
-	currentPosition = sf::Vector2f(currentPosition.x + adjust_parameter, currentPosition.y + adjust_parameter);
+
+	currentPosition = sf::Vector2f(currentPosition.x + adjustX, currentPosition.y + adjustY);
 	this->hitbox.setPosition(currentPosition);
 }

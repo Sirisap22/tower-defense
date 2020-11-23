@@ -75,6 +75,7 @@ public:
     void updateTowerSeller();
     void updateTowerUpgrader();
     void updateMonstersMove(const float& dt);
+    void updateMonsterHitbox(Monster* monster);
     void updateMonstersDead();
     void updateInput(const float& dt);
     void updateAttackMonsters(Tower* tower, Monster* monster);

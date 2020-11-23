@@ -45,7 +45,7 @@ const sf::Vector2f Entity::getPosition() const
 }
 
 HitboxComponent* Entity::getHitboxComponent() const
-{
+{	
 	return this->hitboxComponent;
 }
 

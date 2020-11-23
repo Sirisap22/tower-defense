@@ -2,7 +2,8 @@
 
 #include "Monster.h"
 #include "Entity.h"
-#include "cmath"
+#include <cmath>
+#define M_PI 3.14159265358979323846
 
 class Bullet :
     public Entity
@@ -28,7 +29,7 @@ public:
     virtual sf::Sprite* getSprite();
 
     virtual Monster* getTarget() const;
-    virtual sf::Vector2f relativeTargetPosition();
+    virtual float relativeTargetPosition();
     
     virtual void update(const float& dt, float angle);
     virtual void render(sf::RenderTarget* target);

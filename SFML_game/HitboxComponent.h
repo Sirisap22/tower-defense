@@ -18,6 +18,6 @@ public:
 	const sf::Vector2f& getOriginPoint() const;
 	const sf::CircleShape& getHitbox() const;
 
-	virtual void update(const float& dt, sf::Vector2f currentPosition, float adjust_parameter);
+	virtual void update(sf::Vector2f currentPosition, float adjustX, float adjustY);
 };
 

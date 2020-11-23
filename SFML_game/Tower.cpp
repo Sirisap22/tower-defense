@@ -64,10 +64,10 @@ Tower::Tower(float x, float y, Entity::EntityAttributes attribute ,int damage, i
 	this->initVariables(attribute, damage, attack_speed);
 	this->initTextures(textures);
 
-
-	this->createHitboxComponent(x, y, 50.f);
 	this->setTexture(this->textureTowerLevelN[0]);
 
+	this->createHitboxComponent(x - this->sprite.getTexture()->getSize().x/2 - 30.f, y - this->sprite.getTexture()->getSize().y + 30.f, 100.f);
+	
 	
 	this->originPoint = sf::Vector2f(x - 10.f, y);
 	this->setPositions(x - this->sprite.getTexture()->getSize().x/2, y - this->sprite.getTexture()->getSize().y + 30.f);

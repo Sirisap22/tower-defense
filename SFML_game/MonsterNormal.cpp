@@ -6,8 +6,8 @@ void MonsterNormal::initComponents()
 	this->createAnimationComponent(this->textureSheet);
 
 	// fix later
-	this->createHitboxComponent(this->originPoint.x + 100.f, this->originPoint.y + 100.f, 50);
-
+	this->createHitboxComponent(this->originPoint.x + 100.f, this->originPoint.y + 150.f, 50.f);
+	this->adjustParamHitbox = sf::Vector2f(100.f, 150.f);
 	this->animationComponent->addAnimation("WALK", 10.f, 0, 0, 9, 0, 377, 404);
 }
 

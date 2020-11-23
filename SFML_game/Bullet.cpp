@@ -18,7 +18,7 @@ std::string Bullet::selectTexturesByAttribute()
 
 void Bullet::initComponents()
 {
-	this->createHitboxComponent(this->origin.x, this->origin.y, 10.f);
+	this->createHitboxComponent(this->origin.x - 30.f, this->origin.y, 10.f);
 //	this->createMovementComponent(100.f, 10.f, 0.f);
 }
 
@@ -48,8 +48,12 @@ Bullet::Bullet(float x, float y, Entity::EntityAttributes attribute, int level, 
 
 	this->initComponents();
 
+	if (target) {
+		auto pos = this->relativeTargetPosition();
+		std::cout << "pos : " << pos << std::endl;
+		this->sprite.setRotation(pos);
+	}
 
-	//this->rotateRelativeTextureAngle();
 }
 
 Bullet::~Bullet()
@@ -83,17 +87,27 @@ Monster* Bullet::getTarget() const
 	return this->target;
 }
 
-sf::Vector2f Bullet::relativeTargetPosition()
+float Bullet::relativeTargetPosition()
 {
 	sf::Vector2f bulletHitboxPosition = this->getHitboxComponent()->getHitbox().getPosition();
 	sf::Vector2f monsterHitboxPosition = this->target->getHitboxComponent()->getHitbox().getPosition();
 	sf::FloatRect bulletHitboxShape = this->getHitboxComponent()->getHitbox().getGlobalBounds();
 	sf::FloatRect monsterHitboxShape = this->target->getHitboxComponent()->getHitbox().getGlobalBounds();
 
-	float dx = (bulletHitboxPosition.x + (bulletHitboxShape.width / 2)) - (monsterHitboxPosition.x + (monsterHitboxShape.width / 2));
-	float dy = (bulletHitboxPosition.y + (bulletHitboxShape.height / 2)) - (monsterHitboxPosition.y + (monsterHitboxShape.height / 2));
+	float bX = (bulletHitboxPosition.x + (bulletHitboxShape.width / 2));
+	float bY = (bulletHitboxPosition.y + (bulletHitboxShape.height / 2));
+	float mX = (monsterHitboxPosition.x + (monsterHitboxShape.width / 2));
+	float mY = (monsterHitboxPosition.y + (monsterHitboxShape.height / 2));
 
-	return sf::Vector2f(dx, dy);
+	//float dx = (bulletHitboxPosition.x + (bulletHitboxShape.width / 2)) - (monsterHitboxPosition.x + (monsterHitboxShape.width / 2));
+	//float dy = (bulletHitboxPosition.y + (bulletHitboxShape.height / 2)) - (monsterHitboxPosition.y + (monsterHitboxShape.height / 2));
+
+	float upper = bX * mX + bY * mY;
+	float lower = std::sqrtf(bX * bX + bY * bY) * std::sqrtf(mX * mX + mY * mY);
+	float theta = std::acosf(upper / lower) * 180.f / float(M_PI);
+	if (bX - mX > 0) return -90.f + theta;
+	//std::cout << "theta : " << theta << std::endl;
+	return 90.f - theta;
 }
 
 
