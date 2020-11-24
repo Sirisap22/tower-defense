@@ -92,6 +92,13 @@ void GameState::initPlayer()
 	player.setFillColor(sf::Color::White);
 	this->textName = player;
 	this->playerHealth = 100;
+	sf::Text health;
+	health.setString(std::to_string(this->playerHealth) + "/100");
+	health.setPosition(50.f, 10.f);
+	health.setCharacterSize(42);
+	health.setFont(this->font);
+	health.setFillColor(sf::Color::Red);
+	this->textPlayerHealth = health;
 	this->money = 3000;
 	this->player = new Player(0.f, 0.f, this->textures["PLAYER_SHEET"]);
 }
@@ -113,6 +120,16 @@ void GameState::initButtons()
 	);
 }
 
+void GameState::initScore()
+{
+	this->score = 0;
+	this->textScore.setString(std::to_string(this->score));
+	this->textScore.setPosition(1600.f, 30.f);
+	this->textScore.setCharacterSize(48);
+	this->textScore.setFont(this->font);
+	this->textScore.setFillColor(sf::Color::White);
+}
+
 void GameState::initLevel()
 {
 	this->level = 1;
@@ -122,7 +139,7 @@ void GameState::initLevel()
 	this->gold.setFont(this->font);
 	this->gold.setString("GOLD : "+std::to_string(this->money));
 	this->gold.setCharacterSize(48);
-	this->gold.setPosition(sf::Vector2f(1600.f, 30.f));
+	this->gold.setPosition(sf::Vector2f(1600.f, 70.f));
 	this->gold.setFillColor(sf::Color::Yellow);
 
 	this->towerSeller = new TowerSeller(1400.f, 800.f);
@@ -163,6 +180,7 @@ void GameState::startLevel()
 GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::string player_name)
 	: State(window, supportedKeys, states)
 {
+
 	this->playerName = player_name;
 	this->initKeybinds();
 	this->initTextures();
@@ -175,6 +193,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initPlayer();
 	this->initCreator();
 	this->initButtons();
+	this->initScore();
 
 	//delete later
 	this->mon_walk = false;
@@ -513,6 +532,17 @@ void GameState::updateGold()
 	this->gold.setString("GOLD : "+std::to_string(this->money));
 }
 
+void GameState::updateScore()
+{
+	this->textScore.setString(std::to_string(this->score));
+}
+
+void GameState::updatePlayerHealth()
+{
+	if (this->playerHealth > 100) this->playerHealth = 100;
+	this->textPlayerHealth.setString(std::to_string(this->playerHealth) + "/100");
+}
+
 void GameState::update(const float& dt)
 {
 	this->updateMousePositions();
@@ -567,6 +597,8 @@ void GameState::update(const float& dt)
 	this->destoryMonsters();
 
 	this->updateGold();
+	this->updateScore();
+	this->updatePlayerHealth();
 
 }
 
@@ -589,6 +621,7 @@ void GameState::destoryMonsters()
 	for (int i = 0; i < this->monstersAtLevelN.size();) {
 		if (this->monstersAtLevelN[i]->isDead) {
 			//delete this->monstersAtLevelN[i];
+			this->score += 100;
 			this->monstersAtLevelN.erase(this->monstersAtLevelN.begin() + i);
 		}
 		else {
@@ -675,6 +708,16 @@ void GameState::renderGold(sf::RenderTarget* target)
 	target->draw(this->gold);
 }
 
+void GameState::renderScore(sf::RenderTarget* target)
+{
+	target->draw(this->textScore);
+}
+
+void GameState::renderPlayerHealth(sf::RenderTarget* target)
+{
+	target->draw(this->textPlayerHealth);
+}
+
 void GameState::render(sf::RenderTarget* target)
 {
 	if (!target)
@@ -698,5 +741,6 @@ void GameState::render(sf::RenderTarget* target)
 	this->renderBullet(target);
 
 	this->renderGold(target);
-	
+	this->renderScore(target);
+	this->renderPlayerHealth(target);
 }

@@ -18,7 +18,6 @@
 class GameState :
     public State
 {
-//enum TowerType { NORMAL = 0, FLY, HEAVY };
 private:
     Player* player;
     std::vector<Monster*> monstersAtLevelN;
@@ -35,11 +34,16 @@ private:
     sf::Font font;
     bool toggleHitbox;
     int level;
+    sf::Text textLevel;
     int playerHealth;
+    sf::Text textPlayerHealth;
     int money;
     sf::Text gold;
+    int score;
+    sf::Text textScore;
     std::string playerName;
     sf::Text textName;
+    
 
     // delete later 
     bool mon_walk;
@@ -51,6 +55,7 @@ private:
     void initPlayer();
     void initFont();
     void initButtons();
+    void initScore();
     void initLevel();
     void incrementLevel();
     void startLevel();
@@ -84,6 +89,8 @@ public:
     void updateBullets(const float& dt);
     void updateButtons();
     void updateGold();
+    void updateScore();
+    void updatePlayerHealth();
     void update(const float& dt);
 
     void destoryBullets();
@@ -97,6 +104,8 @@ public:
     void renderButtons(sf::RenderTarget* target);
     void renderBullet(sf::RenderTarget* target);
     void renderGold(sf::RenderTarget* target);
+    void renderScore(sf::RenderTarget* target);
+    void renderPlayerHealth(sf::RenderTarget* target);
     void render(sf::RenderTarget* target = NULL);
 };
 

@@ -7,6 +7,9 @@ TowerFly::TowerFly(float x, float y, Entity::EntityAttributes attribute, int dam
 
 	this->radiusShape.setRadius(this->radius);
 	this->radiusShape.setPosition(x - this->radius - 10.f, y - this->radius);
+
+	delete this->getHitboxComponent();
+	this->createHitboxComponent(x - this->sprite.getTexture()->getSize().x / 2 - 20.f, y - this->sprite.getTexture()->getSize().y - 30.f, 100.f);
 }
 
 TowerFly::~TowerFly()
