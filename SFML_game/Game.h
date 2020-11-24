@@ -13,6 +13,7 @@ private:
 	std::vector<sf::VideoMode> videoModes;
 	sf::ContextSettings windowSettings;
 	bool fullscreen;
+	bool shouldPollEvent;
 
 	
 	/*delta keep track of game for how long to do one update and one render call*/

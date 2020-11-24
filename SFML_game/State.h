@@ -33,6 +33,7 @@ public:
 	State(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
 	virtual ~State();
 
+	const sf::RenderWindow* getWindow() const;
 	const bool& getQuit() const;
 	void endState();
 

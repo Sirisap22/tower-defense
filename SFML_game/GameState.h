@@ -38,6 +38,8 @@ private:
     int playerHealth;
     int money;
     sf::Text gold;
+    std::string playerName;
+    sf::Text textName;
 
     // delete later 
     bool mon_walk;
@@ -53,7 +55,7 @@ private:
     void incrementLevel();
     void startLevel();
 public:
-    GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+    GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::string player_name);
     virtual ~GameState();
 
     // Functions

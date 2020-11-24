@@ -12,6 +12,11 @@ State::~State()
 {
 }
 
+const sf::RenderWindow* State::getWindow() const
+{
+	return this->window;
+}
+
 const bool& State::getQuit() const
 {
 	return this->quit;

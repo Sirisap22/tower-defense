@@ -68,12 +68,13 @@ void Game::initKeys()
 
 void Game::initStates()
 {
-    this->states.push(new MainMenuState(this->window, &this->supportedKeys, &this->states));
+    this->states.push(new MainMenuState(this->window, &this->supportedKeys, &this->states, &this->shouldPollEvent));
 }
 
 //Constructors/Destructors
 Game::Game()
 {
+    this->shouldPollEvent = true;
     this->initWindow();
     this->initKeys();
     this->initStates();
@@ -116,7 +117,7 @@ void Game::updateSFMLEvents()
 
 void Game::update()
 {
-    this->updateSFMLEvents();
+    if (shouldPollEvent) this->updateSFMLEvents();
 
     if (!this->states.empty())
     {

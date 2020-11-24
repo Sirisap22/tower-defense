@@ -3,7 +3,9 @@
 
 #include "GameState.h"
 #include "Button.h"
-#include "Plane.h"
+//#include "Plane.h"
+#include "InputFieldPlane.h"
+#include "InputField.h"
 
 class MainMenuState :
     public State
@@ -14,9 +16,14 @@ private:
     sf::RectangleShape background;
     sf::Font font;
     bool toggleLeaderBoard;
+    bool toggleInputField;
+    bool* shouldPollEvent;
+    sf::Event event;
 
     std::map<std::string, Button*> buttons;
     Plane* leaderBoard;
+    InputFieldPlane* InputPlane;
+    InputField* input;
 
     // Functions
     void initVariables();
@@ -25,13 +32,15 @@ private:
     void initKeybinds();
     void initButtons();
     void initLeaderBoard();
+    void initInputField();
 public:
-    MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+    MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, bool* shouldPollEvent);
     virtual ~MainMenuState();
 
     // Functions
 
     void updateInput(const float& dt);
+    void updateShouldPollEvent();
     void updateButtons();
     void update(const float& dt);
     void renderButtons(sf::RenderTarget* target = NULL);

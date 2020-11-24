@@ -9,7 +9,7 @@
 
 class Plane
 {
-private:
+protected:
 	sf::RectangleShape shape;
 	sf::Font* font;
 	sf::Text header;
@@ -22,6 +22,6 @@ public:
 		sf::Font* font, unsigned header_character_size ,unsigned content_character_size);
 	virtual ~Plane();
 	
-	void render(sf::RenderTarget* target);
+	virtual void render(sf::RenderTarget* target);
 };
 

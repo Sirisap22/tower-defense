@@ -1,24 +1,34 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <iostream>
 class InputField
 {
 private:
+	sf::RenderWindow* window;
+	sf::Clock clock;
+	sf::Event event;
 	sf::RectangleShape field;
 	sf::RectangleShape cursor;
 	sf::Font* font;
 	sf::Text text;
-
-	sf::Color idleColor;
-	sf::Color focusColor;
+	std::string name;
+	unsigned characterSize;
+	bool isFocus;
+	float dt;
 
 public:
-	InputField(float x, float y, float width, float height,
+	InputField(sf::RenderWindow* window, float x, float y, float width, float height,
 		sf::Font* font, unsigned character_size);
 	virtual ~InputField();
 
-	void updateField(std::string str);
-	void updateFocusState(const float dt);
+	const std::string getName() const;
+
+	void updateField();
+	void updateFocusState(const sf::Vector2f mousePos);
+	void update(const float& dt, const sf::Vector2f mousePos);
+
+	void render(sf::RenderTarget* target);
 
 };
 

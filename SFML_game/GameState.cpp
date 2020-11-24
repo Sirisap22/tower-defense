@@ -84,6 +84,13 @@ void GameState::initCreator()
 
 void GameState::initPlayer()
 {
+	sf::Text player;
+	player.setString(this->playerName);
+	player.setPosition(10.f, 10.f);
+	player.setCharacterSize(42);
+	player.setFont(this->font);
+	player.setFillColor(sf::Color::White);
+	this->textName = player;
 	this->playerHealth = 100;
 	this->money = 3000;
 	this->player = new Player(0.f, 0.f, this->textures["PLAYER_SHEET"]);
@@ -153,9 +160,10 @@ void GameState::startLevel()
 
 
 // Constructors / Destructors
-GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
+GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::string player_name)
 	: State(window, supportedKeys, states)
 {
+	this->playerName = player_name;
 	this->initKeybinds();
 	this->initTextures();
 
@@ -676,6 +684,7 @@ void GameState::render(sf::RenderTarget* target)
 	target->draw(this->bg);
 
 	this->player->render(target);
+	target->draw(this->textName);
 
 	this->renderTowerCreators(target);
 	this->renderTowerSeller(target);

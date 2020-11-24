@@ -58,10 +58,12 @@ void MainMenuState::initButtons()
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
-	this->buttons["LEADERBOARD"] = new Button(300, 640, 200, 50,
+	this->buttons["LEADERBOARD"] = new Button(
+		300, 640, 200, 50,
 		&this->font, "Leaderboard", 72,
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
+
 
 	this->buttons["EXIT_STATE"] = new Button(300, 740, 200, 50,
 		&this->font, "Quit", 72,
@@ -74,10 +76,33 @@ void MainMenuState::initLeaderBoard()
 	this->leaderBoard = new Plane(1030.f, 275.f, 500.f, 450.f, &this->font, 72, 48);
 }
 
-MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states)
+void MainMenuState::initInputField()
+{
+	this->InputPlane = new InputFieldPlane(1030.f, 375.f, 500.f, 300.f, &this->font, 72, 0);
+	this->buttons["START_GAME"] = new Button(
+		1060, 600, 200, 50,
+		&this->font, "Start", 52,
+		sf::Color(250, 250, 250, 250), sf::Color(250, 250, 250, 100), sf::Color(70, 70, 70, 200),
+		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
+	);
+
+	this->buttons["CANCEL_GAME"] = new Button(
+		1300, 600, 200, 50,
+		&this->font, "Cancel", 52,
+		sf::Color(250, 250, 250, 250), sf::Color(250, 250, 250, 100), sf::Color(70, 70, 70, 200),
+		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
+	);
+
+
+}
+
+MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, bool* shouldPollEvent)
 	: State(window, supportedKeys, states)
 {
 	this->toggleLeaderBoard = false;
+	this->toggleInputField = false;
+	this->shouldPollEvent = shouldPollEvent;
+	*this->shouldPollEvent = true;
 
 	this->initVariables();
 	this->initBackground();
@@ -86,6 +111,7 @@ MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int
 	this->initButtons();
 	this->initFonts();
 	this->initLeaderBoard();
+	this->initInputField();
 }
 
 MainMenuState::~MainMenuState()
@@ -98,10 +124,25 @@ MainMenuState::~MainMenuState()
 
 	delete this->leaderBoard;
 
+	//if (this->input)
+	//	delete this->input;
+
 }
 
 void MainMenuState::updateInput(const float& dt)
 {
+	this->input->update(dt, this->mousePosView);
+
+}
+
+void MainMenuState::updateShouldPollEvent()
+{
+	if (this->toggleInputField) {
+		*this->shouldPollEvent = false;
+	}
+	else {
+		*this->shouldPollEvent = true;
+	}
 }
 
 void MainMenuState::updateButtons()
@@ -114,10 +155,31 @@ void MainMenuState::updateButtons()
 	// New game
 	if (this->buttons["GAME_STATE"]->isPressed())
 	{
-		this->states->push(new GameState(this->window, this->supportedKeys, this->states));
+		this->input = new InputField(this->window, 1130.f, 500.f, 300.f, 50.f, &this->font, 34);
+		this->toggleInputField = !this->toggleInputField;
+		this->toggleLeaderBoard = false;
+		if (!this->toggleInputField) {
+			delete this->input;
+		}
+	}
+
+	if (this->buttons["START_GAME"]->isPressed() && this->input->getName().size() > 0) {
+		this->toggleInputField = false;
+		this->states->push(new GameState(this->window, this->supportedKeys, this->states, this->input->getName()));
+		delete this->input;
+		*this->shouldPollEvent = true;
+	}
+
+	if (this->buttons["CANCEL_GAME"]->isPressed()) {
+		this->toggleInputField = false;
+		delete this->input;
 	}
 
 	if (this->buttons["LEADERBOARD"]->isPressed()) {
+		if (this->toggleInputField) {
+			this->toggleInputField = false;
+			delete this->input;
+		}
 		this->toggleLeaderBoard = !this->toggleLeaderBoard;
 	}
 
@@ -126,12 +188,19 @@ void MainMenuState::updateButtons()
 	{
 		this->endState();
 	}
+
+
+
 }
 
 void MainMenuState::update(const float& dt)
 {
 	this->updateMousePositions();
-	this->updateInput(dt);
+	this->updateShouldPollEvent();
+
+	if (this->toggleInputField) {
+		this->updateInput(dt);
+	}
 
 	this->updateButtons();
 
@@ -142,7 +211,12 @@ void MainMenuState::renderButtons(sf::RenderTarget* target)
 {
 	for (auto& it : this->buttons)
 	{
-		it.second->render(target);
+		if (it.first == "START_GAME" || it.first == "CANCEL_GAME") {
+			if (this->toggleInputField) it.second->render(target);
+		}
+		else {
+			it.second->render(target);
+		}
 	}
 }
 
@@ -154,6 +228,13 @@ void MainMenuState::render(sf::RenderTarget* target)
 	}
 
 	target->draw(this->background);
+
+	if (this->input && this->InputPlane && this->toggleInputField) {
+		this->InputPlane->render(target);
+		this->input->render(target);
+
+	}
+
 		
 	this->renderButtons(target);
 
@@ -161,6 +242,7 @@ void MainMenuState::render(sf::RenderTarget* target)
 	if (this->toggleLeaderBoard) {
 		this->leaderBoard->render(target);
 	}
+
 
 	// remove later
 	sf::Text mouseText;

@@ -108,6 +108,9 @@
     <ClCompile Include="TowerSeller.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="InputFieldPlane.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameState.h">
@@ -180,6 +183,9 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="TowerSeller.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="InputFieldPlane.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>

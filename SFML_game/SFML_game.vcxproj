@@ -27,6 +27,7 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="HitboxComponent.cpp" />
     <ClCompile Include="InputField.cpp" />
+    <ClCompile Include="InputFieldPlane.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="Monster.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="HitboxComponent.h" />
     <ClInclude Include="InputField.h" />
+    <ClInclude Include="InputFieldPlane.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterFly.h" />
