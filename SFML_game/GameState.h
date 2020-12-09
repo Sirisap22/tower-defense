@@ -74,6 +74,7 @@ public:
     void attackMonsters();
     void monsterBulletCollision();
     Monster* selectNotDeadMonster(Tower* tower);
+    void checkLoseHealth();
 
     
     void updateTowersAndMonstersInteraction();

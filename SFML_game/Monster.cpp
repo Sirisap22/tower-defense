@@ -31,77 +31,231 @@ void Monster::updateMonsterMove(const float& dt)
 	float x = this->getPosition().x;
 	float y = this->getPosition().y;
 
-	// step 1
-	if (x < 290-70 && y > 579) {
-		this->move(1.f, 0.f, dt);
-	}
+	float heavy = 30.f;
 
-	// step 2
-	else if (x < 365-70 && y > 579) {
-		this->move(1.f, 0.f, dt);
-		if (y < 810) {
-			this->move(0.f, 1.f, dt);
+	switch (this->attribute) {
+	case EntityAttributes::NORMAL:
+			// step 1
+			if (x < 290 - 70 && y > 579) {
+				this->move(1.f, 0.f, dt);
+			}
+
+		// step 2
+			else if (x < 365 - 70 && y > 579) {
+				this->move(1.f, 0.f, dt);
+				if (y < 810) {
+					this->move(0.f, 1.f, dt);
+				}
+			}
+
+		// step 3
+			else if (x < 455 - 70 && y > 579) {
+				this->move(1.f, 0.f, dt);
+			}
+
+		// step 4
+			else if (x < 554 - 70 && y > 579) {
+				this->move(1.f, 0.f, dt);
+				if (y > 619) {
+					this->move(0.f, -1.f, dt);
+				}
+			}
+
+		// step 5
+			else if (x < 652 && y > 579) {
+				this->move(1.f, 0.f, dt);
+				if (y < 654) {
+					this->move(0.f, 0.5f, dt);
+				}
+			}
+
+		// step 6
+			else if (x < (1100 - 70) && y > 579) {
+				this->move(1.f, 0.f, dt);
+			}
+
+		// step 7
+			else if (x < (1200 - 50) && y > 344) {
+				this->move(1.f, 0.f, dt);
+				if (y > 500) {
+					this->move(0.f, -1.f, dt);
+				}
+			}
+			else if (y > 344) {
+				this->move(0.f, -1.f, dt);
+				//if (x >  )
+			}
+
+		// step 8
+			else if (x > 600 + 70 && y > 326) {
+				this->move(-1.f, 0.f, dt);
+				if (x < 670 + 50) {
+					this->move(0.f, -1.f, dt);
+				}
+			}
+
+		// step 9
+			else if (y > 160 - 156) {
+				if (x > 650 + 20) {
+					this->move(-1.f, 0.f, dt);
+				}
+				this->move(0.f, -1.f, dt);
+			}
+
+		// step 10
+			else if (y < 160 - 156 && x < 1900) {
+				this->move(1.f, 0.f, dt);
+			}
+			break;
+	case EntityAttributes::HEAVY:
+		// step 1
+		if (x < 290 - 70 && y > 579-heavy) {
+			this->move(1.f, 0.f, dt);
 		}
-	}
 
-	// step 3
-	else if (x < 455-70 && y > 579) {
-		this->move(1.f, 0.f, dt);
-	}
+		// step 2
+		else if (x < 365 - 70 && y > 579-heavy) {
+			this->move(1.f, 0.f, dt);
+			if (y < 810-heavy) {
+				this->move(0.f, 1.f, dt);
+			}
+		}
 
-	// step 4
-	else if (x < 554-70 && y > 579) {
-		this->move(1.f, 0.f, dt);
-		if (y > 619) {
+		// step 3
+		else if (x < 455 - 70 && y > 579-heavy) {
+			this->move(1.f, 0.f, dt);
+		}
+
+		// step 4
+		else if (x < 554 - 70 && y > 579-heavy) {
+			this->move(1.f, 0.f, dt);
+			if (y > 619-heavy) {
+				this->move(0.f, -1.f, dt);
+			}
+		}
+
+		// step 5
+		else if (x < 652 && y > 579-heavy) {
+			this->move(1.f, 0.f, dt);
+			if (y < 654-heavy) {
+				this->move(0.f, 0.5f, dt);
+			}
+		}
+
+		// step 6
+		else if (x < (1100 - 70) && y > 579-heavy) {
+			this->move(1.f, 0.f, dt);
+		}
+
+		// step 7
+		else if (x < (1200 - 50) && y > 344-heavy) {
+			this->move(1.f, 0.f, dt);
+			if (y > 500-heavy) {
+				this->move(0.f, -1.f, dt);
+			}
+		}
+		else if (y > 344-heavy) {
 			this->move(0.f, -1.f, dt);
+			//if (x >  )
 		}
-	}
 
-	// step 5
-	else if (x < 652 && y > 579) {
-		this->move(1.f, 0.f, dt);
-		if (y < 654) {
-			this->move(0.f, 0.5f, dt);
-		}
-	}
-
-	// step 6
-	else if (x < (1100-70) && y > 579) {
-		this->move(1.f, 0.f, dt);
-	}
-
-	// step 7
-	else if (x < (1200-50) && y > 344) {
-		this->move(1.f, 0.f, dt);
-		if (y > 500) {
-			this->move(0.f, -1.f, dt);
-		}
-	}
-	else if (y > 344) {
-		this->move(0.f, -1.f, dt);
-		//if (x >  )
-	}
-
-	// step 8
-	else if (x > 600+70 && y > 326) {
-		this->move(-1.f, 0.f, dt);
-		if (x < 670 + 50) {
-			this->move(0.f, -1.f, dt);
-		}
-	}
-
-	// step 9
-	else if (y > 160 - 156) {
-		if (x > 650+20) {
+		// step 8
+		else if (x > 600 + 70 && y > 326-heavy) {
 			this->move(-1.f, 0.f, dt);
+			if (x < 670 + 50) {
+				this->move(0.f, -1.f, dt);
+			}
 		}
-		this->move(0.f, -1.f, dt);
+
+		// step 9
+		else if (y > 160 - 156-heavy) {
+			if (x > 650) {
+				this->move(-1.f, 0.f, dt);
+			}
+			this->move(0.f, -1.f, dt);
+		}
+
+		// step 10
+		else if (y < 160 - 156-heavy && x < 1900) {
+			this->move(1.f, 0.f, dt);
+		}
+		break;
+	case EntityAttributes::FLY:
+		// step 1
+		if (x < 290 - 70 && y > 579) {
+			this->move(1.f, 0.f, dt);
+		}
+
+		// step 2
+		else if (x < 365 - 70 && y > 579) {
+			this->move(1.f, 0.f, dt);
+			if (y < 810) {
+				this->move(0.f, 1.f, dt);
+			}
+		}
+
+		// step 3
+		else if (x < 455 - 70 && y > 579) {
+			this->move(1.f, 0.f, dt);
+		}
+
+		// step 4
+		else if (x < 554 - 70 && y > 579) {
+			this->move(1.f, 0.f, dt);
+			if (y > 619) {
+				this->move(0.f, -1.f, dt);
+			}
+		}
+
+		// step 5
+		else if (x < 652 && y > 579) {
+			this->move(1.f, 0.f, dt);
+			if (y < 654) {
+				this->move(0.f, 0.5f, dt);
+			}
+		}
+
+		// step 6
+		else if (x < (1100 - 70) && y > 579) {
+			this->move(1.f, 0.f, dt);
+		}
+
+		// step 7
+		else if (x < (1200 - 50) && y > 344) {
+			this->move(1.f, 0.f, dt);
+			if (y > 500) {
+				this->move(0.f, -1.f, dt);
+			}
+		}
+		else if (y > 344) {
+			this->move(0.f, -1.f, dt);
+			//if (x >  )
+		}
+
+		// step 8
+		else if (x > 600 + 70 && y > 326) {
+			this->move(-1.f, 0.f, dt);
+			if (x < 670 + 50) {
+				this->move(0.f, -1.f, dt);
+			}
+		}
+
+		// step 9
+		else if (y > 160 - 156) {
+			if (x > 650 + 20) {
+				this->move(-1.f, 0.f, dt);
+			}
+			this->move(0.f, -1.f, dt);
+		}
+
+		// step 10
+		else if (y < 160 - 156 && x < 1900) {
+			this->move(1.f, 0.f, dt);
+		}
+		break;
 	}
 
-	// step 10
-	else if (y < 160 - 156 && x < 1900) {
-		this->move(1.f, 0.f, dt);
-	}
+
 }
 
 void Monster::update(const float& dt)

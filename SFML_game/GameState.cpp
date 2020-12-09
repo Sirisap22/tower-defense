@@ -147,19 +147,19 @@ void GameState::initLevel()
 	//this->monstersAtLevelN[0] = new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]);
 	
 	// init normal monsters
-	for (int i = 0; i < 2; ++i) {
+	for (int i = 0; i < 1; ++i) {
 		this->monstersAtLevelN.push_back(new MonsterNormal(-4.f, 580.f, Entity::EntityAttributes::NORMAL, 100, 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
 	}
 
 	// init heavy monsters
-	//for (int i = 0; i < 1; ++i) {
-	//	this->monstersAtLevelN.push_back(new MonsterHeavy(100, 100, Entity::EntityAttributes::HEAVY, 100, 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
-	//}
+	for (int i = 0; i < 1; ++i) {
+		this->monstersAtLevelN.push_back(new MonsterHeavy(-4.f, 550.f, Entity::EntityAttributes::HEAVY, 100, 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
+	}
 
 	// init fly monsters
-	//for (int i = 0; i < 2; ++i) {
-	//	this->monstersAtLevelN.push_back(new MonsterFly(100 * 2 * (i + 1), 100 * 2 * (i + 1), Entity::EntityAttributes::FLY, 100, 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
-	//}
+	for (int i = 0; i < 1; ++i) {
+		this->monstersAtLevelN.push_back(new MonsterFly(-4.f, 580.f, Entity::EntityAttributes::FLY, 100, 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
+	}
 
 	
 
@@ -362,6 +362,19 @@ Monster* GameState::selectNotDeadMonster(Tower* tower)
 	return nullptr;
 }
 
+void GameState::checkLoseHealth()
+{
+	if (!this->monstersAtLevelN.empty()) {
+		for (auto monster : this->monstersAtLevelN) {
+			if (monster->getPosition().x > 1750) {
+				monster->isDead = true;
+				this->playerHealth -= 10;
+				this->score -= 100;
+			}
+		}
+	}
+}
+
 
 void GameState::updateTowersAndMonstersInteraction()
 {
@@ -453,9 +466,13 @@ void GameState::updateMonstersMove(const float& dt)
 			monster->getHitboxComponent()->update(dt, this->monstersAtLevelN[0]->getPosition());
 		}*/
 
-		this->monstersAtLevelN[0]->updateMonsterMove(dt);
+		if (!this->monstersAtLevelN.empty()) {
+			for (auto monster : this->monstersAtLevelN) {
+				monster->updateMonsterMove(dt);
 
-		this->updateMonsterHitbox(this->monstersAtLevelN[0]);
+				this->updateMonsterHitbox(monster);
+			}
+		}
 	}
 }
 
@@ -580,6 +597,7 @@ void GameState::update(const float& dt)
 	this->updateSelectTower();
 
 	this->updateTowersAndMonstersInteraction();
+
 	this->checkMonstersDead();
 	this->destoryMonsters();
 
@@ -602,6 +620,8 @@ void GameState::update(const float& dt)
 	this->updateGold();
 	this->updateScore();
 	this->updatePlayerHealth();
+
+	this->checkLoseHealth();
 
 }
 
