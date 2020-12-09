@@ -19,12 +19,20 @@
 
 class MovementComponent
 {
+public: 
+	enum class MovementState {
+		IDLE,
+		LEFT,
+		RIGHT
+	};
 private:
 	sf::Sprite& sprite;
 
 	float maxVelocity;
 	float acceleration;
 	float deceleration;
+
+	MovementState movementState;
 
 	sf::Vector2f velocity;
 	
@@ -39,10 +47,9 @@ public:
 	const sf::Vector2f& getVelocity() const;
 
 	// Functions
-	const bool idle() const;
-	const bool moving() const;
-	const bool movingLeft() const;
-
+	const MovementState getMovementState() const;
+	void setMovementState(MovementState state);
+	
 	void move(const float x, const float y, const float dt);
 	void update(const float& dt);
 };

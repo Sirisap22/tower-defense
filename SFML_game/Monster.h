@@ -20,6 +20,7 @@ public:
     virtual ~Monster();
 
     // functions
+    virtual void updateMonsterMove(const float& dt);
     virtual void update(const float& dt);
     virtual void initComponents() = 0;
 };

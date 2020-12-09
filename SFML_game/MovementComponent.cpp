@@ -5,6 +5,7 @@ MovementComponent::MovementComponent(sf::Sprite& sprite,
 	: sprite(sprite), maxVelocity(maxVelocity), acceleration(acceleration), deceleration(deceleration)
 {
 	this->maxVelocity = maxVelocity;
+	this->movementState = MovementState::IDLE;
 }
 
 MovementComponent::~MovementComponent()
@@ -19,31 +20,14 @@ const sf::Vector2f& MovementComponent::getVelocity() const
 
 
 // Functions
-const bool MovementComponent::idle() const
+const MovementComponent::MovementState MovementComponent::getMovementState() const
 {
-	if (this->velocity.x == 0.f && this->velocity.y == 0.f) {
-		return true;
-	}
-
-	return false;
+	return this->movementState;
 }
 
-const bool MovementComponent::moving() const
+void MovementComponent::setMovementState(MovementState state)
 {
-	if (this->velocity.x > 0.f) {
-		return true;
-	}
-
-	return false;
-}
-
-const bool MovementComponent::movingLeft() const
-{
-	if (this->velocity.x < 0.f) {
-		return true;
-	}
-
-	return false;
+	this->movementState = state;
 }
 
 void MovementComponent::move(const float dir_x, const float dir_y, const float dt)
@@ -62,6 +46,9 @@ void MovementComponent::update(const float& dt)
 
 	if (this->velocity.x > 0.f) // Check for positive x
 	{
+		// Change movement state
+		this->movementState = MovementState::RIGHT;
+
 		// Max velocity check x positive
 		if (this->velocity.x > this->maxVelocity)
 			this->velocity.x = this->maxVelocity;
@@ -73,6 +60,7 @@ void MovementComponent::update(const float& dt)
 	}
 	else if (this->velocity.x < 0.f) // Check for negative x
 	{
+		this->movementState = MovementState::LEFT;
 		// Max velocity check x negative
 		if (this->velocity.x < -this->maxVelocity)
 			this->velocity.x = -this->maxVelocity;

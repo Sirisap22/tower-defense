@@ -10,6 +10,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
+#include "MovementComponent.h"
 
 class AnimationComponent
 {

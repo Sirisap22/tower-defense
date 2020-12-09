@@ -148,18 +148,18 @@ void GameState::initLevel()
 	
 	// init normal monsters
 	for (int i = 0; i < 2; ++i) {
-		this->monstersAtLevelN.push_back(new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 800, Entity::EntityAttributes::NORMAL, 100, 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
+		this->monstersAtLevelN.push_back(new MonsterNormal(-4.f, 580.f, Entity::EntityAttributes::NORMAL, 100, 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
 	}
 
 	// init heavy monsters
-	for (int i = 0; i < 1; ++i) {
-		this->monstersAtLevelN.push_back(new MonsterHeavy(100, 100, Entity::EntityAttributes::HEAVY, 100, 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
-	}
+	//for (int i = 0; i < 1; ++i) {
+	//	this->monstersAtLevelN.push_back(new MonsterHeavy(100, 100, Entity::EntityAttributes::HEAVY, 100, 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
+	//}
 
 	// init fly monsters
-	for (int i = 0; i < 2; ++i) {
-		this->monstersAtLevelN.push_back(new MonsterFly(100 * 2 * (i + 1), 100 * 2 * (i + 1), Entity::EntityAttributes::FLY, 100, 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
-	}
+	//for (int i = 0; i < 2; ++i) {
+	//	this->monstersAtLevelN.push_back(new MonsterFly(100 * 2 * (i + 1), 100 * 2 * (i + 1), Entity::EntityAttributes::FLY, 100, 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
+	//}
 
 	
 
@@ -438,7 +438,7 @@ void GameState::updateTowerUpgrader()
 void GameState::updateMonstersMove(const float& dt)
 {  
 	if (!this->monstersAtLevelN.empty()) {
-		if (this->monstersAtLevelN[0]->getHitboxComponent()->getHitbox().getPosition().x < 1500 && !mon_walk) {
+		/*if (this->monstersAtLevelN[0]->getHitboxComponent()->getHitbox().getPosition().x < 1500 && !mon_walk) {
 			this->monstersAtLevelN[0]->move(1.f, 0.f, dt);
 		}
 		else {
@@ -447,11 +447,14 @@ void GameState::updateMonstersMove(const float& dt)
 			if (this->monstersAtLevelN[0]->getHitboxComponent()->getHitbox().getPosition().x < 100) {
 				this->mon_walk = false;
 			}
-		}
+		}*/
 
 		/*for (auto& monster : this->monstersAtLevelN) {
 			monster->getHitboxComponent()->update(dt, this->monstersAtLevelN[0]->getPosition());
 		}*/
+
+		this->monstersAtLevelN[0]->updateMonsterMove(dt);
+
 		this->updateMonsterHitbox(this->monstersAtLevelN[0]);
 	}
 }
@@ -743,4 +746,15 @@ void GameState::render(sf::RenderTarget* target)
 	this->renderGold(target);
 	this->renderScore(target);
 	this->renderPlayerHealth(target);
+
+	// remove later
+	sf::Text mouseText;
+	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y-50);
+	mouseText.setFont(this->font);
+	mouseText.setCharacterSize(18);
+	std::stringstream ss;
+	ss << this->mousePosView.x << " " << this->mousePosView.y;
+	mouseText.setString(ss.str());
+
+	target->draw(mouseText);
 }
