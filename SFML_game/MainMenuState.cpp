@@ -129,6 +129,10 @@ MainMenuState::~MainMenuState()
 
 }
 
+void MainMenuState::toggleStatePaused()
+{
+}
+
 void MainMenuState::updateInput(const float& dt)
 {
 	this->input->update(dt, this->mousePosView);

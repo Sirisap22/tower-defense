@@ -27,6 +27,7 @@ void State::endState()
 	this->quit = true;
 }
 
+
 void State::updateMousePositions()
 {
 	this->mousePosScreen = sf::Mouse::getPosition();

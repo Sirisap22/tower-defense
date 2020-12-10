@@ -38,6 +38,7 @@ public:
 	void endState();
 
 	// Abstract Functions 
+	virtual void toggleStatePaused() = 0;
 	virtual void updateMousePositions();
 	virtual void updateInput(const float& dt) = 0;
 	virtual void update(const float& dt) = 0;

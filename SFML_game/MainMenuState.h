@@ -39,6 +39,7 @@ public:
 
     // Functions
 
+    void toggleStatePaused();
     void updateInput(const float& dt);
     void updateShouldPollEvent();
     void updateButtons();

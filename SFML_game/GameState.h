@@ -55,6 +55,8 @@ private:
     int countdown;
     bool isWaveStarted;
     sf::Text countdownText;
+    bool isGamePause;
+    sf::Clock pauseDebounce;
 
     // delete later 
     bool mon_walk;
@@ -89,6 +91,7 @@ public:
     Monster* selectNotDeadMonster(Tower* tower);
     void checkLoseHealth();
     void nextLevel();
+    void toggleStatePaused();
 
     void updateFreeAreas();
     void updateLevel();

@@ -178,26 +178,27 @@ void GameState::initCountdown()
 void GameState::initTowerAreas()
 {
 	//1
-	this->towerAreas.push_back(new TowerArea(1000.f, 500.f, 60.f));
+	this->towerAreas.push_back(new TowerArea(821.f, 930.f, 60.f));
 	//2
-
+	this->towerAreas.push_back(new TowerArea(660.f, 600.f, 60.f));
 	//3
-
+	this->towerAreas.push_back(new TowerArea(965.f, 590.f, 60.f));
 	//4
-
+	this->towerAreas.push_back(new TowerArea(1385.f, 590.f, 60.f));
 	//5
-
+	this->towerAreas.push_back(new TowerArea(820.f, 255.f, 60.f));
 	//6
-
+	this->towerAreas.push_back(new TowerArea(1115.f, 250.f, 60.f));
 	//7
+	this->towerAreas.push_back(new TowerArea(1415.f, 250.f, 60.f));
 }
 
 void GameState::spawnMonsters()
 {
 	if (this->isWaveStarted && !this->isCountdown &&
 		this->totalMonstersAtLevelN > this->totalMonstersAtCurrentTime &&
-		this->spawnTimer.getElapsedTime().asSeconds() >= this->totalMonstersAtCurrentTime) {
-
+		this->spawnTimer.getElapsedTime().asSeconds() >= 1) {
+		this->spawnTimer.restart();
 	
 		if (this->level < 5) {
 			
@@ -296,6 +297,8 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initLevel();
 	this->initTowerAreas();
 
+	this->isGamePause = false;
+
 }
 
 GameState::~GameState()
@@ -326,6 +329,11 @@ GameState::~GameState()
 	{
 		delete it2->second;
 	}
+
+	for (auto& area : this->towerAreas) {
+		delete area;
+	}
+	this->towerAreas.clear();
 
 	delete this->towerSeller;
 
@@ -483,6 +491,21 @@ void GameState::nextLevel()
 	this->spawnTimer.restart();
 }
 
+void GameState::toggleStatePaused()
+{
+
+	if (this->pauseDebounce.getElapsedTime() > sf::seconds(60.f)) {
+		this->pauseDebounce.restart();
+	}
+	if (this->pauseDebounce.getElapsedTime() > sf::seconds(0.2f)) {
+		this->pauseDebounce.restart(); 
+		
+		this->isGamePause = !this->isGamePause;
+
+		this->countdownTimer.restart();
+		
+	}
+}
 
 void GameState::updateFreeAreas()
 {
@@ -723,70 +746,71 @@ void GameState::updatePlayerHealth()
 
 void GameState::update(const float& dt)
 {
-	this->spawnMonsters();
-	this->updateMousePositions();
-	this->updateInput(dt);
-	this->updateMonstersMove(dt);
+	if (!isGamePause) {
+		this->spawnMonsters();
+		this->updateMousePositions();
+		this->updateInput(dt);
+		this->updateMonstersMove(dt);
 
-	this->player->update(dt);
+		this->player->update(dt);
 
-	// tower creator
-	for (auto& it : this->towerCreator)
-	{
-		it.second->update(this->mousePosView, dt);
+		// tower creator
+		for (auto& it : this->towerCreator)
+		{
+			it.second->update(this->mousePosView, dt);
+		}
+
+		this->updateTowerCreator(dt);
+		this->updateTowerSeller();
+		this->updateTowerUpgrader();
+
+		for (auto& monster : this->monstersAtLevelN) {
+			monster->update(dt);
+		}
+
+		this->updateButtons();
+
+		//this->monstersAtLevelN->update(dt);
+
+		// delete later
+		for (auto& tower : this->towersAtCurrentState) {
+			tower->update(dt);
+		}
+
+		this->updateSelectTower();
+
+		this->updateTowersAndMonstersInteraction();
+
+		this->checkMonstersDead();
+		this->destoryMonsters();
+
+
+		this->attackMonsters();
+		this->checkMonstersDead();
+		this->destoryMonsters();
+
+
+		this->destoryBullets();
+		this->updateBullets(dt);
+		//	this->destoryBullets();
+
+		this->monsterBulletCollision();
+		//this->destoryBullets();
+
+		this->updateMonstersDead();
+		this->destoryMonsters();
+
+		this->updateGold();
+		this->updateScore();
+		this->updatePlayerHealth();
+
+		this->checkLoseHealth();
+
+		this->updateCountdown();
+		this->updateEndLevel();
+		this->updateLevel();
+		this->updateFreeAreas();
 	}
-
-	this->updateTowerCreator(dt);
-	this->updateTowerSeller();
-	this->updateTowerUpgrader();
-
-	for (auto& monster : this->monstersAtLevelN) {
-		monster->update(dt);
-	}
-
-	this->updateButtons();
-
-	//this->monstersAtLevelN->update(dt);
-
-	// delete later
-	for (auto& tower : this->towersAtCurrentState) {
-		tower->update(dt);
-	}
-
-	this->updateSelectTower();
-
-	this->updateTowersAndMonstersInteraction();
-
-	this->checkMonstersDead();
-	this->destoryMonsters();
-
-
-	this->attackMonsters();
-	this->checkMonstersDead();
-	this->destoryMonsters();
-
-
-	this->destoryBullets();
-	this->updateBullets(dt);
-	//	this->destoryBullets();
-
-	this->monsterBulletCollision();
-	//this->destoryBullets();
-
-	this->updateMonstersDead();
-	this->destoryMonsters();
-
-	this->updateGold();
-	this->updateScore();
-	this->updatePlayerHealth();
-
-	this->checkLoseHealth();
-
-	this->updateCountdown();
-	this->updateEndLevel();
-	this->updateLevel();
-	this->updateFreeAreas();
-
 }
 
 void GameState::destoryBullets()
@@ -820,8 +844,10 @@ void GameState::destoryMonsters()
 
 void GameState::renderTowerAreas(sf::RenderTarget* target)
 {
-	for (auto area : this->towerAreas) {
-		area->render(target);
+	if (this->toggleHitbox) {
+		for (auto area : this->towerAreas) {
+			area->render(target);
+		}
 	}
 }
 
@@ -957,7 +983,7 @@ void GameState::render(sf::RenderTarget* target)
 
 	// remove later
 	sf::Text mouseText;
-	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y-50);
+	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 50);
 	mouseText.setFont(this->font);
 	mouseText.setCharacterSize(18);
 	std::stringstream ss;

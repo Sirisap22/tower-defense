@@ -123,6 +123,10 @@ void Game::update()
     {
         this->states.top()->update(this->dt);
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(sf::Keyboard::P))) {
+            this->states.top()->toggleStatePaused();
+        }
+
         if (this->states.top()->getQuit())
         {
             this->states.top()->endState();
