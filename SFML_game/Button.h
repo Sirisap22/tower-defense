@@ -41,6 +41,8 @@ public:
 
 	// Accessors
 	const bool isPressed() const;
+	const sf::FloatRect getTextGlobalBounds() const;
+	void setButtonPosition(float x, float y);
 
 	//Functions
 	void update(const sf::Vector2f mousePos);

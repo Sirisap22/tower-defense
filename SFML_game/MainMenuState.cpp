@@ -184,6 +184,7 @@ void MainMenuState::updateButtons()
 			this->toggleInputField = false;
 			delete this->input;
 		}
+		this->leaderBoard = new Plane(1030.f, 275.f, 500.f, 450.f, &this->font, 72, 48);;
 		this->toggleLeaderBoard = !this->toggleLeaderBoard;
 	}
 

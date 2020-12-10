@@ -1,5 +1,5 @@
-Elon 12640
-Player 9870
-Test2 8890
-ggTKD 7320
-Sherlock 6100
+Elon	12640
+Player	9870
+Sherlock	300
+dsfatest01	200
+ggTKD	200

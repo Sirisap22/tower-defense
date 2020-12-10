@@ -2,6 +2,7 @@
 #define GAMESTATE_H
 
 #include <cstdlib>
+#include <algorithm>
 
 #include "State.h"
 #include "Monster.h"
@@ -41,8 +42,11 @@ private:
     int selectedTower;
     std::map<std::string, Button*> buttons;
     std::map<std::string, Button*> pausedButtons;
+    std::map<std::string, Button*> endButtons;
     sf::RectangleShape pausedPlane;
-    sf::Text pauseText;
+    sf::RectangleShape endPlane;
+    sf::Text endText;
+    sf::Text scoreEndText;
     sf::Font font;
     bool toggleHitbox;
     int level;
@@ -79,6 +83,8 @@ private:
     void initButtons();
     void initPausedButtons();
     void initPausedMenu();
+    void initEndButtons();
+    void initEndMenu();
     void initScore();
     void initLevel();
     void initCountdown();
@@ -103,6 +109,8 @@ public:
     void checkLoseHealth();
     void nextLevel();
     void toggleStatePaused();
+    void checkEndGame();
+    void endGame();
 
     void updateFreeAreas();
     void updateLevel();
@@ -124,12 +132,15 @@ public:
     void updateScore();
     void updatePlayerHealth();
     void updatePausedMenu();
+    void updateEndMenu();
+    void updateAndSaveScore();
     void update(const float& dt);
 
     void destoryBullets();
     void destoryMonsters();
 
     void renderPausedMenu(sf::RenderTarget* target);
+    void renderEndMenu(sf::RenderTarget* target);
     void renderTowerAreas(sf::RenderTarget* target);
     void renderLevel(sf::RenderTarget* target);
     void renderCountdown(sf::RenderTarget* target);

@@ -48,6 +48,16 @@ const bool Button::isPressed() const
 	return false;
 }
 
+const sf::FloatRect Button::getTextGlobalBounds() const
+{
+	return this->text.getGlobalBounds();
+}
+
+void Button::setButtonPosition(float x, float y)
+{
+	this->text.setPosition(x, y);
+}
+
 // Functions
 
 void Button::update(const sf::Vector2f mousePos)

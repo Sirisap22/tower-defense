@@ -143,11 +143,36 @@ void GameState::initPausedMenu()
 	this->pausedPlane.setPosition(180.f, 0.f);
 	this->pausedPlane.setSize(sf::Vector2f(440.f, this->window->getSize().y));
 
-	//this->pauseText.setString("Game Paused");
-	//this->pauseText.setFont(this->font);
-	//this->pauseText.setFillColor(sf::Color::White);
-	//this->pauseText.setCharacterSize(72);
-	//this->pauseText.setPosition(300.f - 100.f, 100.f);
+}
+
+void GameState::initEndButtons()
+{
+	this->endButtons["BACK_TO_MENU"] = new Button(
+		this->window->getSize().x/2, 570.f, 200.f, 50.f,
+		&this->font, "Back To Menu", 72,
+		sf::Color(250, 250, 250, 250), sf::Color(250, 250, 250, 100), sf::Color(70, 70, 70, 200),
+		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
+	);
+
+	this->endButtons["BACK_TO_MENU"]->setButtonPosition(this->window->getSize().x / 2 - this->endButtons["BACK_TO_MENU"]->getTextGlobalBounds().width / 2, 570.f);
+}
+
+void GameState::initEndMenu()
+{
+	this->endPlane.setFillColor(sf::Color(70, 70, 70, 200));
+	this->endPlane.setPosition(this->window->getSize().x/2 - 440.f/2.f , 320.f);
+	this->endPlane.setSize(sf::Vector2f(440.f, 430.f));
+
+	this->endText.setString("Your Score");
+	this->endText.setFont(this->font);
+	this->endText.setCharacterSize(72);
+	this->endText.setFillColor(sf::Color::White);
+	this->endText.setPosition(this->window->getSize().x / 2 - this->endText.getGlobalBounds().width / 2, 350.f);
+
+	this->scoreEndText.setFont(this->font);
+	this->scoreEndText.setCharacterSize(72);
+	this->scoreEndText.setFillColor(sf::Color::White);
+	this->scoreEndText.setPosition(this->window->getSize().x / 2 - this->scoreEndText.getGlobalBounds().width / 2, 450.f);
 
 }
 
@@ -277,20 +302,6 @@ void GameState::spawnMonsters()
 	}
 		
 
-	// init normal monsters
-	/*for (int i = 0; i < 1; ++i) {
-		this->monstersAtLevelN.push_back(new MonsterNormal(-4.f, 580.f, Entity::EntityAttributes::NORMAL, 100, 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
-	}*/
-
-	// init heavy monsters
-	//for (int i = 0; i < 1; ++i) {
-	//	this->monstersAtLevelN.push_back(new MonsterHeavy(-4.f, 550.f, Entity::EntityAttributes::HEAVY, 100, 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
-	//}
-
-	// init fly monsters
-	/*for (int i = 0; i < 1; ++i) {
-		this->monstersAtLevelN.push_back(new MonsterFly(-4.f, 580.f, Entity::EntityAttributes::FLY, 100, 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
-	}*/
 }
 
 void GameState::startLevel()
@@ -330,6 +341,9 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 
 	this->initPausedButtons();
 	this->initPausedMenu();
+
+	this->initEndButtons();
+	this->initEndMenu();
 
 	this->isGamePause = false;
 	this->status = GameState::Status::PLAY;
@@ -374,6 +388,11 @@ GameState::~GameState()
 	auto it3 = this->pausedButtons.begin();
 	for (it3 = this->pausedButtons.begin(); it3 != this->pausedButtons.end(); ++it3) {
 		delete it3->second;
+	}
+
+	auto it4 = this->endButtons.begin();
+	for (it4 = this->endButtons.begin(); it4 != this->endButtons.end(); ++it4) {
+		delete it4->second;
 	}
 
 	delete this->towerSeller;
@@ -522,6 +541,8 @@ void GameState::checkLoseHealth()
 			}
 		}
 	}
+
+	
 }
 
 void GameState::nextLevel()
@@ -535,9 +556,6 @@ void GameState::nextLevel()
 void GameState::toggleStatePaused()
 {
 
-	if (this->pauseDebounce.getElapsedTime() > sf::seconds(60.f)) {
-		this->pauseDebounce.restart();
-	}
 	if (this->pauseDebounce.getElapsedTime() > sf::seconds(0.2f)) {
 		this->pauseDebounce.restart(); 
 		
@@ -548,6 +566,7 @@ void GameState::toggleStatePaused()
 				this->status = GameState::Status::PAUSE;
 			}
 			else {
+				this->scoreEndText.setString(std::to_string(this->score));
 				this->status = GameState::Status::END;
 			}
 		}
@@ -558,6 +577,24 @@ void GameState::toggleStatePaused()
 		this->countdownTimer.restart();
 		
 	}
+}
+
+void GameState::checkEndGame()
+{
+	if (this->playerHealth <= 0) {
+		this->playerHealth = 0;
+
+		this->endGame();
+	}
+}
+
+void GameState::endGame()
+{
+	this->status = GameState::Status::END;
+	this->toggleStatePaused();
+	this->updateAndSaveScore();
+
+	// sort - update - save score
 }
 
 void GameState::updateFreeAreas()
@@ -813,6 +850,78 @@ void GameState::updatePausedMenu()
 	}
 }
 
+void GameState::updateEndMenu()
+{
+	for (auto button : this->endButtons) {
+		button.second->update(this->mousePosView);
+	}
+
+	if (this->score < 0) this->score = 0;
+	this->scoreEndText.setString(std::to_string(this->score));
+	this->scoreEndText.setPosition(this->window->getSize().x / 2 - this->scoreEndText.getGlobalBounds().width / 2, 450.f);
+
+	if (this->endButtons["BACK_TO_MENU"]->isPressed()) {
+		this->endState();
+	}
+}
+
+void GameState::updateAndSaveScore()
+{
+
+	typedef struct NameWithScore{
+		std::string name;
+		int score;
+	} NameWithScore;
+
+	auto compareScores = [](NameWithScore p_1, NameWithScore p_2) {
+		return p_1.score > p_2.score;
+	};
+
+	std::vector<NameWithScore> namesWithScore;
+
+	NameWithScore currentPlayer;
+	currentPlayer.name = this->playerName;
+	currentPlayer.score = this->score;
+
+	namesWithScore.push_back(currentPlayer);
+	
+	std::ifstream ifs("public/scores/scores.txt");
+
+	if (ifs.is_open())
+	{
+		std::string playerName = "";
+		std::string playerScore = "";
+
+		while (ifs >> playerName >> playerScore)
+		{
+			NameWithScore temp;
+			temp.name = playerName;
+			temp.score = std::stoi(playerScore);
+			namesWithScore.push_back(temp);
+		}
+
+
+	}
+
+	ifs.close();
+
+	std::sort(namesWithScore.begin(), namesWithScore.end(), compareScores);
+
+	while (namesWithScore.size() > 5) {
+		namesWithScore.pop_back();
+	}
+
+	std::fstream ofs;
+
+	ofs.open("public/scores/scores.txt", std::ios::out | std::ios::trunc);
+
+	for (auto nameWithScore : namesWithScore) {
+		ofs << nameWithScore.name + "\t" + std::to_string(nameWithScore.score) + "\n";
+	}
+
+	ofs.close();
+}
+
 void GameState::update(const float& dt)
 {
 	this->updateMousePositions();
@@ -880,15 +989,21 @@ void GameState::update(const float& dt)
 		this->updateEndLevel();
 		this->updateLevel();
 		this->updateFreeAreas();
+
+		this->checkEndGame();
 	
 	}
 
 	else if (this->isGamePause && this->status == GameState::Status::PAUSE) {
 		this->updatePausedMenu();
+
+		// change later
+	
 	}
 
-	else if (this->isGamePause && this->status == GameState::Status::END) {
-
+	else if (this->isGamePause && this->status == GameState::Status::END &&
+		this->status != GameState::Status::PAUSE) {
+		this->updateEndMenu();
 	}
 }
 
@@ -925,9 +1040,20 @@ void GameState::renderPausedMenu(sf::RenderTarget* target)
 {
 	target->draw(this->pausedPlane);
 
-	target->draw(this->pauseText);
 
 	for (auto button : this->pausedButtons) {
+		button.second->render(target);
+	}
+}
+
+void GameState::renderEndMenu(sf::RenderTarget* target)
+{
+	target->draw(this->endPlane);
+
+	target->draw(this->endText);
+	target->draw(this->scoreEndText);
+
+	for (auto button : this->endButtons) {
 		button.second->render(target);
 	}
 }
@@ -1073,9 +1199,14 @@ void GameState::render(sf::RenderTarget* target)
 
 	if (this->status == GameState::Status::PAUSE) {
 		this->renderPausedMenu(target);
-	}
-	else if (this->status == GameState::Status::END) {
 
+		// change later 
+
+	
+	}
+	else if (this->status == GameState::Status::END &&
+		this->status != GameState::Status::PAUSE) {
+		this->renderEndMenu(target);
 	}
 
 	// remove later
