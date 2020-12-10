@@ -22,6 +22,11 @@ class GameState :
     public State
 {
 private:
+    enum class Status {
+        PLAY,
+        PAUSE,
+        END
+    };
     Player* player;
     std::vector<Monster*> monstersAtLevelN;
     std::vector<Tower*> towersAtCurrentState;
@@ -35,6 +40,9 @@ private:
     TowerCreator::TowerType selectedTowerCreator;
     int selectedTower;
     std::map<std::string, Button*> buttons;
+    std::map<std::string, Button*> pausedButtons;
+    sf::RectangleShape pausedPlane;
+    sf::Text pauseText;
     sf::Font font;
     bool toggleHitbox;
     int level;
@@ -57,6 +65,7 @@ private:
     sf::Text countdownText;
     bool isGamePause;
     sf::Clock pauseDebounce;
+    GameState::Status status;
 
     // delete later 
     bool mon_walk;
@@ -68,6 +77,8 @@ private:
     void initPlayer();
     void initFont();
     void initButtons();
+    void initPausedButtons();
+    void initPausedMenu();
     void initScore();
     void initLevel();
     void initCountdown();
@@ -112,11 +123,13 @@ public:
     void updateGold();
     void updateScore();
     void updatePlayerHealth();
+    void updatePausedMenu();
     void update(const float& dt);
 
     void destoryBullets();
     void destoryMonsters();
 
+    void renderPausedMenu(sf::RenderTarget* target);
     void renderTowerAreas(sf::RenderTarget* target);
     void renderLevel(sf::RenderTarget* target);
     void renderCountdown(sf::RenderTarget* target);

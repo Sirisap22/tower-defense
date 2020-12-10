@@ -105,7 +105,7 @@ void GameState::initPlayer()
 
 void GameState::initFont()
 {
-	if (!this->font.loadFromFile("Fonts/Play-Regular.ttf")) {
+	if (!this->font.loadFromFile("Fonts/EvilEmpire-4BBVK.ttf")) {
 		throw("ERROR::GAMESTATE::COULD NOT LOAD FONT");
 	}
 }
@@ -118,6 +118,37 @@ void GameState::initButtons()
 		sf::Color(250, 250, 250, 250), sf::Color(70, 70, 70, 200), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 0)
 	);
+}
+
+void GameState::initPausedButtons()
+{
+	this->pausedButtons["RESUME"] = new Button(
+		300.f, 400.f, 200.f, 50.f,
+		&this->font, "Resume", 72,
+		sf::Color(250, 250, 250, 250), sf::Color(250, 250, 250, 100), sf::Color(70, 70, 70, 200),
+		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
+	);
+
+	this->pausedButtons["BACK_TO_MENU"] = new Button(
+		300.f, 500.f, 200.f, 50.f,
+		&this->font, "Back To Menu", 72,
+		sf::Color(250, 250, 250, 250), sf::Color(250, 250, 250, 100), sf::Color(70, 70, 70, 200),
+		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
+	);
+}
+
+void GameState::initPausedMenu()
+{
+	this->pausedPlane.setFillColor(sf::Color(70, 70, 70, 200));
+	this->pausedPlane.setPosition(180.f, 0.f);
+	this->pausedPlane.setSize(sf::Vector2f(440.f, this->window->getSize().y));
+
+	//this->pauseText.setString("Game Paused");
+	//this->pauseText.setFont(this->font);
+	//this->pauseText.setFillColor(sf::Color::White);
+	//this->pauseText.setCharacterSize(72);
+	//this->pauseText.setPosition(300.f - 100.f, 100.f);
+
 }
 
 void GameState::initScore()
@@ -297,7 +328,12 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initLevel();
 	this->initTowerAreas();
 
+	this->initPausedButtons();
+	this->initPausedMenu();
+
 	this->isGamePause = false;
+	this->status = GameState::Status::PLAY;
+
 
 }
 
@@ -334,6 +370,11 @@ GameState::~GameState()
 		delete area;
 	}
 	this->towerAreas.clear();
+
+	auto it3 = this->pausedButtons.begin();
+	for (it3 = this->pausedButtons.begin(); it3 != this->pausedButtons.end(); ++it3) {
+		delete it3->second;
+	}
 
 	delete this->towerSeller;
 
@@ -501,6 +542,18 @@ void GameState::toggleStatePaused()
 		this->pauseDebounce.restart(); 
 		
 		this->isGamePause = !this->isGamePause;
+
+		if (this->isGamePause) {
+			if (this->playerHealth > 0) {
+				this->status = GameState::Status::PAUSE;
+			}
+			else {
+				this->status = GameState::Status::END;
+			}
+		}
+		else if (!this->isGamePause) {
+			this->status = GameState::Status::PLAY;
+		}
 
 		this->countdownTimer.restart();
 		
@@ -744,11 +797,28 @@ void GameState::updatePlayerHealth()
 	this->textPlayerHealth.setString(std::to_string(this->playerHealth) + "/100");
 }
 
+void GameState::updatePausedMenu()
+{
+	for (auto button : this->pausedButtons) {
+		button.second->update(this->mousePosView);
+	}
+
+	// if pressed
+	if (this->pausedButtons["RESUME"]->isPressed()) {
+		this->toggleStatePaused();
+	}
+
+	if (this->pausedButtons["BACK_TO_MENU"]->isPressed()) {
+		this->endState();
+	}
+}
+
 void GameState::update(const float& dt)
 {
-	if (!isGamePause) {
-		this->spawnMonsters();
-		this->updateMousePositions();
+	this->updateMousePositions();
+
+	if (!isGamePause && this->status == GameState::Status::PLAY) {
+		this->spawnMonsters();		
 		this->updateInput(dt);
 		this->updateMonstersMove(dt);
 
@@ -810,6 +880,15 @@ void GameState::update(const float& dt)
 		this->updateEndLevel();
 		this->updateLevel();
 		this->updateFreeAreas();
+	
+	}
+
+	else if (this->isGamePause && this->status == GameState::Status::PAUSE) {
+		this->updatePausedMenu();
+	}
+
+	else if (this->isGamePause && this->status == GameState::Status::END) {
+
 	}
 }
 
@@ -839,6 +918,17 @@ void GameState::destoryMonsters()
 		else {
 			++i;
 		}
+	}
+}
+
+void GameState::renderPausedMenu(sf::RenderTarget* target)
+{
+	target->draw(this->pausedPlane);
+
+	target->draw(this->pauseText);
+
+	for (auto button : this->pausedButtons) {
+		button.second->render(target);
 	}
 }
 
@@ -980,6 +1070,13 @@ void GameState::render(sf::RenderTarget* target)
 	this->renderCountdown(target);
 	this->renderLevel(target);
 	this->renderTowerAreas(target);
+
+	if (this->status == GameState::Status::PAUSE) {
+		this->renderPausedMenu(target);
+	}
+	else if (this->status == GameState::Status::END) {
+
+	}
 
 	// remove later
 	sf::Text mouseText;
