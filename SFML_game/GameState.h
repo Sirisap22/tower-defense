@@ -1,6 +1,8 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
+#include <cstdlib>
+
 #include "State.h"
 #include "Monster.h"
 #include "MonsterNormal.h"
@@ -43,7 +45,12 @@ private:
     sf::Text textScore;
     std::string playerName;
     sf::Text textName;
-    
+    sf::Clock spawnTimer;
+    int totalMonstersAtLevelN;
+    int totalMonstersAtCurrentTime;
+    sf::Text nextWaveStartInText;
+    int waveCountdown;
+    sf::Clock nextWaveTimer;
 
     // delete later 
     bool mon_walk;
@@ -58,6 +65,7 @@ private:
     void initScore();
     void initLevel();
     void incrementLevel();
+    void spawnMonsters();
     void startLevel();
 public:
     GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::string player_name);

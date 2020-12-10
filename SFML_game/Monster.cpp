@@ -89,14 +89,14 @@ void Monster::updateMonsterMove(const float& dt)
 		// step 8
 			else if (x > 600 + 70 && y > 326) {
 				this->move(-1.f, 0.f, dt);
-				if (x < 670 + 50) {
+				if (x < 670 + 30) {
 					this->move(0.f, -1.f, dt);
 				}
 			}
 
 		// step 9
 			else if (y > 160 - 156) {
-				if (x > 650 + 20) {
+				if (x > 650 - 20) {
 					this->move(-1.f, 0.f, dt);
 				}
 				this->move(0.f, -1.f, dt);
@@ -169,7 +169,7 @@ void Monster::updateMonsterMove(const float& dt)
 
 		// step 9
 		else if (y > 160 - 156-heavy) {
-			if (x > 650) {
+			if (x > 650-40) {
 				this->move(-1.f, 0.f, dt);
 			}
 			this->move(0.f, -1.f, dt);
@@ -242,7 +242,7 @@ void Monster::updateMonsterMove(const float& dt)
 
 		// step 9
 		else if (y > 160 - 156) {
-			if (x > 650 + 20) {
+			if (x > 650 - 20) {
 				this->move(-1.f, 0.f, dt);
 			}
 			this->move(0.f, -1.f, dt);
@@ -275,7 +275,13 @@ void Monster::update(const float& dt)
 	// idle left
 	else {
 		this->sprite.setScale(-0.5f, 0.5f);
-		this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 1.f, 0.f);
+		this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 0.7f, 0.f);
+		if (this->attribute == EntityAttributes::HEAVY) {
+			this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 0.7f - 25.f, 0.f);
+		}
+		else if (this->attribute == EntityAttributes::FLY) {
+			this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 0.7f - 25.f, 0.f);
+		}
 		this->animationComponent->play("WALK", dt);
 	}
 }

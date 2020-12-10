@@ -146,28 +146,83 @@ void GameState::initLevel()
 	this->towerUpgrader = new TowerUpgrader(1200.f, 800.f);
 	//this->monstersAtLevelN[0] = new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]);
 	
-	// init normal monsters
-	for (int i = 0; i < 1; ++i) {
-		this->monstersAtLevelN.push_back(new MonsterNormal(-4.f, 580.f, Entity::EntityAttributes::NORMAL, 100, 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
-	}
-
-	// init heavy monsters
-	for (int i = 0; i < 1; ++i) {
-		this->monstersAtLevelN.push_back(new MonsterHeavy(-4.f, 550.f, Entity::EntityAttributes::HEAVY, 100, 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
-	}
-
-	// init fly monsters
-	for (int i = 0; i < 1; ++i) {
-		this->monstersAtLevelN.push_back(new MonsterFly(-4.f, 580.f, Entity::EntityAttributes::FLY, 100, 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
-	}
-
-	
+	this->totalMonstersAtCurrentTime = 0;
+	this->totalMonstersAtLevelN = 100;
+	this->spawnTimer.restart();
 
 }
 
 void GameState::incrementLevel()
 {
 
+}
+
+void GameState::spawnMonsters()
+{
+	if (this->totalMonstersAtLevelN > this->totalMonstersAtCurrentTime &&
+		this->spawnTimer.getElapsedTime() >= sf::seconds(this->totalMonstersAtCurrentTime * 1)) {
+
+	
+		if (this->level < 5) {
+			
+			this->monstersAtLevelN.push_back(new MonsterNormal(-4.f, 580.f, Entity::EntityAttributes::NORMAL, 100, 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
+		}
+		else if (this->level >= 5 && this->level < 10) {
+			float randNum = float(std::rand()) / float(RAND_MAX);
+			int randomAttribute = ((randNum >= 0.35f) ? 1:2) ;
+			switch (randomAttribute) {
+			case 1:
+				this->monstersAtLevelN.push_back(new MonsterNormal(-4.f, 580.f, Entity::EntityAttributes::NORMAL, 100, 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
+				break;
+			case 2:
+				this->monstersAtLevelN.push_back(new MonsterFly(-4.f, 580.f, Entity::EntityAttributes::FLY, 100, 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
+				break;
+			}
+		}
+		else if (this->level >= 10) {
+			float randNum = float(std::rand() / float(RAND_MAX));
+
+			int randomAttribute = 1;
+			if (randNum < 0.6) {
+				randomAttribute = 1;
+			} else if (randNum < 0.9) {
+				randomAttribute = 2;
+			}
+			else {
+				randomAttribute = 3;
+			}
+
+			switch (randomAttribute) {
+			case 1:
+				this->monstersAtLevelN.push_back(new MonsterNormal(-4.f, 580.f, Entity::EntityAttributes::NORMAL, 100, 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
+				break;
+			case 2:
+				this->monstersAtLevelN.push_back(new MonsterFly(-4.f, 580.f, Entity::EntityAttributes::FLY, 100, 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
+				break;
+			case 3:
+				this->monstersAtLevelN.push_back(new MonsterHeavy(-4.f, 550.f, Entity::EntityAttributes::HEAVY, 100, 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
+				break;
+			}
+		}
+
+		this->totalMonstersAtCurrentTime += 1;
+	}
+		
+
+	// init normal monsters
+	/*for (int i = 0; i < 1; ++i) {
+		this->monstersAtLevelN.push_back(new MonsterNormal(-4.f, 580.f, Entity::EntityAttributes::NORMAL, 100, 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
+	}*/
+
+	// init heavy monsters
+	//for (int i = 0; i < 1; ++i) {
+	//	this->monstersAtLevelN.push_back(new MonsterHeavy(-4.f, 550.f, Entity::EntityAttributes::HEAVY, 100, 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
+	//}
+
+	// init fly monsters
+	/*for (int i = 0; i < 1; ++i) {
+		this->monstersAtLevelN.push_back(new MonsterFly(-4.f, 580.f, Entity::EntityAttributes::FLY, 100, 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
+	}*/
 }
 
 void GameState::startLevel()
@@ -180,6 +235,8 @@ void GameState::startLevel()
 GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, std::string player_name)
 	: State(window, supportedKeys, states)
 {
+
+	std::srand((unsigned)std::time(NULL));
 
 	this->playerName = player_name;
 	this->initKeybinds();
@@ -450,7 +507,7 @@ void GameState::updateTowerUpgrader()
 
 void GameState::updateMonstersMove(const float& dt)
 {  
-	if (!this->monstersAtLevelN.empty()) {
+	if (!this->monstersAtLevelN.empty() && 1) {
 		/*if (this->monstersAtLevelN[0]->getHitboxComponent()->getHitbox().getPosition().x < 1500 && !mon_walk) {
 			this->monstersAtLevelN[0]->move(1.f, 0.f, dt);
 		}
@@ -565,6 +622,7 @@ void GameState::updatePlayerHealth()
 
 void GameState::update(const float& dt)
 {
+	this->spawnMonsters();
 	this->updateMousePositions();
 	this->updateInput(dt);
 	this->updateMonstersMove(dt);

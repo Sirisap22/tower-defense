@@ -7,7 +7,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
 
-#include "Tower.h";
+#include "Tower.h"
 
 class TowerSeller
 {
