@@ -132,7 +132,14 @@ void GameState::initScore()
 
 void GameState::initLevel()
 {
-	this->level = 1;
+	this->level = 0;
+
+	this->textLevel.setPosition(800.f, 5.f);
+	this->textLevel.setCharacterSize(18);
+	this->textLevel.setFont(this->font);
+	this->textLevel.setFillColor(sf::Color::White);
+	this->textLevel.setString("Level "+std::to_string(this->level));
+
 	this->selectedTower = -1;
 	this->toggleHitbox = false;
 
@@ -147,20 +154,32 @@ void GameState::initLevel()
 	//this->monstersAtLevelN[0] = new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]);
 	
 	this->totalMonstersAtCurrentTime = 0;
-	this->totalMonstersAtLevelN = 100;
+	this->totalMonstersAtLevelN = 5;
 	this->spawnTimer.restart();
 
 }
 
-void GameState::incrementLevel()
+
+
+void GameState::initCountdown()
 {
+	this->countdown = 30;
+	this->isWaveStarted = false;
+	this->isCountdown = true;
+
+	this->countdownText.setFont(this->font);
+	this->countdownText.setCharacterSize(24);
+	this->countdownText.setPosition(5.f, 1000.f);
+	this->countdownText.setFillColor(sf::Color::White);
+	this->countdownText.setString("Next wave start in " + std::to_string(this->countdown));
 
 }
 
 void GameState::spawnMonsters()
 {
-	if (this->totalMonstersAtLevelN > this->totalMonstersAtCurrentTime &&
-		this->spawnTimer.getElapsedTime() >= sf::seconds(this->totalMonstersAtCurrentTime * 1)) {
+	if (this->isWaveStarted && !this->isCountdown &&
+		this->totalMonstersAtLevelN > this->totalMonstersAtCurrentTime &&
+		this->spawnTimer.getElapsedTime().asSeconds() >= this->totalMonstersAtCurrentTime) {
 
 	
 		if (this->level < 5) {
@@ -256,7 +275,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->mon_walk = false;
 
 
-
+	this->initCountdown();
 	this->initLevel();
 
 }
@@ -427,11 +446,54 @@ void GameState::checkLoseHealth()
 				monster->isDead = true;
 				this->playerHealth -= 10;
 				this->score -= 100;
+				this->money -= 50;
 			}
 		}
 	}
 }
 
+void GameState::nextLevel()
+{
+
+	this->totalMonstersAtLevelN += 5;
+	this->totalMonstersAtCurrentTime = 0;
+	this->spawnTimer.restart();
+}
+
+
+void GameState::updateLevel()
+{
+	this->textLevel.setString("Level " + std::to_string(this->level));
+}
+
+void GameState::updateEndLevel()
+{
+	if (this->isWaveStarted && this->monstersAtLevelN.empty() && this->countdownTimer.getElapsedTime().asSeconds() > 5) {
+		this->countdownTimer.restart();
+		this->isCountdown = true;
+		this->isWaveStarted = false;
+	}
+}
+
+void GameState::updateCountdown()
+{
+	if (this->isCountdown && this->countdownTimer.getElapsedTime().asSeconds() >= 1) {
+		if (this->countdown <= 0) {
+			this->countdownTimer.restart();
+			this->spawnTimer.restart();
+			this->isCountdown = false;
+			this->isWaveStarted = true;
+			this->countdown = 30;
+			this->level += 1;
+			if (this->level > 1) {
+				this->nextLevel();
+			}
+		}
+		this->countdown -= 1;
+		this->countdownTimer.restart();
+		this->countdownText.setString("Next wave start in " + std::to_string(this->countdown));
+	}
+}
 
 void GameState::updateTowersAndMonstersInteraction()
 {
@@ -681,6 +743,10 @@ void GameState::update(const float& dt)
 
 	this->checkLoseHealth();
 
+	this->updateCountdown();
+	this->updateEndLevel();
+	this->updateLevel();
+
 }
 
 void GameState::destoryBullets()
@@ -703,11 +769,24 @@ void GameState::destoryMonsters()
 		if (this->monstersAtLevelN[i]->isDead) {
 			//delete this->monstersAtLevelN[i];
 			this->score += 100;
+			this->money += 50;
 			this->monstersAtLevelN.erase(this->monstersAtLevelN.begin() + i);
 		}
 		else {
 			++i;
 		}
+	}
+}
+
+void GameState::renderLevel(sf::RenderTarget* target)
+{
+	target->draw(this->textLevel);
+}
+
+void GameState::renderCountdown(sf::RenderTarget* target)
+{
+	if (this->isCountdown) {
+		target->draw(this->countdownText);
 	}
 }
 
@@ -824,6 +903,9 @@ void GameState::render(sf::RenderTarget* target)
 	this->renderGold(target);
 	this->renderScore(target);
 	this->renderPlayerHealth(target);
+
+	this->renderCountdown(target);
+	this->renderLevel(target);
 
 	// remove later
 	sf::Text mouseText;

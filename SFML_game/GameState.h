@@ -48,9 +48,11 @@ private:
     sf::Clock spawnTimer;
     int totalMonstersAtLevelN;
     int totalMonstersAtCurrentTime;
-    sf::Text nextWaveStartInText;
-    int waveCountdown;
-    sf::Clock nextWaveTimer;
+    bool isCountdown;
+    sf::Clock countdownTimer;
+    int countdown;
+    bool isWaveStarted;
+    sf::Text countdownText;
 
     // delete later 
     bool mon_walk;
@@ -64,7 +66,7 @@ private:
     void initButtons();
     void initScore();
     void initLevel();
-    void incrementLevel();
+    void initCountdown();
     void spawnMonsters();
     void startLevel();
 public:
@@ -83,8 +85,11 @@ public:
     void monsterBulletCollision();
     Monster* selectNotDeadMonster(Tower* tower);
     void checkLoseHealth();
+    void nextLevel();
 
-    
+    void updateLevel();
+    void updateEndLevel();
+    void updateCountdown();
     void updateTowersAndMonstersInteraction();
     void updateSelectTower();
     void updateTowerCreator(const float& dt);
@@ -105,6 +110,8 @@ public:
     void destoryBullets();
     void destoryMonsters();
 
+    void renderLevel(sf::RenderTarget* target);
+    void renderCountdown(sf::RenderTarget* target);
     void renderTowerCreators(sf::RenderTarget* target);
     void renderTowerSeller(sf::RenderTarget* target);
     void renderTowerUpgrader(sf::RenderTarget* target);
