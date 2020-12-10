@@ -175,6 +175,23 @@ void GameState::initCountdown()
 
 }
 
+void GameState::initTowerAreas()
+{
+	//1
+	this->towerAreas.push_back(new TowerArea(1000.f, 500.f, 60.f));
+	//2
+
+	//3
+
+	//4
+
+	//5
+
+	//6
+
+	//7
+}
+
 void GameState::spawnMonsters()
 {
 	if (this->isWaveStarted && !this->isCountdown &&
@@ -277,6 +294,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 
 	this->initCountdown();
 	this->initLevel();
+	this->initTowerAreas();
 
 }
 
@@ -316,22 +334,27 @@ GameState::~GameState()
 
 void GameState::checkAndCreateTower()
 {
-	if (this->selectedTowerCreator != TowerCreator::TowerType::NONE && this->mousePosView.y < 800 && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		switch (this->selectedTowerCreator) {
-		case TowerCreator::TowerType::NORMAL:
-			this->towersAtCurrentState.push_back(new TowerNormal(this->mousePosView.x, this->mousePosView.y, Entity::EntityAttributes::NORMAL, 10, 10, this->textures));
-			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
-			break;
-		case TowerCreator::TowerType::FLY:
-			this->towersAtCurrentState.push_back(new TowerFly(this->mousePosView.x, this->mousePosView.y, Entity::EntityAttributes::FLY, 10, 10, this->textures));
-			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
-			break;
-		case TowerCreator::TowerType::HEAVY:
-			this->towersAtCurrentState.push_back(new TowerHeavy(this->mousePosView.x, this->mousePosView.y, Entity::EntityAttributes::HEAVY, 10, 10, this->textures));
-			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
-			break;
-		default:
-			std::cout << "NONE" << std::endl;
+	for (auto area : this->towerAreas) {
+		if (this->selectedTowerCreator != TowerCreator::TowerType::NONE && area->isPressed(this->mousePosView) && !area->isTowerCreated()) {
+			sf::Vector2f pos = area->getOriginPoint();
+
+			area->updateIsCreated(true);
+			switch (this->selectedTowerCreator) {
+			case TowerCreator::TowerType::NORMAL:
+				this->towersAtCurrentState.push_back(new TowerNormal(pos.x, pos.y, Entity::EntityAttributes::NORMAL, 10, 10, this->textures));
+				this->selectedTowerCreator = TowerCreator::TowerType::NONE;
+				break;
+			case TowerCreator::TowerType::FLY:
+				this->towersAtCurrentState.push_back(new TowerFly(pos.x, pos.y, Entity::EntityAttributes::FLY, 10, 10, this->textures));
+				this->selectedTowerCreator = TowerCreator::TowerType::NONE;
+				break;
+			case TowerCreator::TowerType::HEAVY:
+				this->towersAtCurrentState.push_back(new TowerHeavy(pos.x, pos.y, Entity::EntityAttributes::HEAVY, 10, 10, this->textures));
+				this->selectedTowerCreator = TowerCreator::TowerType::NONE;
+				break;
+			default:
+				std::cout << "NONE" << std::endl;
+			}
 		}
 	}
 }
@@ -460,6 +483,22 @@ void GameState::nextLevel()
 	this->spawnTimer.restart();
 }
 
+
+void GameState::updateFreeAreas()
+{
+	if (!this->towersAtCurrentState.empty()) {
+		for (auto area : this->towerAreas) {
+			for (auto tower : this->towersAtCurrentState) {
+				if (tower->getHitboxComponent()->getHitbox().getGlobalBounds().intersects(area->getGlobalBound())) {
+					area->updateIsCreated(true);
+					break;
+				}
+				area->updateIsCreated(false);
+			}
+
+		}
+	}
+}
 
 void GameState::updateLevel()
 {
@@ -746,6 +785,7 @@ void GameState::update(const float& dt)
 	this->updateCountdown();
 	this->updateEndLevel();
 	this->updateLevel();
+	this->updateFreeAreas();
 
 }
 
@@ -775,6 +815,13 @@ void GameState::destoryMonsters()
 		else {
 			++i;
 		}
+	}
+}
+
+void GameState::renderTowerAreas(sf::RenderTarget* target)
+{
+	for (auto area : this->towerAreas) {
+		area->render(target);
 	}
 }
 
@@ -906,6 +953,7 @@ void GameState::render(sf::RenderTarget* target)
 
 	this->renderCountdown(target);
 	this->renderLevel(target);
+	this->renderTowerAreas(target);
 
 	// remove later
 	sf::Text mouseText;

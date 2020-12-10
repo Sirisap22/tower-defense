@@ -16,6 +16,7 @@
 #include "Button.h"
 #include "TowerSeller.h"
 #include "TowerUpgrader.h"
+#include "TowerArea.h"
 
 class GameState :
     public State
@@ -24,7 +25,8 @@ private:
     Player* player;
     std::vector<Monster*> monstersAtLevelN;
     std::vector<Tower*> towersAtCurrentState;
-    std::vector<Bullet* > bulletsAtCurrentTime;
+    std::vector<Bullet*> bulletsAtCurrentTime;
+    std::vector<TowerArea*> towerAreas;
     sf::Texture texture;
     sf::RectangleShape bg;
     std::map<std::string, TowerCreator*> towerCreator;
@@ -67,6 +69,7 @@ private:
     void initScore();
     void initLevel();
     void initCountdown();
+    void initTowerAreas();
     void spawnMonsters();
     void startLevel();
 public:
@@ -87,6 +90,7 @@ public:
     void checkLoseHealth();
     void nextLevel();
 
+    void updateFreeAreas();
     void updateLevel();
     void updateEndLevel();
     void updateCountdown();
@@ -110,6 +114,7 @@ public:
     void destoryBullets();
     void destoryMonsters();
 
+    void renderTowerAreas(sf::RenderTarget* target);
     void renderLevel(sf::RenderTarget* target);
     void renderCountdown(sf::RenderTarget* target);
     void renderTowerCreators(sf::RenderTarget* target);
