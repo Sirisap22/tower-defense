@@ -855,7 +855,7 @@ void GameState::updateInput(const float& dt)
 void GameState::updateAttackMonsters(Tower* tower, Monster* monster)
 {
 		this->bulletsAtCurrentTime.push_back(
-			new Bullet(float(tower->getPosition().x), float(tower->getPosition().y),
+			new Bullet(float(tower->getPosition().x)+70.f, float(tower->getPosition().y),
 				tower->attribute, tower->level, tower->damage, monster, this->textures));
 
 }

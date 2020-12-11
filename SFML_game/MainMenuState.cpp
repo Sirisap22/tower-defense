@@ -114,6 +114,16 @@ void MainMenuState::initInputField()
 
 }
 
+void MainMenuState::initSounds()
+{
+	if (!this->clickBuffer.loadFromFile("public/sounds/menu_click.wav")) {
+		throw("ERROR::MAINMENUSTATE::COULD_NOT_LOAD_SOUND");
+	}
+
+	this->click.setBuffer(this->clickBuffer);
+	this->click.setVolume(50.f);
+}
+
 void MainMenuState::initCreditPlane()
 {
 	this->creditPlane = new CreditPlane(
@@ -153,6 +163,7 @@ MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int
 	this->initInputField();
 	this->initCreditPlane();
 	this->initGoalsAndContralPlane();
+	this->initSounds();
 }
 
 MainMenuState::~MainMenuState()
@@ -205,6 +216,7 @@ void MainMenuState::updateButtons()
 	// New game
 	if (this->buttons["GAME_STATE"]->isPressed())
 	{
+		this->click.play();
 		this->input = new InputField(this->window, 1130.f, 500.f, 300.f, 50.f, &this->font, 34);
 		this->toggleInputField = !this->toggleInputField;
 
@@ -217,6 +229,7 @@ void MainMenuState::updateButtons()
 	}
 
 	if (this->buttons["START_GAME"]->isPressed() && this->input->getName().size() > 0) {
+		this->click.play();
 		this->toggleInputField = false;
 		this->states->push(new GameState(this->window, this->supportedKeys, this->states, this->input->getName()));
 		delete this->input;
@@ -224,11 +237,13 @@ void MainMenuState::updateButtons()
 	}
 
 	if (this->buttons["CANCEL_GAME"]->isPressed()) {
+		this->click.play();
 		this->toggleInputField = false;
 		delete this->input;
 	}
 
 	if (this->buttons["LEADERBOARD"]->isPressed()) {
+		this->click.play();
 		if (this->toggleInputField) {
 			this->toggleInputField = false;
 			delete this->input;
@@ -241,6 +256,7 @@ void MainMenuState::updateButtons()
 	}
 
 	if (this->buttons["HOW_TO_PLAY"]->isPressed()) {
+		this->click.play();
 			if (this->toggleInputField) {
 			this->toggleInputField = false;
 			delete this->input;
@@ -252,6 +268,7 @@ void MainMenuState::updateButtons()
 	}
 
 	if (this->buttons["CREDIT"]->isPressed()) {
+		this->click.play();
 		if (this->toggleInputField) {
 			this->toggleInputField = false;
 			delete this->input;
@@ -265,6 +282,7 @@ void MainMenuState::updateButtons()
 	// Quit the game
 	if (this->buttons["EXIT_STATE"]->isPressed())
 	{
+		this->click.play();
 		this->endState();
 	}
 

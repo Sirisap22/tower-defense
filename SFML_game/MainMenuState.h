@@ -32,6 +32,8 @@ private:
     CreditPlane* creditPlane;
     GoalsPlane* goalsPlane;
     ContralPlane* contralPlane;
+    sf::SoundBuffer clickBuffer;
+    sf::Sound click;
 
     // Functions
     void initVariables();
@@ -41,6 +43,7 @@ private:
     void initButtons();
     void initLeaderBoard();
     void initInputField();
+    void initSounds();
     void initCreditPlane();
     void initGoalsAndContralPlane();
 

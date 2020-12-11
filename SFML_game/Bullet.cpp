@@ -110,11 +110,15 @@ float Bullet::relativeTargetPosition()
 	float lower = std::sqrtf(bX * bX + bY * bY) * std::sqrtf(mX * mX + mY * mY);
 	float theta = std::acosf(upper / lower) * 180.f / float(M_PI);
 	std::cout << "theta" << theta << std::endl;
-	if (bX - mX > 0 && bY-mY <= 0) return 180.f + theta;
-	if (bX - mX < 0 && bY - mY >= 0) return 90.f - theta;
-	if (bX - mX >= 0 && bY - mY >= 0) return -theta;
-	//std::cout << "theta : " << theta << std::endl;
-	return 90.f + theta;
+	sf::Vector2f curPos = sf::Vector2f(bX, bY);
+	sf::Vector2f position = sf::Vector2f(mX, mY);
+	const float PI = 3.14159265;
+
+	float dx = curPos.x - position.x;
+	float dy = curPos.y - position.y;
+
+	float rotation = (atan2(dy, dx)) * 180 / PI;
+	return rotation + 90.f+180.f;
 }
 
 

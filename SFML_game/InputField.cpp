@@ -33,7 +33,13 @@ InputField::InputField(sf::RenderWindow* window, float x, float y, float width, 
 	this->text.setCharacterSize(this->characterSize);
 	this->text.setFillColor(sf::Color::Black);
 
+	// sound
+	if (!this->keyType.loadFromFile("public/sounds/key_type.wav")) {
+		throw("ERROR::INPUTFIELD::COULD_NOT_LOAD_SOUND");
+	}
 
+	this->typing.setBuffer(this->keyType);
+	this->typing.setVolume(50.f);
 }
 
 InputField::~InputField()
@@ -59,11 +65,14 @@ void InputField::updateField()
 						break;
 					}
 					this->name.pop_back();
+					this->typing.play();
 					this->text.setString(this->name);
 					break;
 				default:
 					if (this->name.size() >= 15) break;
 					this->name += event.text.unicode;
+					// play sound
+					this->typing.play();
 					this->text.setString(this->name);
 			}
 

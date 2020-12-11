@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <string>
 #include <iostream>
 class InputField
@@ -13,6 +14,8 @@ private:
 	sf::Font* font;
 	sf::Text text;
 	std::string name;
+	sf::SoundBuffer keyType;
+	sf::Sound typing;
 	unsigned characterSize;
 	bool isFocus;
 	float dt;
