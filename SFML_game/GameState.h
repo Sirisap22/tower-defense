@@ -83,6 +83,10 @@ private:
     sf::SoundBuffer selectBuffer;
     sf::SoundBuffer towerBuffer;
     sf::SoundBuffer healthBuffer;
+    sf::SoundBuffer arrowBuffer;
+    sf::SoundBuffer magicBuffer;
+    sf::SoundBuffer rockBuffer;
+    sf::SoundBuffer waveBuffer;
 
     sf::Sound build;
     sf::Sound upgrade;
@@ -92,6 +96,10 @@ private:
     sf::Sound select;
     sf::Sound tower;
     sf::Sound health;
+    sf::Sound arrow;
+    sf::Sound magic;
+    sf::Sound rock;
+    sf::Sound wave;
 
     // delete later 
     bool mon_walk;

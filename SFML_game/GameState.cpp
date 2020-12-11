@@ -355,6 +355,35 @@ void GameState::initSounds()
 
 	this->health.setBuffer(this->healthBuffer);
 	this->health.setVolume(50.f);
+
+	if (!this->arrowBuffer.loadFromFile("public/sounds/arrow.wav")) {
+		throw("ERROR::GAMESTATE::COULD_NOT_LOAD_SOUND");
+	}
+
+	this->arrow.setBuffer(this->arrowBuffer);
+	this->arrow.setVolume(30.f);
+	
+	if (!this->magicBuffer.loadFromFile("public/sounds/magic.wav")) {
+		throw("ERROR::GAMESTATE::COULD_NOT_LOAD_SOUND");
+	}
+
+	this->magic.setBuffer(this->magicBuffer);
+	this->magic.setVolume(30.f);
+
+	if (!this->rockBuffer.loadFromFile("public/sounds/rock.wav")) {
+		throw("ERROR::GAMESTATE::COULD_NOT_LOAD_SOUND");
+	}
+
+	this->rock.setBuffer(this->rockBuffer);
+	this->rock.setVolume(30.f);
+
+	if (!this->waveBuffer.loadFromFile("public/sounds/wave.wav")) {
+		throw("ERROR::GAMESTATE::COULD_NOT_LOAD_SOUND");
+	}
+
+	this->wave.setBuffer(this->waveBuffer);
+	this->wave.setVolume(50.f);
+
 }
 
 void GameState::spawnMonsters()
@@ -638,6 +667,17 @@ void GameState::monsterBulletCollision()
 	//	std::cout << bullet->getTarget() << " bulleet target \n";
 		if (bullet->getHitboxComponent()->getHitbox().getGlobalBounds()
 			.intersects(bullet->getTarget()->getHitboxComponent()->getHitbox().getGlobalBounds())) {
+			switch (bullet->getTarget()->attribute) {
+			case (Entity::EntityAttributes::NORMAL):
+				this->arrow.play();
+				break;
+			case(Entity::EntityAttributes::FLY):
+				this->magic.play();
+				break;
+			case(Entity::EntityAttributes::HEAVY):
+				this->rock.play();
+				break;
+			}
 			bullet->isCollide = true;
 			bullet->getTarget()->health -= bullet->damage; //********//
 		}
@@ -776,7 +816,11 @@ void GameState::updateCountdown()
 			this->isWaveStarted = true;
 			this->countdown = 30;
 			this->level += 1;
+			if (this->level == 1) {
+				this->wave.play();
+			}
 			if (this->level > 1) {
+				this->wave.play();
 				this->nextLevel();
 			}
 		}

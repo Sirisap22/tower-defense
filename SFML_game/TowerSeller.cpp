@@ -36,7 +36,12 @@ void TowerSeller::sellTower(int selectedTower,int* money, std::vector<Tower*>* t
 {
 	if (selectedTower != -1) {
 		std::cout << "TEST\n";
-		*money += 150;
+		if (towers->at(selectedTower)->level > 1) {
+			*money += 150;
+		}
+		else {
+			*money += 100;
+		}
 		delete towers->at(selectedTower);
 		towers->erase(towers->begin() + selectedTower);
 	}
