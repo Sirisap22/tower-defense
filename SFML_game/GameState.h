@@ -74,6 +74,25 @@ private:
     GameState::Status status;
     sf::Clock keyPressedClock;
 
+    // sounds
+    sf::SoundBuffer buildBuffer;
+    sf::SoundBuffer upgradeBuffer;
+    sf::SoundBuffer sellBuffer;
+    sf::SoundBuffer clickBuffer;
+    sf::SoundBuffer endBuffer;
+    sf::SoundBuffer selectBuffer;
+    sf::SoundBuffer towerBuffer;
+    sf::SoundBuffer healthBuffer;
+
+    sf::Sound build;
+    sf::Sound upgrade;
+    sf::Sound sell;
+    sf::Sound click;
+    sf::Sound end;
+    sf::Sound select;
+    sf::Sound tower;
+    sf::Sound health;
+
     // delete later 
     bool mon_walk;
 
@@ -93,6 +112,7 @@ private:
     void initCountdown();
     void initTowerAreas();
     void initTowerCreatorPointers();
+    void initSounds();
     void spawnMonsters();
     void startLevel();
 public:

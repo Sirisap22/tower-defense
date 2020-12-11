@@ -188,11 +188,15 @@ void GameState::initEndMenu()
 	this->endText.setCharacterSize(72);
 	this->endText.setFillColor(sf::Color::White);
 	this->endText.setPosition(this->window->getSize().x / 2 - this->endText.getGlobalBounds().width / 2, 350.f);
+	this->endText.setOutlineColor(sf::Color::Black);
+	this->endText.setOutlineThickness(1.f);
 
 	this->scoreEndText.setFont(this->font);
 	this->scoreEndText.setCharacterSize(72);
 	this->scoreEndText.setFillColor(sf::Color::White);
 	this->scoreEndText.setPosition(this->window->getSize().x / 2 - this->scoreEndText.getGlobalBounds().width / 2, 450.f);
+	this->scoreEndText.setOutlineColor(sf::Color::Black);
+	this->scoreEndText.setOutlineThickness(1.f);
 
 }
 
@@ -294,6 +298,65 @@ void GameState::initTowerCreatorPointers()
 
 }
 
+void GameState::initSounds()
+{
+	if (!this->clickBuffer.loadFromFile("public/sounds/click.wav")) {
+		throw("ERROR::GAMESTATE::COULD_NOT_LOAD_SOUND");
+	}
+
+	this->click.setBuffer(this->clickBuffer);
+	this->click.setVolume(50.f);
+
+	if (!this->buildBuffer.loadFromFile("public/sounds/build_tower.wav")) {
+		throw("ERROR::GAMESTATE::COULD_NOT_LOAD_SOUND");
+	}
+
+	this->build.setBuffer(this->buildBuffer);
+	this->build.setVolume(50.f);
+
+	if (!this->upgradeBuffer.loadFromFile("public/sounds/upgrade_tower.wav")) {
+		throw("ERROR::GAMESTATE::COULD_NOT_LOAD_SOUND");
+	}
+
+	this->upgrade.setBuffer(this->upgradeBuffer);
+	this->upgrade.setVolume(50.f);
+
+	if (!this->sellBuffer.loadFromFile("public/sounds/sell_tower.wav")) {
+		throw("ERROR::GAMESTATE::COULD_NOT_LOAD_SOUND");
+	}
+
+	this->sell.setBuffer(this->sellBuffer);
+	this->sell.setVolume(50.f);
+
+	if (!this->endBuffer.loadFromFile("public/sounds/end_game.wav")) {
+		throw("ERROR::GAMESTATE::COULD_NOT_LOAD_SOUND");
+	}
+
+	this->end.setBuffer(this->endBuffer);
+	this->end.setVolume(50.f);
+
+	if (!this->towerBuffer.loadFromFile("public/sounds/tower.wav")) {
+		throw("ERROR::GAMESTATE::COULD_NOT_LOAD_SOUND");
+	}
+
+	this->tower.setBuffer(this->towerBuffer);
+	this->tower.setVolume(50.f);
+
+	if (!this->selectBuffer.loadFromFile("public/sounds/select_click.wav")) {
+		throw("ERROR::GAMESTATE::COULD_NOT_LOAD_SOUND");
+	}
+
+	this->select.setBuffer(this->selectBuffer);
+	this->select.setVolume(50.f);
+
+	if (!this->healthBuffer.loadFromFile("public/sounds/health.wav")) {
+		throw("ERROR::GAMESTATE::COULD_NOT_LOAD_SOUND");
+	}
+
+	this->health.setBuffer(this->healthBuffer);
+	this->health.setVolume(50.f);
+}
+
 void GameState::spawnMonsters()
 {
 	if (this->isWaveStarted && !this->isCountdown &&
@@ -390,6 +453,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initEndButtons();
 	this->initEndMenu();
 	this->initTowerCreatorPointers();
+	this->initSounds();
 
 	this->isGamePause = false;
 	this->status = GameState::Status::PLAY;
@@ -456,18 +520,25 @@ void GameState::checkAndCreateTower()
 		if (this->selectedTowerCreator != TowerCreator::TowerType::NONE && area->isPressed(this->mousePosView) && !area->isTowerCreated()) {
 			sf::Vector2f pos = area->getOriginPoint();
 			area->updateIsCreated(true);
+			
 			switch (this->selectedTowerCreator) {
 			case TowerCreator::TowerType::NORMAL:
+				if (this->money - 100 < 0) return;
 				this->money -= 100;
+				this->build.play();
 				this->towersAtCurrentState.push_back(new TowerNormal(pos.x, pos.y, Entity::EntityAttributes::NORMAL, 10, 10, this->textures));
 				this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 				break;
 			case TowerCreator::TowerType::FLY:
+				if (this->money - 150 < 0) return;
 				this->money -= 150;
+				this->build.play();
 				this->towersAtCurrentState.push_back(new TowerFly(pos.x, pos.y, Entity::EntityAttributes::FLY, 10, 10, this->textures));
 				this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 				break;
 			case TowerCreator::TowerType::HEAVY:
+				if (this->money - 200 < 0) return;
+				this->build.play();
 				this->money -= 200;
 				this->towersAtCurrentState.push_back(new TowerHeavy(pos.x, pos.y, Entity::EntityAttributes::HEAVY, 10, 10, this->textures));
 				this->selectedTowerCreator = TowerCreator::TowerType::NONE;
@@ -587,6 +658,7 @@ void GameState::checkLoseHealth()
 		for (auto monster : this->monstersAtLevelN) {
 			if (monster->getPosition().x > 1750) {
 				monster->isDead = true;
+				this->health.play();
 				this->playerHealth -= 10;
 				this->score -= 100;
 				this->money -= 50;
@@ -646,6 +718,7 @@ void GameState::checkEndGame()
 
 void GameState::endGame()
 {
+	this->end.play();
 	this->status = GameState::Status::END;
 	this->toggleStatePaused();
 	this->updateAndSaveScore();
@@ -669,6 +742,11 @@ void GameState::updateFreeAreas()
 				area->updateIsCreated(false);
 			}
 
+		}
+	}
+	else {
+		for (auto area : this->towerAreas) {
+			area->updateIsCreated(false);
 		}
 	}
 }
@@ -724,6 +802,7 @@ void GameState::updateSelectTower()
 
 		Tower* tower = this->towersAtCurrentState[i];
 		if (tower->isPressed(this->mousePosView)) {
+			this->tower.play();
 			this->selectedTower = ((this->selectedTower == -1 || this->selectedTower != i) ? i : -1);
 			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 			std::cout << "Selected Tower ID : " << this->selectedTower << std::endl;
@@ -735,6 +814,7 @@ void GameState::updateTowerCreator(const float& dt)
 {
 	for (auto& towerCreator : this->towerCreator) {
 		if (towerCreator.second->isPressed()) {
+			this->select.play();
 			// toggle selected item
 			if (this->selectedTowerCreator == towerCreator.second->selectedTowerType() && this->selectedTowerCreator != TowerCreator::TowerType::NONE) {
 				this->selectedTowerCreator = TowerCreator::TowerType::NONE;
@@ -768,6 +848,7 @@ void GameState::updateTowerCreator(const float& dt)
 void GameState::updateTowerSeller()
 {
 	if (this->towerSeller->isPressed(this->mousePosView)) {
+		this->sell.play();
 		this->towerSeller->sellTower(this->selectedTower, &this->money, &this->towersAtCurrentState);
 		this->selectedTower = -1;
 	}
@@ -776,6 +857,8 @@ void GameState::updateTowerSeller()
 void GameState::updateTowerUpgrader()
 {
 	if (this->towerUpgrader->isPressed(this->mousePosView)) {
+		if (this->money - 200 < 0) return;
+		this->upgrade.play();
 		this->towerUpgrader->upgraderTower(this->selectedTower, &this->money, &this->towersAtCurrentState);
 	}
 }
@@ -828,19 +911,25 @@ void GameState::updateInput(const float& dt)
 	if (this->keyPressedClock.getElapsedTime() > sf::seconds(0.2f)) {
 		this->keyPressedClock.restart();
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+			this->select.play();
 			this->selectedTowerCreator = this->selectedTowerCreator == TowerCreator::TowerType::NORMAL ? TowerCreator::TowerType::NONE : TowerCreator::TowerType::NORMAL;
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			this->select.play();
 			this->selectedTowerCreator = this->selectedTowerCreator == TowerCreator::TowerType::FLY ? TowerCreator::TowerType::NONE : TowerCreator::TowerType::FLY;
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			this->select.play();
 			this->selectedTowerCreator = this->selectedTowerCreator == TowerCreator::TowerType::HEAVY ? TowerCreator::TowerType::NONE : TowerCreator::TowerType::HEAVY;
 		}
 		else if (this->selectedTower != -1) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+				if (this->money - 200 < 0) return;
+				this->upgrade.play();
 				this->towerUpgrader->upgraderTower(this->selectedTower, &this->money, &this->towersAtCurrentState);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
+				this->sell.play();
 				this->towerSeller->sellTower(this->selectedTower, &this->money, &this->towersAtCurrentState);
 				this->selectedTower = -1;
 			}
@@ -889,10 +978,12 @@ void GameState::updateButtons()
 	// New game
 	if (this->buttons["TOGGLE_HITBOX"]->isPressed())
 	{
+		this->click.play();
 		this->toggleHitbox = !this->toggleHitbox;
 	}
 
 	if (this->buttons["START_WAVE"]->isPressed() && !this->isWaveStarted) {
+		this->click.play();
 		this->countdown = 0;
 	}
 
@@ -924,10 +1015,12 @@ void GameState::updatePausedMenu()
 
 	// if pressed
 	if (this->pausedButtons["RESUME"]->isPressed()) {
+		this->click.play();
 		this->toggleStatePaused();
 	}
 
 	if (this->pausedButtons["BACK_TO_MENU"]->isPressed()) {
+		this->click.play();
 		this->endState();
 	}
 }
@@ -943,6 +1036,7 @@ void GameState::updateEndMenu()
 	this->scoreEndText.setPosition(this->window->getSize().x / 2 - this->scoreEndText.getGlobalBounds().width / 2, 450.f);
 
 	if (this->endButtons["BACK_TO_MENU"]->isPressed()) {
+		this->click.play();
 		this->endState();
 	}
 }
