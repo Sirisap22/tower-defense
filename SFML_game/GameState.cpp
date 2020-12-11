@@ -102,13 +102,13 @@ void GameState::initPlayer()
 	//health.setFont(this->font);
 	//health.setFillColor(sf::Color::Red);
 	//this->textPlayerHealth = health;
-	this->hpOutline.setSize(sf::Vector2f(this->playerHealth * 5, 40.f));
+	this->hpOutline.setSize(sf::Vector2f(this->playerHealth * 5.f, 40.f));
 	this->hpOutline.setOutlineThickness(1.f);
 	this->hpOutline.setOutlineColor(sf::Color::Black);
 	this->hpOutline.setFillColor(sf::Color::Red);
 	this->hpOutline.setPosition(10.f + player.getGlobalBounds().width + 10.f, 20.f);
 
-	this->hp.setSize(sf::Vector2f(this->playerHealth * 5, 40.f));
+	this->hp.setSize(sf::Vector2f(this->playerHealth * 5.f, 40.f));
 	this->hp.setFillColor(sf::Color::Green);
 	this->hp.setPosition(10.f + player.getGlobalBounds().width + 10.f, 20.f);
 
@@ -161,7 +161,7 @@ void GameState::initPausedMenu()
 {
 	this->pausedPlane.setFillColor(sf::Color(70, 70, 70, 200));
 	this->pausedPlane.setPosition(180.f, 0.f);
-	this->pausedPlane.setSize(sf::Vector2f(440.f, this->window->getSize().y));
+	this->pausedPlane.setSize(sf::Vector2f(440.f, (float)this->window->getSize().y));
 
 }
 

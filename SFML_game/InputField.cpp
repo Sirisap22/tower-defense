@@ -99,7 +99,6 @@ void InputField::updateFocusState(const sf::Vector2f mousePos)
 
 void InputField::update(const float& dt, const sf::Vector2f mousePos)
 {
-	this->dt = dt;
 	this->updateFocusState(mousePos);
 	this->updateField();
 }

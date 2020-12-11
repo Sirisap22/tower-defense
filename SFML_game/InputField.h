@@ -18,7 +18,6 @@ private:
 	sf::Sound typing;
 	unsigned characterSize;
 	bool isFocus;
-	float dt;
 
 public:
 	InputField(sf::RenderWindow* window, float x, float y, float width, float height,
