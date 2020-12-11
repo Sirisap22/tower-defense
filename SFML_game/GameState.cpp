@@ -277,6 +277,23 @@ void GameState::initTowerAreas()
 	this->towerAreas.push_back(new TowerArea(1415.f, 250.f, 60.f));
 }
 
+void GameState::initTowerCreatorPointers()
+{
+	for (int i = 0; i < 3; ++i) {
+		sf::CircleShape* temp = new sf::CircleShape(10, 3);
+		//temp->setOrigin(temp->getPosition().x + temp->getGlobalBounds().width / 2, temp->getPosition().y + temp->getGlobalBounds().height / 2);
+		temp->setRotation(180.f);
+		temp->setFillColor(sf::Color::Green);
+		temp->setOutlineThickness(3.f);
+		temp->setOutlineColor(sf::Color::Black);
+		temp->setPosition(1340.f + i * 200 + 171.f/2.f + temp->getGlobalBounds().width/4 , 825.f+20.f);
+
+
+		this->towerCreatorPointers.push_back(temp);
+	}
+
+}
+
 void GameState::spawnMonsters()
 {
 	if (this->isWaveStarted && !this->isCountdown &&
@@ -372,6 +389,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 
 	this->initEndButtons();
 	this->initEndMenu();
+	this->initTowerCreatorPointers();
 
 	this->isGamePause = false;
 	this->status = GameState::Status::PLAY;
@@ -421,6 +439,11 @@ GameState::~GameState()
 	for (it4 = this->endButtons.begin(); it4 != this->endButtons.end(); ++it4) {
 		delete it4->second;
 	}
+
+	for (auto& pointer : this->towerCreatorPointers) {
+		delete pointer;
+	}
+	this->towerCreatorPointers.clear();
 
 	delete this->towerSeller;
 
@@ -614,7 +637,9 @@ void GameState::checkEndGame()
 		this->playerHealth = 0;
 		//this->textPlayerHealth.setString("0/100");
 		this->hp.setSize(sf::Vector2f(this->playerHealth * 5, 40.f));
-
+		this->score += 100;
+		this->textScore.setString("Score : " + std::to_string(this->score));
+		this->textScore.setPosition(this->window->getSize().x - 20.f - this->textScore.getGlobalBounds().width, 10.f);
 		this->endGame();
 	}
 }
@@ -799,6 +824,28 @@ void GameState::updateMonstersDead()
 
 void GameState::updateInput(const float& dt)
 {
+	// contral input
+	if (this->keyPressedClock.getElapsedTime() > sf::seconds(0.2f)) {
+		this->keyPressedClock.restart();
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+			this->selectedTowerCreator = this->selectedTowerCreator == TowerCreator::TowerType::NORMAL ? TowerCreator::TowerType::NONE : TowerCreator::TowerType::NORMAL;
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			this->selectedTowerCreator = this->selectedTowerCreator == TowerCreator::TowerType::FLY ? TowerCreator::TowerType::NONE : TowerCreator::TowerType::FLY;
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			this->selectedTowerCreator = this->selectedTowerCreator == TowerCreator::TowerType::HEAVY ? TowerCreator::TowerType::NONE : TowerCreator::TowerType::HEAVY;
+		}
+		else if (this->selectedTower != -1) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+				this->towerUpgrader->upgraderTower(this->selectedTower, &this->money, &this->towersAtCurrentState);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
+				this->towerSeller->sellTower(this->selectedTower, &this->money, &this->towersAtCurrentState);
+				this->selectedTower = -1;
+			}
+		}
+	}
 
 	// Update player input
 
@@ -825,7 +872,7 @@ void GameState::updateBullets(const float& dt)
 			float dx = targetX - bulletX;
 			float dy = targetY - bulletY;
 		//	std::cout << dx << dy << "\n";
-			bullet->getSprite()->move(sf::Vector2f(dx, dy) * (dt + 0.07f));   
+			bullet->getSprite()->move(sf::Vector2f(dx, dy) * (0.1f));   
 			//bullet->update(dt, std::atan(dx/dy));
 			bullet->getHitboxComponent()->update(bullet->getPosition(), -20.f, -20.f);
 		}
@@ -848,6 +895,7 @@ void GameState::updateButtons()
 	if (this->buttons["START_WAVE"]->isPressed() && !this->isWaveStarted) {
 		this->countdown = 0;
 	}
+
 }
 
 void GameState::updateGold()
@@ -1069,6 +1117,23 @@ void GameState::destoryMonsters()
 	}
 }
 
+void GameState::renderTowerCreatorPointers(sf::RenderTarget* target)
+{
+	switch (this->selectedTowerCreator){
+	case (TowerCreator::TowerType::NORMAL):
+		target->draw(*this->towerCreatorPointers[0]);
+		break;
+	case(TowerCreator::TowerType::FLY):
+		target->draw(*this->towerCreatorPointers[1]);
+		break;
+	case(TowerCreator::TowerType::HEAVY):
+		target->draw(*this->towerCreatorPointers[2]);
+		break;
+	default:
+		break;
+	}
+}
+
 void GameState::renderPausedMenu(sf::RenderTarget* target)
 {
 	target->draw(this->pausedPlane);
@@ -1217,13 +1282,13 @@ void GameState::render(sf::RenderTarget* target)
 
 	target->draw(this->textName);
 
-	this->renderTowerCreators(target);
-	this->renderTowerSeller(target);
-	this->renderTowerUpgrader(target);
-
 	this->renderButtons(target);
 
 	this->renderTowers(target);
+
+	this->renderTowerCreators(target);
+	this->renderTowerSeller(target);
+	this->renderTowerUpgrader(target);
 
 	this->renderMonsters(target);
 	this->renderBullet(target);
@@ -1235,6 +1300,7 @@ void GameState::render(sf::RenderTarget* target)
 	this->renderCountdown(target);
 	this->renderLevel(target);
 	this->renderTowerAreas(target);
+	this->renderTowerCreatorPointers(target);
 
 	if (this->status == GameState::Status::PAUSE) {
 		this->renderPausedMenu(target);

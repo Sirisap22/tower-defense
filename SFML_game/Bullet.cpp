@@ -18,7 +18,7 @@ std::string Bullet::selectTexturesByAttribute()
 
 void Bullet::initComponents()
 {
-	this->createHitboxComponent(this->origin.x - 30.f, this->origin.y, 10.f);
+	this->createHitboxComponent(this->origin.x+20.f, this->origin.y+10.f, 10.f);
 //	this->createMovementComponent(100.f, 10.f, 0.f);
 }
 
@@ -48,11 +48,15 @@ Bullet::Bullet(float x, float y, Entity::EntityAttributes attribute, int level, 
 
 	this->initComponents();
 
+	this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 2, this->sprite.getGlobalBounds().height / 2);
+
 	if (target) {
 		auto pos = this->relativeTargetPosition();
 		std::cout << "pos : " << pos << std::endl;
 		this->sprite.setRotation(pos);
 	}
+
+	this->sprite.setScale(0.5f, 0.5f);
 
 }
 
@@ -105,9 +109,12 @@ float Bullet::relativeTargetPosition()
 	float upper = bX * mX + bY * mY;
 	float lower = std::sqrtf(bX * bX + bY * bY) * std::sqrtf(mX * mX + mY * mY);
 	float theta = std::acosf(upper / lower) * 180.f / float(M_PI);
-	if (bX - mX > 0) return -90.f + theta;
+	std::cout << "theta" << theta << std::endl;
+	if (bX - mX > 0 && bY-mY <= 0) return 180.f + theta;
+	if (bX - mX < 0 && bY - mY >= 0) return 90.f - theta;
+	if (bX - mX >= 0 && bY - mY >= 0) return -theta;
 	//std::cout << "theta : " << theta << std::endl;
-	return 90.f - theta;
+	return 90.f + theta;
 }
 
 

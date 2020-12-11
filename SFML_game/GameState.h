@@ -32,6 +32,7 @@ private:
     std::vector<Tower*> towersAtCurrentState;
     std::vector<Bullet*> bulletsAtCurrentTime;
     std::vector<TowerArea*> towerAreas;
+    std::vector<sf::CircleShape* > towerCreatorPointers;
     sf::Texture texture;
     sf::RectangleShape bg;
     std::map<std::string, TowerCreator*> towerCreator;
@@ -71,6 +72,7 @@ private:
     bool isGamePause;
     sf::Clock pauseDebounce;
     GameState::Status status;
+    sf::Clock keyPressedClock;
 
     // delete later 
     bool mon_walk;
@@ -90,6 +92,7 @@ private:
     void initLevel();
     void initCountdown();
     void initTowerAreas();
+    void initTowerCreatorPointers();
     void spawnMonsters();
     void startLevel();
 public:
@@ -142,6 +145,7 @@ public:
     void destoryBullets();
     void destoryMonsters();
 
+    void renderTowerCreatorPointers(sf::RenderTarget* target);
     void renderPausedMenu(sf::RenderTarget* target);
     void renderEndMenu(sf::RenderTarget* target);
     void renderTowerAreas(sf::RenderTarget* target);
