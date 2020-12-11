@@ -112,6 +112,8 @@ public:
     void checkEndGame();
     void endGame();
 
+    void highlightSelectedTowerCreator();
+
     void updateFreeAreas();
     void updateLevel();
     void updateEndLevel();

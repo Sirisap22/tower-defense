@@ -235,7 +235,8 @@ void GameState::initCountdown()
 	this->countdownText.setPosition(5.f, 1000.f);
 	this->countdownText.setFillColor(sf::Color::White);
 	this->countdownText.setString("Next wave start in " + std::to_string(this->countdown));
-
+	this->countdownText.setOutlineThickness(1.f);
+	this->countdownText.setOutlineColor(sf::Color::Black);
 }
 
 void GameState::initTowerAreas()
@@ -603,6 +604,10 @@ void GameState::endGame()
 	this->updateAndSaveScore();
 
 	// sort - update - save score
+}
+
+void GameState::highlightSelectedTowerCreator()
+{
 }
 
 void GameState::updateFreeAreas()

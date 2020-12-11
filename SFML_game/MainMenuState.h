@@ -6,6 +6,7 @@
 //#include "Plane.h"
 #include "InputFieldPlane.h"
 #include "InputField.h"
+#include "CreditPlane.h"
 
 class MainMenuState :
     public State
@@ -17,6 +18,7 @@ private:
     sf::Font font;
     bool toggleLeaderBoard;
     bool toggleInputField;
+    bool toggleCreditPlane;
     bool* shouldPollEvent;
     sf::Event event;
 
@@ -24,6 +26,7 @@ private:
     Plane* leaderBoard;
     InputFieldPlane* InputPlane;
     InputField* input;
+    CreditPlane* creditPlane;
 
     // Functions
     void initVariables();
@@ -33,7 +36,9 @@ private:
     void initButtons();
     void initLeaderBoard();
     void initInputField();
-public:
+    void initCreditPlane();
+
+ public:
     MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, bool* shouldPollEvent);
     virtual ~MainMenuState();
 

@@ -114,6 +114,9 @@
     <ClCompile Include="TowerArea.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="CreditPlane.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameState.h">
@@ -192,6 +195,9 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="TowerArea.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditPlane.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>

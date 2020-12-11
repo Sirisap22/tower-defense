@@ -32,6 +32,9 @@ Button::Button(float x, float y, float width, float height,
 	this->activeColor = active_color;
 
 	this->shape.setFillColor(this->idleColor);
+
+	this->text.setOutlineColor(sf::Color::Black);
+	this->text.setOutlineThickness(1.f);
 }
 
 Button::~Button()

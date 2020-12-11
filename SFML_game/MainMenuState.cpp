@@ -53,22 +53,31 @@ void MainMenuState::initKeybinds()
 void MainMenuState::initButtons()
 {
 	this->buttons["GAME_STATE"] = new Button(
-		300.f, 540.f, 200.f, 50.f,
+		300.f, 440.f, 200.f, 50.f,
 		&this->font, "New Game", 72,
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
 	this->buttons["LEADERBOARD"] = new Button(
-		300, 640, 200, 50,
+		300, 540, 200, 50,
 		&this->font, "Leaderboard", 72,
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
+	this->buttons["CREDIT"] = new Button(
+		300, 640, 200, 50,
+		&this->font, "Credit", 72,
+		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 50),
+		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
+	);
 
-	this->buttons["EXIT_STATE"] = new Button(300, 740, 200, 50,
+
+	this->buttons["EXIT_STATE"] = new Button(
+		300, 740, 200, 50,
 		&this->font, "Quit", 72,
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 50),
-		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
+		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
+	);
 }
 
 void MainMenuState::initLeaderBoard()
@@ -96,11 +105,20 @@ void MainMenuState::initInputField()
 
 }
 
+void MainMenuState::initCreditPlane()
+{
+	this->creditPlane = new CreditPlane(
+		1030.f, 275.f, 500.f, 250.f, &this->font, 72, 48
+	);
+}
+
+
 MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, bool* shouldPollEvent)
 	: State(window, supportedKeys, states)
 {
 	this->toggleLeaderBoard = false;
 	this->toggleInputField = false;
+	this->toggleCreditPlane = false;
 	this->shouldPollEvent = shouldPollEvent;
 	*this->shouldPollEvent = true;
 
@@ -112,6 +130,7 @@ MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int
 	this->initFonts();
 	this->initLeaderBoard();
 	this->initInputField();
+	this->initCreditPlane();
 }
 
 MainMenuState::~MainMenuState()
@@ -124,6 +143,7 @@ MainMenuState::~MainMenuState()
 
 	delete this->leaderBoard;
 
+	delete this->creditPlane;
 	//if (this->input)
 	//	delete this->input;
 
@@ -161,7 +181,9 @@ void MainMenuState::updateButtons()
 	{
 		this->input = new InputField(this->window, 1130.f, 500.f, 300.f, 50.f, &this->font, 34);
 		this->toggleInputField = !this->toggleInputField;
+
 		this->toggleLeaderBoard = false;
+		this->toggleCreditPlane = false;
 		if (!this->toggleInputField) {
 			delete this->input;
 		}
@@ -184,8 +206,20 @@ void MainMenuState::updateButtons()
 			this->toggleInputField = false;
 			delete this->input;
 		}
+		this->toggleCreditPlane = false;
+
 		this->leaderBoard = new Plane(1030.f, 275.f, 500.f, 450.f, &this->font, 72, 48);;
 		this->toggleLeaderBoard = !this->toggleLeaderBoard;
+	}
+
+	if (this->buttons["CREDIT"]->isPressed()) {
+		if (this->toggleInputField) {
+			this->toggleInputField = false;
+			delete this->input;
+		}
+		this->toggleLeaderBoard = false;
+
+		this->toggleCreditPlane = !this->toggleCreditPlane;
 	}
 
 	// Quit the game
@@ -246,6 +280,10 @@ void MainMenuState::render(sf::RenderTarget* target)
 
 	if (this->toggleLeaderBoard) {
 		this->leaderBoard->render(target);
+	}
+
+	if (this->toggleCreditPlane) {
+		this->creditPlane->render(target);
 	}
 
 

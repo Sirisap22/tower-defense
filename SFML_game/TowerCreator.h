@@ -18,11 +18,12 @@ public:
 	enum class TowerType { NORMAL, FLY, HEAVY, NONE };
 private:
 	
-	sf::Sprite shape;
+
 	states towerCreatorState;
 	TowerType towerTypeToCreator;
 	sf::Clock clock;
-public:
+public:	
+	sf::Sprite shape;
 	TowerCreator(float x, float y, float width, float height,TowerType tower_type, sf::Texture& texture);
 	~TowerCreator();
 
