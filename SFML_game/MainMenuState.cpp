@@ -351,13 +351,13 @@ void MainMenuState::render(sf::RenderTarget* target)
 
 
 	// remove later
-	sf::Text mouseText;
-	mouseText.setPosition(this->mousePosView.x, this->mousePosView.y-50);
-	mouseText.setFont(this->font);
-	mouseText.setCharacterSize(18);
-	std::stringstream ss;
-	ss << this->mousePosView.x << " " << this->mousePosView.y;
-	mouseText.setString(ss.str());
+	//sf::Text mouseText;
+	//mouseText.setPosition(this->mousePosView.x, this->mousePosView.y-50);
+	//mouseText.setFont(this->font);
+	//mouseText.setCharacterSize(18);
+	//std::stringstream ss;
+	//ss << this->mousePosView.x << " " << this->mousePosView.y;
+	//mouseText.setString(ss.str());
 
-	target->draw(mouseText);
+	//target->draw(mouseText);
 }
