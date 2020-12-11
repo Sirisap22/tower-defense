@@ -56,16 +56,25 @@ void MainMenuState::initButtons()
 		300.f, 440.f, 200.f, 50.f,
 		&this->font, "New Game", 72,
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 50),
-		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
+		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
+	);
 
 	this->buttons["LEADERBOARD"] = new Button(
 		300, 540, 200, 50,
 		&this->font, "Leaderboard", 72,
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 50),
-		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
+		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
+	);
+
+	this->buttons["HOW_TO_PLAY"] = new Button(
+		300, 640, 200, 50,
+		&this->font, "How to Play", 72,
+		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 50),
+		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
+	);
 
 	this->buttons["CREDIT"] = new Button(
-		300, 640, 200, 50,
+		300, 740, 200, 50,
 		&this->font, "Credit", 72,
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
@@ -73,7 +82,7 @@ void MainMenuState::initButtons()
 
 
 	this->buttons["EXIT_STATE"] = new Button(
-		300, 740, 200, 50,
+		300, 840, 200, 50,
 		&this->font, "Quit", 72,
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
@@ -112,6 +121,17 @@ void MainMenuState::initCreditPlane()
 	);
 }
 
+void MainMenuState::initGoalsAndContralPlane()
+{
+	this->goalsPlane = new GoalsPlane(
+		900.f, 275.f, 800.f, 200.f, &this->font, 48, 36
+	);
+
+	this->contralPlane = new ContralPlane(
+		900.f, 500.f, 800.f, 250.f, &this->font, 48, 36
+	);
+}
+
 
 MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, bool* shouldPollEvent)
 	: State(window, supportedKeys, states)
@@ -119,6 +139,7 @@ MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int
 	this->toggleLeaderBoard = false;
 	this->toggleInputField = false;
 	this->toggleCreditPlane = false;
+	this->toggleGoalsAndContralPlane = false;
 	this->shouldPollEvent = shouldPollEvent;
 	*this->shouldPollEvent = true;
 
@@ -131,6 +152,7 @@ MainMenuState::MainMenuState(sf::RenderWindow* window, std::map<std::string, int
 	this->initLeaderBoard();
 	this->initInputField();
 	this->initCreditPlane();
+	this->initGoalsAndContralPlane();
 }
 
 MainMenuState::~MainMenuState()
@@ -144,6 +166,10 @@ MainMenuState::~MainMenuState()
 	delete this->leaderBoard;
 
 	delete this->creditPlane;
+
+	delete this->goalsPlane;
+
+	delete this->contralPlane;
 	//if (this->input)
 	//	delete this->input;
 
@@ -184,6 +210,7 @@ void MainMenuState::updateButtons()
 
 		this->toggleLeaderBoard = false;
 		this->toggleCreditPlane = false;
+		this->toggleGoalsAndContralPlane = false;
 		if (!this->toggleInputField) {
 			delete this->input;
 		}
@@ -206,10 +233,22 @@ void MainMenuState::updateButtons()
 			this->toggleInputField = false;
 			delete this->input;
 		}
-		this->toggleCreditPlane = false;
+		this->toggleCreditPlane = false;	
+		this->toggleGoalsAndContralPlane = false;
 
 		this->leaderBoard = new Plane(1030.f, 275.f, 500.f, 450.f, &this->font, 72, 48);;
 		this->toggleLeaderBoard = !this->toggleLeaderBoard;
+	}
+
+	if (this->buttons["HOW_TO_PLAY"]->isPressed()) {
+			if (this->toggleInputField) {
+			this->toggleInputField = false;
+			delete this->input;
+		}
+		this->toggleLeaderBoard = false;
+		this->toggleCreditPlane = false;
+
+		this->toggleGoalsAndContralPlane = !this->toggleGoalsAndContralPlane;
 	}
 
 	if (this->buttons["CREDIT"]->isPressed()) {
@@ -218,6 +257,7 @@ void MainMenuState::updateButtons()
 			delete this->input;
 		}
 		this->toggleLeaderBoard = false;
+		this->toggleGoalsAndContralPlane = false;
 
 		this->toggleCreditPlane = !this->toggleCreditPlane;
 	}
@@ -284,6 +324,11 @@ void MainMenuState::render(sf::RenderTarget* target)
 
 	if (this->toggleCreditPlane) {
 		this->creditPlane->render(target);
+	}
+
+	if (this->toggleGoalsAndContralPlane) {
+		this->goalsPlane->render(target);
+		this->contralPlane->render(target);
 	}
 
 

@@ -7,6 +7,8 @@
 #include "InputFieldPlane.h"
 #include "InputField.h"
 #include "CreditPlane.h"
+#include "GoalsPlane.h"
+#include "ContralPlane.h"
 
 class MainMenuState :
     public State
@@ -19,6 +21,7 @@ private:
     bool toggleLeaderBoard;
     bool toggleInputField;
     bool toggleCreditPlane;
+    bool toggleGoalsAndContralPlane;
     bool* shouldPollEvent;
     sf::Event event;
 
@@ -27,6 +30,8 @@ private:
     InputFieldPlane* InputPlane;
     InputField* input;
     CreditPlane* creditPlane;
+    GoalsPlane* goalsPlane;
+    ContralPlane* contralPlane;
 
     // Functions
     void initVariables();
@@ -37,6 +42,7 @@ private:
     void initLeaderBoard();
     void initInputField();
     void initCreditPlane();
+    void initGoalsAndContralPlane();
 
  public:
     MainMenuState(sf::RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states, bool* shouldPollEvent);

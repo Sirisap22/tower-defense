@@ -77,9 +77,9 @@ void GameState::initTextures()
 void GameState::initCreator()
 {
 	this->selectedTowerCreator = TowerCreator::TowerType::NONE;
-	this->towerCreator["NORMAL"] = new TowerCreator(500.f, 825.f, 100.f, 250.f, TowerCreator::TowerType::NORMAL, this->textures["TOWER_CREATOR_NORMAL"]);
-	this->towerCreator["FLY"] = new TowerCreator(700.f, 825.f, 100.f, 250.f, TowerCreator::TowerType::FLY, this->textures["TOWER_CREATOR_FLY"]);
-	this->towerCreator["HEAVY"] = new TowerCreator(900.f, 825.f, 100.f, 250.f, TowerCreator::TowerType::HEAVY, this->textures["TOWER_CREATOR_HEAVY"]);
+	this->towerCreator["NORMAL"] = new TowerCreator(1340.f, 825.f, 100.f, 250.f, TowerCreator::TowerType::NORMAL, this->textures["TOWER_CREATOR_NORMAL"]);
+	this->towerCreator["FLY"] = new TowerCreator(1540.f, 825.f, 100.f, 250.f, TowerCreator::TowerType::FLY, this->textures["TOWER_CREATOR_FLY"]);
+	this->towerCreator["HEAVY"] = new TowerCreator(1740.f, 825.f, 100.f, 250.f, TowerCreator::TowerType::HEAVY, this->textures["TOWER_CREATOR_HEAVY"]);
 }
 
 void GameState::initPlayer()
@@ -87,20 +87,33 @@ void GameState::initPlayer()
 	sf::Text player;
 	player.setString(this->playerName);
 	player.setPosition(10.f, 10.f);
-	player.setCharacterSize(42);
+	player.setCharacterSize(48);
+	player.setOutlineColor(sf::Color::Black);
+	player.setOutlineThickness(1.f);
 	player.setFont(this->font);
 	player.setFillColor(sf::Color::White);
 	this->textName = player;
+
 	this->playerHealth = 100;
 	sf::Text health;
-	health.setString(std::to_string(this->playerHealth) + "/100");
-	health.setPosition(50.f, 10.f);
-	health.setCharacterSize(42);
-	health.setFont(this->font);
-	health.setFillColor(sf::Color::Red);
-	this->textPlayerHealth = health;
-	this->money = 3000;
-	this->player = new Player(0.f, 0.f, this->textures["PLAYER_SHEET"]);
+	//health.setString(std::to_string(this->playerHealth) + "/100");
+	//health.setPosition(50.f, 10.f);
+	//health.setCharacterSize(42);
+	//health.setFont(this->font);
+	//health.setFillColor(sf::Color::Red);
+	//this->textPlayerHealth = health;
+	this->hpOutline.setSize(sf::Vector2f(this->playerHealth * 5, 40.f));
+	this->hpOutline.setOutlineThickness(1.f);
+	this->hpOutline.setOutlineColor(sf::Color::Black);
+	this->hpOutline.setFillColor(sf::Color::Red);
+	this->hpOutline.setPosition(10.f + player.getGlobalBounds().width + 10.f, 20.f);
+
+	this->hp.setSize(sf::Vector2f(this->playerHealth * 5, 40.f));
+	this->hp.setFillColor(sf::Color::Green);
+	this->hp.setPosition(10.f + player.getGlobalBounds().width + 10.f, 20.f);
+
+	this->money = 500;
+	
 }
 
 void GameState::initFont()
@@ -113,14 +126,14 @@ void GameState::initFont()
 void GameState::initButtons()
 {
 	this->buttons["TOGGLE_HITBOX"] = new Button(
-		1600.f, 900.f, 200.f, 50.f,
+		1080.f, 910.f, 200.f, 50.f,
 		&this->font, "Toggle Hitbox", 24,
 		sf::Color(250, 250, 250, 250), sf::Color(70, 70, 70, 200), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 0)
 	);
 
 	this->buttons["START_WAVE"] = new Button(
-		1600.f, 800.f, 200.f, 50.f,
+		1080.f, 860.f, 200.f, 50.f,
 		&this->font, "Start Wave", 24,
 		sf::Color(250, 250, 250, 250), sf::Color(70, 70, 70, 200), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 0)
@@ -186,22 +199,27 @@ void GameState::initEndMenu()
 void GameState::initScore()
 {
 	this->score = 0;
-	this->textScore.setString(std::to_string(this->score));
-	this->textScore.setPosition(1600.f, 30.f);
+	this->textScore.setString("Score : " + std::to_string(this->score));
 	this->textScore.setCharacterSize(48);
 	this->textScore.setFont(this->font);
+	this->textScore.setOutlineColor(sf::Color::Black);
+	this->textScore.setOutlineThickness(1.f);
 	this->textScore.setFillColor(sf::Color::White);
+	this->textScore.setPosition(this->window->getSize().x - 20.f - this->textScore.getGlobalBounds().width, 10.f);
+
 }
 
 void GameState::initLevel()
 {
 	this->level = 0;
 
-	this->textLevel.setPosition(800.f, 5.f);
-	this->textLevel.setCharacterSize(18);
+	this->textLevel.setCharacterSize(48);
 	this->textLevel.setFont(this->font);
+	this->textLevel.setOutlineColor(sf::Color::Black);
+	this->textLevel.setOutlineThickness(1.f);
 	this->textLevel.setFillColor(sf::Color::White);
 	this->textLevel.setString("Level "+std::to_string(this->level));
+	this->textLevel.setPosition(this->window->getSize().x - 20.f - this->textLevel.getGlobalBounds().width, 10.f + this->textScore.getGlobalBounds().height + 20.f);
 
 	this->selectedTower = -1;
 	this->toggleHitbox = false;
@@ -209,11 +227,13 @@ void GameState::initLevel()
 	this->gold.setFont(this->font);
 	this->gold.setString("GOLD : "+std::to_string(this->money));
 	this->gold.setCharacterSize(48);
-	this->gold.setPosition(sf::Vector2f(1600.f, 70.f));
+	this->gold.setOutlineColor(sf::Color::Black);
+	this->gold.setOutlineThickness(1.f);
+	this->gold.setPosition(sf::Vector2f(10.f, 10.f + this->textName.getGlobalBounds().height + 20.f ));
 	this->gold.setFillColor(sf::Color::Yellow);
 
-	this->towerSeller = new TowerSeller(1400.f, 800.f);
-	this->towerUpgrader = new TowerUpgrader(1200.f, 800.f);
+	this->towerSeller = new TowerSeller(1640.f, 620.f);
+	this->towerUpgrader = new TowerUpgrader(1440.f, 620.f);
 	//this->monstersAtLevelN[0] = new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]);
 	
 	this->totalMonstersAtCurrentTime = 0;
@@ -231,12 +251,12 @@ void GameState::initCountdown()
 	this->isCountdown = true;
 
 	this->countdownText.setFont(this->font);
-	this->countdownText.setCharacterSize(24);
-	this->countdownText.setPosition(5.f, 1000.f);
+	this->countdownText.setCharacterSize(48);
 	this->countdownText.setFillColor(sf::Color::White);
 	this->countdownText.setString("Next wave start in " + std::to_string(this->countdown));
 	this->countdownText.setOutlineThickness(1.f);
 	this->countdownText.setOutlineColor(sf::Color::Black);
+	this->countdownText.setPosition(10.f, 980.f);
 }
 
 void GameState::initTowerAreas()
@@ -362,7 +382,6 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 GameState::~GameState()
 {
 
-	delete this->player;
 
 	for (auto& monster : this->monstersAtLevelN) {
 		delete monster;
@@ -413,18 +432,20 @@ void GameState::checkAndCreateTower()
 	for (auto area : this->towerAreas) {
 		if (this->selectedTowerCreator != TowerCreator::TowerType::NONE && area->isPressed(this->mousePosView) && !area->isTowerCreated()) {
 			sf::Vector2f pos = area->getOriginPoint();
-
 			area->updateIsCreated(true);
 			switch (this->selectedTowerCreator) {
 			case TowerCreator::TowerType::NORMAL:
+				this->money -= 100;
 				this->towersAtCurrentState.push_back(new TowerNormal(pos.x, pos.y, Entity::EntityAttributes::NORMAL, 10, 10, this->textures));
 				this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 				break;
 			case TowerCreator::TowerType::FLY:
+				this->money -= 150;
 				this->towersAtCurrentState.push_back(new TowerFly(pos.x, pos.y, Entity::EntityAttributes::FLY, 10, 10, this->textures));
 				this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 				break;
 			case TowerCreator::TowerType::HEAVY:
+				this->money -= 200;
 				this->towersAtCurrentState.push_back(new TowerHeavy(pos.x, pos.y, Entity::EntityAttributes::HEAVY, 10, 10, this->textures));
 				this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 				break;
@@ -591,7 +612,8 @@ void GameState::checkEndGame()
 {
 	if (this->playerHealth <= 0) {
 		this->playerHealth = 0;
-		this->textPlayerHealth.setString("0/100");
+		//this->textPlayerHealth.setString("0/100");
+		this->hp.setSize(sf::Vector2f(this->playerHealth * 5, 40.f));
 
 		this->endGame();
 	}
@@ -629,6 +651,7 @@ void GameState::updateFreeAreas()
 void GameState::updateLevel()
 {
 	this->textLevel.setString("Level " + std::to_string(this->level));
+	this->textLevel.setPosition(this->window->getSize().x - 20.f - this->textLevel.getGlobalBounds().width, 10.f + this->textScore.getGlobalBounds().height + 10.f);
 }
 
 void GameState::updateEndLevel()
@@ -778,14 +801,6 @@ void GameState::updateInput(const float& dt)
 {
 
 	// Update player input
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_LEFT"))))
-		this->player->move(-1.f, 0.f, dt);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT"))))
-		this->player->move(1.f, 0.f, dt);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP"))))
-		this->player->move(0.f, -1.f, dt);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN"))))
-		this->player->move( 0.f, 1.f, dt);
 
 	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("CLOSE"))))
 		//this->endState();
@@ -842,13 +857,15 @@ void GameState::updateGold()
 
 void GameState::updateScore()
 {
-	this->textScore.setString(std::to_string(this->score));
+	this->textScore.setString("Score : " + std::to_string(this->score));
+	this->textScore.setPosition(this->window->getSize().x - 20.f - this->textScore.getGlobalBounds().width, 10.f);
 }
 
 void GameState::updatePlayerHealth()
 {
 	if (this->playerHealth > 100) this->playerHealth = 100;
-	this->textPlayerHealth.setString(std::to_string(this->playerHealth) + "/100");
+	//this->textPlayerHealth.setString(std::to_string(this->playerHealth) + "/100");
+	this->hp.setSize(sf::Vector2f(this->playerHealth * 5, 40.f));
 }
 
 void GameState::updatePausedMenu()
@@ -948,7 +965,6 @@ void GameState::update(const float& dt)
 		this->updateInput(dt);
 		this->updateMonstersMove(dt);
 
-		this->player->update(dt);
 
 		// tower creator
 		for (auto& it : this->towerCreator)
@@ -1186,7 +1202,9 @@ void GameState::renderScore(sf::RenderTarget* target)
 
 void GameState::renderPlayerHealth(sf::RenderTarget* target)
 {
-	target->draw(this->textPlayerHealth);
+	//target->draw(this->textPlayerHealth);
+	target->draw(this->hpOutline);
+	target->draw(this->hp);
 }
 
 void GameState::render(sf::RenderTarget* target)
@@ -1197,7 +1215,6 @@ void GameState::render(sf::RenderTarget* target)
 	}
 	target->draw(this->bg);
 
-	this->player->render(target);
 	target->draw(this->textName);
 
 	this->renderTowerCreators(target);
