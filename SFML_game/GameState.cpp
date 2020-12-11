@@ -118,6 +118,13 @@ void GameState::initButtons()
 		sf::Color(250, 250, 250, 250), sf::Color(70, 70, 70, 200), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 0)
 	);
+
+	this->buttons["START_WAVE"] = new Button(
+		1600.f, 800.f, 200.f, 50.f,
+		&this->font, "Start Wave", 24,
+		sf::Color(250, 250, 250, 250), sf::Color(70, 70, 70, 200), sf::Color(20, 20, 20, 50),
+		sf::Color(70, 70, 70, 200), sf::Color(250, 250, 250, 250), sf::Color(20, 20, 20, 0)
+	);
 }
 
 void GameState::initPausedButtons()
@@ -583,6 +590,7 @@ void GameState::checkEndGame()
 {
 	if (this->playerHealth <= 0) {
 		this->playerHealth = 0;
+		this->textPlayerHealth.setString("0/100");
 
 		this->endGame();
 	}
@@ -774,8 +782,8 @@ void GameState::updateInput(const float& dt)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN"))))
 		this->player->move( 0.f, 1.f, dt);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("CLOSE"))))
-		this->endState();
+	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("CLOSE"))))
+		//this->endState();
 }
 void GameState::updateAttackMonsters(Tower* tower, Monster* monster)
 {
@@ -815,6 +823,10 @@ void GameState::updateButtons()
 	if (this->buttons["TOGGLE_HITBOX"]->isPressed())
 	{
 		this->toggleHitbox = !this->toggleHitbox;
+	}
+
+	if (this->buttons["START_WAVE"]->isPressed() && !this->isWaveStarted) {
+		this->countdown = 0;
 	}
 }
 
@@ -1132,10 +1144,15 @@ void GameState::renderMonsters(sf::RenderTarget* target)
 
 void GameState::renderButtons(sf::RenderTarget* target)
 {
-	for (auto& it : this->buttons)
-	{
-		//std::cout << it.second->isPressed() << "\n";
-		it.second->render(target);
+	//for (auto& it : this->buttons)
+	//{
+	//	//std::cout << it.second->isPressed() << "\n";
+	//	it.second->render(target);
+	//}
+
+	this->buttons["TOGGLE_HITBOX"]->render(target);
+	if (!this->isWaveStarted) {
+		this->buttons["START_WAVE"]->render(target);
 	}
 }
 
