@@ -169,7 +169,7 @@ void GameState::initPausedMenu()
 void GameState::initEndButtons()
 {
 	this->endButtons["BACK_TO_MENU"] = new Button(
-		this->window->getSize().x/2, 570.f, 400.f, 200.f,
+		this->window->getSize().x/2, 570.f, 400.f, 100.f,
 		&this->font, "Back To Menu", 72,
 		sf::Color(250, 250, 250, 250), sf::Color(250, 250, 250, 100), sf::Color(70, 70, 70, 200),
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
@@ -753,11 +753,11 @@ void GameState::toggleStatePaused()
 				this->status = GameState::Status::END;
 			}
 		}
-		else if (!this->isGamePause && !this->skipToEnd) {
+		else if (!this->isGamePause /*&& !this->skipToEnd*/) {
 			this->status = GameState::Status::PLAY;
-			if (this->playerHealth <= 0) {
+			/*if (this->playerHealth <= 0) {
 				this->skipToEnd = true;
-			}
+			}*/
 		}
 
 		this->countdownTimer.restart();
