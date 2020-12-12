@@ -29,7 +29,8 @@ public:
 	void createAnimationComponent(sf::Texture& texture_sheet);
 	void createHitboxComponent(float x, float y, float radius);
 
-	// Accessors
+	// Accessor
+	const sf::FloatRect getGlobalBounds() const;
 	const sf::Vector2f getPosition() const;
 	HitboxComponent* getHitboxComponent() const;
 

@@ -31,7 +31,7 @@ public:
     virtual Monster* getTarget() const;
     virtual float relativeTargetPosition();
     
-    virtual void update(const float& dt, float angle);
+
     virtual void render(sf::RenderTarget* target);
    };
 

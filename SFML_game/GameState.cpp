@@ -96,12 +96,6 @@ void GameState::initPlayer()
 
 	this->playerHealth = 100;
 	sf::Text health;
-	//health.setString(std::to_string(this->playerHealth) + "/100");
-	//health.setPosition(50.f, 10.f);
-	//health.setCharacterSize(42);
-	//health.setFont(this->font);
-	//health.setFillColor(sf::Color::Red);
-	//this->textPlayerHealth = health;
 	this->hpOutline.setSize(sf::Vector2f(this->playerHealth * 5.f, 40.f));
 	this->hpOutline.setOutlineThickness(1.f);
 	this->hpOutline.setOutlineColor(sf::Color::Black);
@@ -149,8 +143,15 @@ void GameState::initPausedButtons()
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
 	);
 
-	this->pausedButtons["BACK_TO_MENU"] = new Button(
+	this->pausedButtons["END_GAME"] = new Button(
 		300.f, 500.f, 200.f, 50.f,
+		&this->font, "End Game", 72,
+		sf::Color(250, 250, 250, 250), sf::Color(250, 250, 250, 100), sf::Color(70, 70, 70, 200),
+		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
+	);
+
+	this->pausedButtons["BACK_TO_MENU"] = new Button(
+		300.f, 600.f, 200.f, 50.f,
 		&this->font, "Back To Menu", 72,
 		sf::Color(250, 250, 250, 250), sf::Color(250, 250, 250, 100), sf::Color(70, 70, 70, 200),
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
@@ -168,13 +169,15 @@ void GameState::initPausedMenu()
 void GameState::initEndButtons()
 {
 	this->endButtons["BACK_TO_MENU"] = new Button(
-		this->window->getSize().x/2, 570.f, 200.f, 50.f,
+		this->window->getSize().x/2, 570.f, 400.f, 200.f,
 		&this->font, "Back To Menu", 72,
 		sf::Color(250, 250, 250, 250), sf::Color(250, 250, 250, 100), sf::Color(70, 70, 70, 200),
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0)
 	);
 
-	this->endButtons["BACK_TO_MENU"]->setButtonPosition(this->window->getSize().x / 2 - this->endButtons["BACK_TO_MENU"]->getTextGlobalBounds().width / 2, 570.f);
+	this->endButtons["BACK_TO_MENU"]->setButtonPosition(this->window->getSize().x / 2 - this->endButtons["BACK_TO_MENU"]->getTextGlobalBounds().width / 2, 570.f);    void setButtonPosition();
+	this->endButtons["BACK_TO_MENU"]->setShapePosition(this->window->getSize().x / 2 - this->endButtons["BACK_TO_MENU"]->getTextGlobalBounds().width / 2, 570.f);    void setButtonPosition();
+
 }
 
 void GameState::initEndMenu()
@@ -238,7 +241,6 @@ void GameState::initLevel()
 
 	this->towerSeller = new TowerSeller(1640.f, 620.f);
 	this->towerUpgrader = new TowerUpgrader(1440.f, 620.f);
-	//this->monstersAtLevelN[0] = new MonsterNormal(this->window->getSize().x - 1000, this->window->getSize().y - 1000, 100, "land", 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]);
 	
 	this->totalMonstersAtCurrentTime = 0;
 	this->totalMonstersAtLevelN = 5;
@@ -285,7 +287,6 @@ void GameState::initTowerCreatorPointers()
 {
 	for (int i = 0; i < 3; ++i) {
 		sf::CircleShape* temp = new sf::CircleShape(10, 3);
-		//temp->setOrigin(temp->getPosition().x + temp->getGlobalBounds().width / 2, temp->getPosition().y + temp->getGlobalBounds().height / 2);
 		temp->setRotation(180.f);
 		temp->setFillColor(sf::Color::Green);
 		temp->setOutlineThickness(3.f);
@@ -296,6 +297,17 @@ void GameState::initTowerCreatorPointers()
 		this->towerCreatorPointers.push_back(temp);
 	}
 
+}
+
+void GameState::initTowerPointer()
+{
+	sf::CircleShape temp = sf::CircleShape(10, 3);
+	temp.setRotation(180.f);
+	temp.setFillColor(sf::Color::Green);
+	temp.setOutlineThickness(3.f);
+	temp.setOutlineColor(sf::Color::Black);
+
+	this->towerPointer = temp;
 }
 
 void GameState::initSounds()
@@ -383,6 +395,13 @@ void GameState::initSounds()
 
 	this->wave.setBuffer(this->waveBuffer);
 	this->wave.setVolume(50.f);
+
+	if (!this->errorBuffer.loadFromFile("public/sounds/error.wav")) {
+		throw("ERROR::GAMESTATE::COULD_NOT_LOAD_SOUND");
+	}
+
+	this->error.setBuffer(this->errorBuffer);
+	this->error.setVolume(50.f);
 
 }
 
@@ -483,6 +502,7 @@ GameState::GameState(sf::RenderWindow* window, std::map<std::string, int>* suppo
 	this->initEndMenu();
 	this->initTowerCreatorPointers();
 	this->initSounds();
+	this->initTowerPointer();
 
 	this->isGamePause = false;
 	this->status = GameState::Status::PLAY;
@@ -552,70 +572,72 @@ void GameState::checkAndCreateTower()
 			
 			switch (this->selectedTowerCreator) {
 			case TowerCreator::TowerType::NORMAL:
-				if (this->money - 100 < 0) return;
+				if (this->money - 100 < 0){
+					this->error.play();
+					return;
+				}
 				this->money -= 100;
 				this->build.play();
 				this->towersAtCurrentState.push_back(new TowerNormal(pos.x, pos.y, Entity::EntityAttributes::NORMAL, 10, 10, this->textures));
 				this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 				break;
 			case TowerCreator::TowerType::FLY:
-				if (this->money - 150 < 0) return;
+				if (this->money - 150 < 0) {
+					this->error.play();
+					return;
+				}
 				this->money -= 150;
 				this->build.play();
 				this->towersAtCurrentState.push_back(new TowerFly(pos.x, pos.y, Entity::EntityAttributes::FLY, 10, 10, this->textures));
 				this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 				break;
 			case TowerCreator::TowerType::HEAVY:
-				if (this->money - 200 < 0) return;
+				if (this->money - 200 < 0) {
+					this->error.play();
+					return;
+				}
 				this->build.play();
 				this->money -= 200;
 				this->towersAtCurrentState.push_back(new TowerHeavy(pos.x, pos.y, Entity::EntityAttributes::HEAVY, 10, 10, this->textures));
 				this->selectedTowerCreator = TowerCreator::TowerType::NONE;
 				break;
-			default:
-				std::cout << "NONE" << std::endl;
-			}
 		}
 	}
+}
 }
 
 bool GameState::isMonsterInTowerRadius(Tower* tower, Monster* monster)
 {
-	if (!monster) return false;
-	sf::Vector2f towerPosition = tower->radiusShape.getPosition();
-	sf::Vector2f monsterPosition = monster->getHitboxComponent()->getHitbox().getPosition();
-	sf::FloatRect towerRadiusShape = tower->radiusShape.getGlobalBounds();
-	sf::FloatRect monsterHitboxShape = monster->getHitboxComponent()->getHitbox().getGlobalBounds();
+if (!monster) return false;
+sf::Vector2f towerPosition = tower->radiusShape.getPosition();
+sf::Vector2f monsterPosition = monster->getHitboxComponent()->getHitbox().getPosition();
+sf::FloatRect towerRadiusShape = tower->radiusShape.getGlobalBounds();
+sf::FloatRect monsterHitboxShape = monster->getHitboxComponent()->getHitbox().getGlobalBounds();
 
-	float dx = (towerPosition.x + (towerRadiusShape.width / 2)) - (monsterPosition.x + (monsterHitboxShape.width / 2));
-	float dy = (towerPosition.y + (towerRadiusShape.height / 2)) - (monsterPosition.y + (monsterHitboxShape.height / 2));
-	float distance = std::sqrt((dx * dx) + (dy * dy));
+float dx = (towerPosition.x + (towerRadiusShape.width / 2)) - (monsterPosition.x + (monsterHitboxShape.width / 2));
+float dy = (towerPosition.y + (towerRadiusShape.height / 2)) - (monsterPosition.y + (monsterHitboxShape.height / 2));
+float distance = std::sqrt((dx * dx) + (dy * dy));
 
-	if (distance <= (towerRadiusShape.width / 2) + (monsterHitboxShape.width / 2))
-	{
-		return true;
-	}
-	else {
-		return false;
-	}
+if (distance <= (towerRadiusShape.width / 2) + (monsterHitboxShape.width / 2))
+{
+	return true;
+}
+else {
+	return false;
+}
 }
 
 void GameState::checkMonstersInTowersRadius()
 {
-	for (auto& tower : this->towersAtCurrentState) {
-		for (auto& monster : this->monstersAtLevelN) {
-			
-			if (
-				tower->attribute == monster->attribute && 
-				isMonsterInTowerRadius(tower, monster) &&
-				!tower->isAlreadyDetected(monster)
-				) {
-				//std::cout << tower->radiusShape.getGlobalBounds(). << std::endl;
-				//std::cout << tower->radiusShape.getGlobalBounds().height << std::endl;
+for (auto& tower : this->towersAtCurrentState) {
+	for (auto& monster : this->monstersAtLevelN) {
+		
+		if (
+			tower->attribute == monster->attribute && 
+			isMonsterInTowerRadius(tower, monster) &&
+			!tower->isAlreadyDetected(monster)
+			) {
 				tower->monstersInRadius.push_back(monster);
-				// delete later
-				std::cout << "Detected In\n";
-				//tower->monstersInRadius.erase(tower->monstersInRadius.begin());
 			}
 		}
 	}
@@ -627,8 +649,7 @@ void GameState::checkMonstersOutTowersRadius()
 		for (int i = 0; i < tower->monstersInRadius.size();) {
 			Monster* monster = tower->monstersInRadius[i];
 			if (!isMonsterInTowerRadius(tower, monster)) {
-				std::cout << "Detected Out\n";
-				tower->monstersInRadius.erase(tower->monstersInRadius.begin() + i);
+					tower->monstersInRadius.erase(tower->monstersInRadius.begin() + i);
 			}
 			else {
 				++i;
@@ -654,7 +675,6 @@ void GameState::checkMonstersDead()
 void GameState::attackMonsters()
 {
 	for (auto& tower : this->towersAtCurrentState) {
-		//std::cout << !tower->monstersInRadius.empty() << std::endl;
 		if (!tower->monstersInRadius.empty() && tower->canAttack()) {
 			this->updateAttackMonsters(tower, this->selectNotDeadMonster(tower));
 		}
@@ -664,7 +684,6 @@ void GameState::attackMonsters()
 void GameState::monsterBulletCollision()
 {
 	for (auto& bullet : this->bulletsAtCurrentTime) {
-	//	std::cout << bullet->getTarget() << " bulleet target \n";
 		if (bullet->getHitboxComponent()->getHitbox().getGlobalBounds()
 			.intersects(bullet->getTarget()->getHitboxComponent()->getHitbox().getGlobalBounds())) {
 			switch (bullet->getTarget()->attribute) {
@@ -734,8 +753,11 @@ void GameState::toggleStatePaused()
 				this->status = GameState::Status::END;
 			}
 		}
-		else if (!this->isGamePause) {
+		else if (!this->isGamePause && !this->skipToEnd) {
 			this->status = GameState::Status::PLAY;
+			if (this->playerHealth <= 0) {
+				this->skipToEnd = true;
+			}
 		}
 
 		this->countdownTimer.restart();
@@ -747,7 +769,6 @@ void GameState::checkEndGame()
 {
 	if (this->playerHealth <= 0) {
 		this->playerHealth = 0;
-		//this->textPlayerHealth.setString("0/100");
 		this->hp.setSize(sf::Vector2f(this->playerHealth * 5, 40.f));
 		this->score += 100;
 		this->textScore.setString("Score : " + std::to_string(this->score));
@@ -759,11 +780,12 @@ void GameState::checkEndGame()
 void GameState::endGame()
 {
 	this->end.play();
+	this->playerHealth = 0;
+	this->isGamePause = true;
 	this->status = GameState::Status::END;
 	this->toggleStatePaused();
 	this->updateAndSaveScore();
 
-	// sort - update - save score
 }
 
 void GameState::highlightSelectedTowerCreator()
@@ -787,6 +809,17 @@ void GameState::updateFreeAreas()
 	else {
 		for (auto area : this->towerAreas) {
 			area->updateIsCreated(false);
+		}
+	}
+}
+
+void GameState::updateTowerPointer()
+{
+	if (this->selectedTower != -1) {
+		Tower* tower = this->towersAtCurrentState[this->selectedTower];
+		this->towerPointer.setPosition(tower->getPosition().x + tower->getGlobalBounds().width / 2+3.f, tower->getPosition().y - 20.f);
+		if (tower->attribute == Entity::EntityAttributes::HEAVY) {
+			this->towerPointer.setPosition(tower->getPosition().x + tower->getGlobalBounds().width / 2, tower->getPosition().y - 20.f);
 		}
 	}
 }
@@ -842,14 +875,12 @@ void GameState::updateTowersAndMonstersInteraction()
 void GameState::updateSelectTower()
 {
 	for (int i = 0; i < this->towersAtCurrentState.size(); i++) {
-		//std::cout << this->selectedTower << std::endl;
 
 		Tower* tower = this->towersAtCurrentState[i];
 		if (tower->isPressed(this->mousePosView)) {
 			this->tower.play();
 			this->selectedTower = ((this->selectedTower == -1 || this->selectedTower != i) ? i : -1);
 			this->selectedTowerCreator = TowerCreator::TowerType::NONE;
-			std::cout << "Selected Tower ID : " << this->selectedTower << std::endl;
 		}
 	}
 }
@@ -867,21 +898,6 @@ void GameState::updateTowerCreator(const float& dt)
 				this->selectedTowerCreator = towerCreator.second->selectedTowerType();
 			}
 
-			// delete later 
-			switch(this->selectedTowerCreator) {
-				case TowerCreator::TowerType::NORMAL:
-					std::cout << "NORMAL" << std::endl;
-					break;
-				case TowerCreator::TowerType::FLY:
-					std::cout << "FLY" << std::endl;
-					break;
-				case TowerCreator::TowerType::HEAVY:
-					std::cout << "HEAVY" << std::endl;
-					break;
-				case TowerCreator::TowerType::NONE:
-					std::cout << "NONE" << std::endl;
-
-			}
 			
 		}
 	}
@@ -901,7 +917,10 @@ void GameState::updateTowerSeller()
 void GameState::updateTowerUpgrader()
 {
 	if (this->towerUpgrader->isPressed(this->mousePosView)) {
-		if (this->money - 200 < 0) return;
+		if (this->money - 200 < 0) {
+			this->error.play();
+			return;
+		}
 		this->upgrade.play();
 		this->towerUpgrader->upgraderTower(this->selectedTower, &this->money, &this->towersAtCurrentState);
 	}
@@ -909,22 +928,8 @@ void GameState::updateTowerUpgrader()
 
 void GameState::updateMonstersMove(const float& dt)
 {  
-	if (!this->monstersAtLevelN.empty() && 1) {
-		/*if (this->monstersAtLevelN[0]->getHitboxComponent()->getHitbox().getPosition().x < 1500 && !mon_walk) {
-			this->monstersAtLevelN[0]->move(1.f, 0.f, dt);
-		}
-		else {
-			this->mon_walk = true;
-			this->monstersAtLevelN[0]->move(-1.f, 0.f, dt);
-			if (this->monstersAtLevelN[0]->getHitboxComponent()->getHitbox().getPosition().x < 100) {
-				this->mon_walk = false;
-			}
-		}*/
-
-		/*for (auto& monster : this->monstersAtLevelN) {
-			monster->getHitboxComponent()->update(dt, this->monstersAtLevelN[0]->getPosition());
-		}*/
-
+	if (!this->monstersAtLevelN.empty()) {
+	
 		if (!this->monstersAtLevelN.empty()) {
 			for (auto monster : this->monstersAtLevelN) {
 				monster->updateMonsterMove(dt);
@@ -980,10 +985,6 @@ void GameState::updateInput(const float& dt)
 		}
 	}
 
-	// Update player input
-
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("CLOSE"))))
-		//this->endState();
 }
 void GameState::updateAttackMonsters(Tower* tower, Monster* monster)
 {
@@ -996,7 +997,6 @@ void GameState::updateAttackMonsters(Tower* tower, Monster* monster)
 void GameState::updateBullets(const float& dt)
 {
 	for (auto& bullet : this->bulletsAtCurrentTime) {
-		//std::cout << "TEST\n";
 		if (bullet->getTarget() != nullptr) {
 			float targetX = bullet->getTarget()->getHitboxComponent()->getHitbox().getPosition().x;
 			float targetY = bullet->getTarget()->getHitboxComponent()->getHitbox().getPosition().y;
@@ -1004,9 +1004,7 @@ void GameState::updateBullets(const float& dt)
 			float bulletY = bullet->getHitboxComponent()->getHitbox().getPosition().y;
 			float dx = targetX - bulletX;
 			float dy = targetY - bulletY;
-		//	std::cout << dx << dy << "\n";
 			bullet->getSprite()->move(sf::Vector2f(dx, dy) * (0.1f));   
-			//bullet->update(dt, std::atan(dx/dy));
 			bullet->getHitboxComponent()->update(bullet->getPosition(), -20.f, -20.f);
 		}
 	}
@@ -1047,7 +1045,6 @@ void GameState::updateScore()
 void GameState::updatePlayerHealth()
 {
 	if (this->playerHealth > 100) this->playerHealth = 100;
-	//this->textPlayerHealth.setString(std::to_string(this->playerHealth) + "/100");
 	this->hp.setSize(sf::Vector2f(this->playerHealth * 5, 40.f));
 }
 
@@ -1061,12 +1058,21 @@ void GameState::updatePausedMenu()
 	if (this->pausedButtons["RESUME"]->isPressed()) {
 		this->click.play();
 		this->toggleStatePaused();
+	}	
+	
+	if (this->pausedButtons["END_GAME"]->isPressed()) {
+		this->click.play();
+		this->score -= 100;
+		this->playerHealth = 0;
+		this->endGame();
 	}
 
 	if (this->pausedButtons["BACK_TO_MENU"]->isPressed()) {
 		this->click.play();
 		this->endState();
 	}
+
+
 }
 
 void GameState::updateEndMenu()
@@ -1170,7 +1176,6 @@ void GameState::update(const float& dt)
 
 		//this->monstersAtLevelN->update(dt);
 
-		// delete later
 		for (auto& tower : this->towersAtCurrentState) {
 			tower->update(dt);
 		}
@@ -1210,6 +1215,7 @@ void GameState::update(const float& dt)
 		this->updateFreeAreas();
 
 		this->checkEndGame();
+		this->updateTowerPointer();
 	
 	}
 
@@ -1236,7 +1242,6 @@ void GameState::destoryBullets()
 		else {
 			++i;
 		}
-		//std::cout << "BULL SIZE: " << this->bulletsAtCurrentTime.size() << "\n";
 	}
 }
 
@@ -1252,6 +1257,13 @@ void GameState::destoryMonsters()
 		else {
 			++i;
 		}
+	}
+}
+
+void GameState::renderTowerPointer(sf::RenderTarget* target)
+{
+	if (this->selectedTower != -1) {
+		target->draw(this->towerPointer);
 	}
 }
 
@@ -1368,11 +1380,6 @@ void GameState::renderMonsters(sf::RenderTarget* target)
 
 void GameState::renderButtons(sf::RenderTarget* target)
 {
-	//for (auto& it : this->buttons)
-	//{
-	//	//std::cout << it.second->isPressed() << "\n";
-	//	it.second->render(target);
-	//}
 
 	this->buttons["TOGGLE_HITBOX"]->render(target);
 	if (!this->isWaveStarted) {
@@ -1405,7 +1412,6 @@ void GameState::renderScore(sf::RenderTarget* target)
 
 void GameState::renderPlayerHealth(sf::RenderTarget* target)
 {
-	//target->draw(this->textPlayerHealth);
 	target->draw(this->hpOutline);
 	target->draw(this->hp);
 }
@@ -1438,12 +1444,11 @@ void GameState::render(sf::RenderTarget* target)
 	this->renderCountdown(target);
 	this->renderLevel(target);
 	this->renderTowerAreas(target);
+	this->renderTowerPointer(target);
 	this->renderTowerCreatorPointers(target);
 
 	if (this->status == GameState::Status::PAUSE) {
 		this->renderPausedMenu(target);
-
-		// change later 
 
 	
 	}
@@ -1452,14 +1457,4 @@ void GameState::render(sf::RenderTarget* target)
 		this->renderEndMenu(target);
 	}
 
-	// remove later
-	//sf::Text mouseText;
-	//mouseText.setPosition(this->mousePosView.x, this->mousePosView.y - 50);
-	//mouseText.setFont(this->font);
-	//mouseText.setCharacterSize(18);
-	//std::stringstream ss;
-	//ss << this->mousePosView.x << " " << this->mousePosView.y;
-	//mouseText.setString(ss.str());
-
-	//target->draw(mouseText);
 }

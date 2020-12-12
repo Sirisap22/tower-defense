@@ -39,6 +39,11 @@ void Entity::createHitboxComponent(float x, float y, float radius)
 	this->hitboxComponent = new HitboxComponent(x, y, radius);
 }
 
+const sf::FloatRect Entity::getGlobalBounds() const
+{
+	return this->sprite.getGlobalBounds();
+}
+
 const sf::Vector2f Entity::getPosition() const
 {
 	return this->sprite.getPosition();

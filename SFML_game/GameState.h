@@ -33,6 +33,7 @@ private:
     std::vector<Bullet*> bulletsAtCurrentTime;
     std::vector<TowerArea*> towerAreas;
     std::vector<sf::CircleShape* > towerCreatorPointers;
+    sf::CircleShape towerPointer;
     sf::Texture texture;
     sf::RectangleShape bg;
     std::map<std::string, TowerCreator*> towerCreator;
@@ -73,6 +74,7 @@ private:
     sf::Clock pauseDebounce;
     GameState::Status status;
     sf::Clock keyPressedClock;
+    bool skipToEnd;
 
     // sounds
     sf::SoundBuffer buildBuffer;
@@ -87,6 +89,7 @@ private:
     sf::SoundBuffer magicBuffer;
     sf::SoundBuffer rockBuffer;
     sf::SoundBuffer waveBuffer;
+    sf::SoundBuffer errorBuffer;
 
     sf::Sound build;
     sf::Sound upgrade;
@@ -100,6 +103,7 @@ private:
     sf::Sound magic;
     sf::Sound rock;
     sf::Sound wave;
+    sf::Sound error;
 
     // delete later 
     bool mon_walk;
@@ -120,6 +124,7 @@ private:
     void initCountdown();
     void initTowerAreas();
     void initTowerCreatorPointers();
+    void initTowerPointer();
     void initSounds();
     void spawnMonsters();
     void startLevel();
@@ -147,6 +152,7 @@ public:
     void highlightSelectedTowerCreator();
 
     void updateFreeAreas();
+    void updateTowerPointer();
     void updateLevel();
     void updateEndLevel();
     void updateCountdown();
@@ -173,6 +179,7 @@ public:
     void destoryBullets();
     void destoryMonsters();
 
+    void renderTowerPointer(sf::RenderTarget* target);
     void renderTowerCreatorPointers(sf::RenderTarget* target);
     void renderPausedMenu(sf::RenderTarget* target);
     void renderEndMenu(sf::RenderTarget* target);

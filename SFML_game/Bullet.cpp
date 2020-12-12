@@ -19,7 +19,6 @@ std::string Bullet::selectTexturesByAttribute()
 void Bullet::initComponents()
 {
 	this->createHitboxComponent(this->origin.x+20.f, this->origin.y+10.f, 10.f);
-//	this->createMovementComponent(100.f, 10.f, 0.f);
 }
 
 void Bullet::initTextures(std::map<std::string, sf::Texture> textures)
@@ -52,7 +51,6 @@ Bullet::Bullet(float x, float y, Entity::EntityAttributes attribute, int level, 
 
 	if (target) {
 		auto pos = this->relativeTargetPosition();
-		std::cout << "pos : " << pos << std::endl;
 		this->sprite.setRotation(pos);
 	}
 
@@ -109,7 +107,6 @@ float Bullet::relativeTargetPosition()
 	float upper = bX * mX + bY * mY;
 	float lower = std::sqrtf(bX * bX + bY * bY) * std::sqrtf(mX * mX + mY * mY);
 	float theta = std::acosf(upper / lower) * 180.f / float(M_PI);
-	std::cout << "theta" << theta << std::endl;
 	sf::Vector2f curPos = sf::Vector2f(bX, bY);
 	sf::Vector2f position = sf::Vector2f(mX, mY);
 	const float PI = 3.14159265;
@@ -124,11 +121,6 @@ float Bullet::relativeTargetPosition()
 
 
 
-void Bullet::update(const float& dt,float angle)
-{
-	//this->movementComponent->update(dt);
-	//this->sprite.rotate(angle);
-}
 
 void Bullet::render(sf::RenderTarget* target)
 {

@@ -2,4 +2,4 @@ dasd	27900
 sadf	25300
 Elon	12640
 Player	9870
-sirisap	500
+asdf	2500

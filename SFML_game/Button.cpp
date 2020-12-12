@@ -61,6 +61,12 @@ void Button::setButtonPosition(float x, float y)
 	this->text.setPosition(x, y);
 }
 
+void Button::setShapePosition(float x, float y)
+{
+	this->shape.setPosition(x, y);
+}
+
+
 // Functions
 
 void Button::update(const sf::Vector2f mousePos)
