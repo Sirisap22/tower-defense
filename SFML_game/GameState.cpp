@@ -755,7 +755,7 @@ void GameState::toggleStatePaused()
 		}
 		else if (!this->isGamePause /*&& !this->skipToEnd*/) {
 			this->status = GameState::Status::PLAY;
-			/*if (this->playerHealth <= 0) {
+		/*	if (this->playerHealth <= 0) {
 				this->skipToEnd = true;
 			}*/
 		}

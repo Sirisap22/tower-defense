@@ -1,5 +1,5 @@
 dasd	27900
+sirisap	25600
+sirisap	25500
+sirisap	25400
 sadf	25300
-sirisap	21800
-sirisap	21700
-Elon	12640
