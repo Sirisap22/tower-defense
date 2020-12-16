@@ -424,7 +424,7 @@ void GameState::spawnMonsters()
 				this->monstersAtLevelN.push_back(new MonsterNormal(-4.f, 580.f, Entity::EntityAttributes::NORMAL, 100, 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
 				break;
 			case 2:
-				this->monstersAtLevelN.push_back(new MonsterFly(-4.f, 580.f, Entity::EntityAttributes::FLY, 100, 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
+				this->monstersAtLevelN.push_back(new MonsterFly(-4.f, 580.f, Entity::EntityAttributes::FLY, 100, 120.f, 5, this->textures["MONSTER_FLY_SHEET"]));
 				break;
 			}
 		}
@@ -446,10 +446,10 @@ void GameState::spawnMonsters()
 				this->monstersAtLevelN.push_back(new MonsterNormal(-4.f, 580.f, Entity::EntityAttributes::NORMAL, 100, 100.f, 10, this->textures["MONSTER_NORMAL_SHEET"]));
 				break;
 			case 2:
-				this->monstersAtLevelN.push_back(new MonsterFly(-4.f, 580.f, Entity::EntityAttributes::FLY, 100, 100.f, 10, this->textures["MONSTER_FLY_SHEET"]));
+				this->monstersAtLevelN.push_back(new MonsterFly(-4.f, 580.f, Entity::EntityAttributes::FLY, 100, 120.f, 5, this->textures["MONSTER_FLY_SHEET"]));
 				break;
 			case 3:
-				this->monstersAtLevelN.push_back(new MonsterHeavy(-4.f, 550.f, Entity::EntityAttributes::HEAVY, 100, 100.f, 10, this->textures["MONSTER_HEAVY_SHEET"]));
+				this->monstersAtLevelN.push_back(new MonsterHeavy(-4.f, 550.f, Entity::EntityAttributes::HEAVY, 100, 90.f, 20, this->textures["MONSTER_HEAVY_SHEET"]));
 				break;
 			}
 		}

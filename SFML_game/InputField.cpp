@@ -50,7 +50,6 @@ const std::string InputField::getName() const
 {
 	return this->name;
 }
-
 void InputField::updateField()
 {
 	while (this->window->pollEvent(this->event)) {
